@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS `tb_fornecedor` (
   `nome_contato` varchar(255) DEFAULT NULL,
   `razao_social` varchar(255) DEFAULT NULL,
   `telefone` varchar(255) DEFAULT NULL,
+  `ativo` bit(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

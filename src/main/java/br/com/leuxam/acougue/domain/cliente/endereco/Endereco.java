@@ -1,4 +1,4 @@
-package br.com.leuxam.acougue.domain.endereco;
+package br.com.leuxam.acougue.domain.cliente.endereco;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -15,4 +15,9 @@ public class Endereco {
 	public String bairro;
 	public Integer numero;
 	
+	public Endereco(DadosEndereco endereco) {
+		this.rua = endereco.rua();
+		this.bairro = endereco.bairro();
+		this.numero = endereco.numero();
+	}
 }

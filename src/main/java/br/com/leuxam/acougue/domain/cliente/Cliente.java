@@ -3,7 +3,9 @@ package br.com.leuxam.acougue.domain.cliente;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import br.com.leuxam.acougue.domain.endereco.Endereco;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,6 +35,7 @@ public class Cliente {
 	private String telefone;
 	
 	@JoinColumn(name = "data_nascimento")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 	
 	@Embedded
@@ -42,4 +45,17 @@ public class Cliente {
 	
 	@Enumerated(EnumType.STRING)
 	private Sexo sexo;
+	
+	private Boolean ativo;
+	
+	public Cliente(DadosCriarCliente dados) {
+		this.nome = dados.nome();
+		this.sobrenome = dados.sobrenome();
+		this.telefone = dados.telefone();
+		this.dataNascimento = dados.dataNascimento();
+		if(dados.endereco() != null) this.endereco = new Endereco(dados.endereco());
+		this.lucratividade = new BigDecimal("53.00");
+		this.sexo = dados.sexo();
+		this.ativo = true;
+	}
 }

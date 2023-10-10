@@ -29,4 +29,6 @@ public class Fornecedor {
 	
 	@JoinColumn(name = "nome_contato")
 	private String nomeContato;
+	
+	private Boolean ativo;
 }
