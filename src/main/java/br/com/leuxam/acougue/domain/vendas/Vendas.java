@@ -1,49 +1,49 @@
-package br.com.leuxam.acougue.domain.estoque;
+package br.com.leuxam.acougue.domain.vendas;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
+import br.com.leuxam.acougue.domain.cliente.Cliente;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "Estoque")
-@Table(name = "tb_estoque")
+@Entity(name = "Vendas")
+@Table(name = "tb_vendas")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Estoque {
+public class Vendas {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String descricao;
-	private Double quantidade;
+	@JoinColumn(name = "data_venda")
+	private LocalDateTime dataVenda;
 	
-	@JoinColumn(name = "data_compra")
-	private LocalDate dataCompra;
+	@JoinColumn(name = "valor_total")
+	private BigDecimal valorTotal;
 	
-	@JoinColumn(name = "data_validade")
-	private LocalDate dataValidade;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Cliente cliente;
 	
 	@Enumerated(EnumType.STRING)
-	private Unidade unidade;
+	private CondicaoPagamento condicaoPagamento;
 	
-	@OneToMany(mappedBy = "estoque")
+	@OneToMany(mappedBy = "vendas")
 	private List<VendasEstoque> vendasEstoque;
-	
-	@OneToMany(mappedBy = "estoque")
-	private List<ComprasEstoque> comprasEstoque;
 }
