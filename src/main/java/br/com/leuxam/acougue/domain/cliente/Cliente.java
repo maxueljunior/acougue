@@ -58,4 +58,20 @@ public class Cliente {
 		this.sexo = dados.sexo();
 		this.ativo = true;
 	}
+
+	public void atualizarDados(DadosAtualizarCliente dados) {
+		if(dados.nome() != null) this.nome = dados.nome();
+		if(dados.sobrenome() != null) this.sobrenome = dados.sobrenome();
+		if(dados.telefone() != null) this.telefone = dados.telefone();
+		if(dados.dataNascimento() != null) this.dataNascimento = dados.dataNascimento();
+		if(dados.endereco() != null) this.endereco = new Endereco(dados.endereco());
+	}
+
+	public void desativar() {
+		this.ativo = false;
+	}
+
+	public void ativar() {
+		this.ativo = true;
+	}
 }

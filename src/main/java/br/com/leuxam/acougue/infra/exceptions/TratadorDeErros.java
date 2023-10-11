@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.leuxam.acougue.domain.AtivadoException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
 
 @RestControllerAdvice
@@ -22,6 +23,11 @@ public class TratadorDeErros {
 	@ExceptionHandler(ValidacaoException.class)
 	public ResponseEntity ErroBuscaPorId404(ValidacaoException ex) {
 		return ResponseEntity.notFound().build();
+	}
+	
+	@ExceptionHandler(AtivadoException.class)
+	public ResponseEntity ErroAtivacao400(AtivadoException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 	
 	public record DadosErro(String field, String message) {
