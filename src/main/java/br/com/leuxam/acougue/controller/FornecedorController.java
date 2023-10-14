@@ -26,6 +26,6 @@ public class FornecedorController {
 			UriComponentsBuilder uriBuilder){
 		var fornecedor = service.create(dados);
 		var uri = uriBuilder.path("/fornecedor/{id}").buildAndExpand(fornecedor.id()).toUri();
-		return ResponseEntity.created(uri).body(null);
+		return ResponseEntity.created(uri).body(fornecedor);
 	}
 }

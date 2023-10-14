@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.leuxam.acougue.domain.AtivadoException;
+import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
 
 @RestControllerAdvice
@@ -25,8 +26,8 @@ public class TratadorDeErros {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@ExceptionHandler(AtivadoException.class)
-	public ResponseEntity ErroAtivacao400(AtivadoException ex) {
+	@ExceptionHandler({AtivadoException.class, ExisteException.class})
+	public ResponseEntity ErroAtivacao400(RuntimeException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 	

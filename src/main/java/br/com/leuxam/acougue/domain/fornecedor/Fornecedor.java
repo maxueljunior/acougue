@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Fornecedor {
 	
+	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -31,4 +33,12 @@ public class Fornecedor {
 	private String nomeContato;
 	
 	private Boolean ativo;
+	
+	public Fornecedor(DadosCriarFornecedor dados) {
+		this.razaoSocial = dados.razaoSocial();
+		this.cnpj = dados.cnpj();
+		this.telefone = dados.telefone();
+		this.nomeContato = dados.nomeContato();
+		this.ativo = true;
+	}
 }

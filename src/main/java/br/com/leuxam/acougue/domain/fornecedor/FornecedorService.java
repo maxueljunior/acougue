@@ -16,6 +16,8 @@ public class FornecedorService {
 	}
 
 	public DadosDetalhamentoFornecedor create(DadosCriarFornecedor dados) {
-		return null;
+		var fornecedor = new Fornecedor(dados);
+		fornecedorRepository.save(fornecedor);
+		return new DadosDetalhamentoFornecedor(fornecedor);
 	}
 }

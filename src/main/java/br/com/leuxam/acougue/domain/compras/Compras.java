@@ -14,29 +14,39 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "Compras")
 @Table(name = "tb_compras")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Compras {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Fornecedor fornecedor;
-	
+
 	@JoinColumn(name = "valor_total")
 	private BigDecimal valorTotal;
-	
+
 	@OneToMany(mappedBy = "compras")
 	private List<ComprasEstoque> comprasEstoque;
-	
+
 	/*
 	 * 
-	 * Aqui ficara faltando a parte de download e upload de Pdf's
-	 * para deixarem eles salvos e conseguir consulta-lós através do Id
+	 * Aqui ficara faltando a parte de download e upload de Pdf's para deixarem eles
+	 * salvos e conseguir consulta-lós através do Id
 	 * 
 	 * 
 	 */
+
+	public void atualizar(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
 }
