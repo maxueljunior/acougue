@@ -8,5 +8,10 @@ public record DadosDetalhamentoComprasEstoque(
 		Double quantidade,
 		Long idCompras,
 		Long idEstoque) {
+
+	public DadosDetalhamentoComprasEstoque(ComprasEstoque ce) {
+		this(ce.getId(), ce.getPrecoUnitario(), ce.getQuantidade(), ce.getCompras().getId(),
+				ce.getEstoque().getId());
+	}
 	
 }

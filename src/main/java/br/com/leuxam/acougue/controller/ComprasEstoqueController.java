@@ -26,6 +26,6 @@ public class ComprasEstoqueController {
 			UriComponentsBuilder uriBuilder){
 		var compraEstoque = service.create(dados);
 		var uri = uriBuilder.path("/itens/compras/{id}").buildAndExpand(compraEstoque.idCompras()).toUri();
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body(compraEstoque);
 	}
 }

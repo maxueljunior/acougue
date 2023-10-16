@@ -46,4 +46,17 @@ public class Estoque {
 	
 	@OneToMany(mappedBy = "estoque")
 	private List<ComprasEstoque> comprasEstoque;
+	
+	public Estoque(DadosCriarEstoque dados) {
+		this.descricao = dados.descricao();
+		this.unidade = dados.unidade();
+		this.quantidade = 0.0;
+		if (dados.quantidade() != null) this.quantidade = dados.quantidade();
+		this.dataCompra = LocalDate.of(1900, 1, 1);
+		this.dataValidade = LocalDate.of(1900, 1, 1);
+	}
+
+	public void atualizar(DadosAtualizarEstoque dados) {
+		if(dados.descricao() != null) this.descricao = dados.descricao();
+	}
 }
