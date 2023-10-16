@@ -6,8 +6,9 @@ public record DadosDetalhamentoFornecedor(
 		String cnpj,
 		String nomeContato,
 		String telefone) {
-
-	public DadosDetalhamentoFornecedor(Fornecedor f) {
-		this(f.getId(), f.getRazaoSocial(), f.getCnpj(), f.getNomeContato(), f.getTelefone());
+	
+	public DadosDetalhamentoFornecedor(Fornecedor fornecedor) {
+		this(fornecedor.getId(), fornecedor.getRazaoSocial(), fornecedor.getCnpj(),
+				fornecedor.getNomeContato(), fornecedor.getTelefone());
 	}
 }
