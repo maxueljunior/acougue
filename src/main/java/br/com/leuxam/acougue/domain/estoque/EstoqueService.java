@@ -38,13 +38,14 @@ public class EstoqueService {
 	
 		return new DadosDetalhamentoEstoque(estoque.get());
 	}
-
+	
+	@Transactional
 	public DadosDetalhamentoEstoque update(Long id, DadosAtualizarEstoque dados) {
 		var estoque = estoqueRepository.findById(id);
 		
 		if(!estoque.isPresent()) throw new ValidacaoException("O produto nº " + id + " não existe");
 		
 		estoque.get().atualizar(dados);
-		return null;
+		return new DadosDetalhamentoEstoque(estoque.get());
 	}
 }

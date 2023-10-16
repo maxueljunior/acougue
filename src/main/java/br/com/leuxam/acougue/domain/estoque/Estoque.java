@@ -59,4 +59,14 @@ public class Estoque {
 	public void atualizar(DadosAtualizarEstoque dados) {
 		if(dados.descricao() != null) this.descricao = dados.descricao();
 	}
+
+	public void atualizarQuantidadeEstoque(Double quantidade) {
+		this.quantidade += quantidade;
+		this.dataCompra = LocalDate.now();
+		this.dataValidade = LocalDate.now().plusMonths(1);
+	}
+
+	public void atualizarQuantidadeEstoque(ComprasEstoque comprasEstoque) {
+		this.quantidade -= comprasEstoque.getQuantidade();
+	}
 }

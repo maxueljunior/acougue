@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
+import br.com.leuxam.acougue.domain.comprasEstoque.DadosCriarComprasEstoque;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,7 +35,7 @@ public class Compras {
 
 	@JoinColumn(name = "valor_total")
 	private BigDecimal valorTotal;
-
+	
 	@OneToMany(mappedBy = "compras")
 	private List<ComprasEstoque> comprasEstoque;
 
@@ -48,5 +49,15 @@ public class Compras {
 
 	public void atualizar(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
+	}
+
+	public void atualizarValorCompra(DadosCriarComprasEstoque dados) {
+		BigDecimal valorTotal = this.valorTotal.add(dados.precoUnitario().multiply(BigDecimal.valueOf(dados.quantidade())));
+		this.valorTotal = valorTotal;
+	}
+
+	public void atualizarValorCompra(ComprasEstoque comprasEstoque) {
+		BigDecimal valorTotal = this.valorTotal.subtract(comprasEstoque.getPrecoUnitario().multiply(BigDecimal.valueOf(comprasEstoque.getQuantidade())));
+		this.valorTotal = valorTotal;
 	}
 }
