@@ -12,5 +12,10 @@ public record DadosDetalhamentoVendas(
 		LocalDateTime dataVenda,
 		BigDecimal valorTotal,
 		Long idCliente) {
+
+	public DadosDetalhamentoVendas(Vendas vendas) {
+		this(vendas.getId(), vendas.getCondicaoPagamento(), vendas.getDataVenda(),
+				vendas.getValorTotal(), vendas.getCliente().getId());
+	}
 	
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
+import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -68,5 +69,9 @@ public class Estoque {
 
 	public void atualizarQuantidadeEstoque(ComprasEstoque comprasEstoque) {
 		this.quantidade -= comprasEstoque.getQuantidade();
+	}
+
+	public void atualizar(DadosCriarVendaEstoque dados) {
+		this.quantidade -= dados.quantidade();
 	}
 }

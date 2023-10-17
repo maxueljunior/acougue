@@ -1,5 +1,9 @@
 package br.com.leuxam.acougue.domain.compras;
 
-public record DadosCriarVendas() {
+import jakarta.validation.constraints.NotNull;
+
+public record DadosCriarVendas(
+		@NotNull
+		Long idCliente) {
 	
 }

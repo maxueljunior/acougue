@@ -2,9 +2,12 @@ package br.com.leuxam.acougue.domain.vendas;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import br.com.leuxam.acougue.domain.cliente.Cliente;
+import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,4 +49,22 @@ public class Vendas {
 	
 	@OneToMany(mappedBy = "vendas")
 	private List<VendasEstoque> vendasEstoque;
+	
+	public Vendas(Cliente c) {
+		this.cliente = c;
+		this.dataVenda = LocalDateTime.now(ZoneOffset.ofHours(-3));
+		this.condicaoPagamento = CondicaoPagamento.PIX;
+		this.valorTotal = BigDecimal.ZERO;
+	}
+
+	public void atualizar(DadosAtualizarVenda dados) {
+		if(dados.condicaoPagamento() != null) this.condicaoPagamento = dados.condicaoPagamento();
+	}
+
+	public void atualizar(DadosCriarVendaEstoque dados) {
+		var valorTotal = this.valorTotal.add(dados.valorUnitario()
+				.multiply(BigDecimal.valueOf(dados.quantidade())));
+		this.valorTotal = valorTotal;
+	}
+
 }

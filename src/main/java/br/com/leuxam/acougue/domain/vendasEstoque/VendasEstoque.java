@@ -39,4 +39,11 @@ public class VendasEstoque {
 	private BigDecimal valorUnitario;
 	
 	private Double quantidade;
+	
+	public VendasEstoque(DadosCriarVendaEstoque dados, Vendas vendas, Estoque estoque) {
+		this.vendas = vendas;
+		this.estoque = estoque;
+		this.valorUnitario = dados.valorUnitario();
+		this.quantidade = dados.quantidade();
+	}
 }
