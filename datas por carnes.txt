@@ -1,0 +1,22 @@
+- Quando uma carne é registrada no sistema, a data vem padrão 01/01/1900.
+- Quando uma compra é efetuada para a aquela carne, a data vem atualizada com o dia da compra e acrescentado um mês para a data de validade
+- Logo, se no sistema você contiver carnes compradas na data 25/11 e depois comprar novamente a mesma carne em 09/12 você perderá quantas unidades contem daquela carne na data que foi comprada!
+
+- Na pratica deveria ficar por exemplo:
+
+produto 1	27/01	10 kg.
+produto 1	09/02	15 kg.
+
+Assim que for terminando a quantidade por data, lembrando que isso seria vendido sempre do mais antigo para o mais atual. Isso iria eliminar automaticamente quando a quantidade chegasse a ZERO!
+
+Obs.: Não pode ser feito nada na tb_compras_estoque, tendo em vista para ter o historico do que foi comprado naquela COMPRA!.
+
+********************************************************
+
+tb_estoque_datas
+
+tb_estoque	data_de_compra	quantidade
+1		27/11		25
+1		03/02		15	
+
+Logo chegou-se a conclusão que a tb_estoque que foi feita, na verdade é para ser uma tb de produtos, e a tb estoque deve ser apenas um log de informações de datas!

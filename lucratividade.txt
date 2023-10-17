@@ -1,0 +1,24 @@
+- O Valor do KG e colocado pelo usuário.
+- O Valor do peso e colocado pelo usuário.
+- A compra pode colocar tanto UN quanto KG. e pode ser colocado quantidade e preço do kg/un.
+
+********************************************************
+
+tb_estoque_lucratividade
+many to many
+
+tb_estoque, tb_cliente, lucratividade.
+
+1 		1		53
+2		1		40
+3		1		23
+4		1		55
+1		2		25
+2		2		15
+3		2		90
+
+*********************************************************
+
+Quando uma venda for inicializada, não vai ter como colocar o preço tendo em vista que o preço do KG é colocado pelo usuario!.
+E sim apenas uma sugestão do que pode ser colocado, caso o usuário não atenda a sugestão de acordo com o novo valor colocado por ele, irá recalcular a lucratividade daquele item pelo preço de UN/
+

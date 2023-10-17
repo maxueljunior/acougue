@@ -74,4 +74,8 @@ public class Estoque {
 	public void atualizar(DadosCriarVendaEstoque dados) {
 		this.quantidade -= dados.quantidade();
 	}
+
+	public void atualizar(VendasEstoque vendasEstoque) {
+		this.quantidade += vendasEstoque.getQuantidade();
+	}
 }

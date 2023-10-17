@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 import br.com.leuxam.acougue.domain.cliente.Cliente;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
@@ -64,6 +65,11 @@ public class Vendas {
 	public void atualizar(DadosCriarVendaEstoque dados) {
 		var valorTotal = this.valorTotal.add(dados.valorUnitario()
 				.multiply(BigDecimal.valueOf(dados.quantidade())));
+		this.valorTotal = valorTotal;
+	}
+
+	public void atualizar(VendasEstoque vendaEstoque) {
+		var valorTotal = this.valorTotal.subtract(vendaEstoque.getValorUnitario().multiply(BigDecimal.valueOf(vendaEstoque.getQuantidade())));
 		this.valorTotal = valorTotal;
 	}
 

@@ -43,7 +43,7 @@ public class ComprasEstoqueController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Page<DadosDetalhamentoComprasEstoque>> findById(
+	public ResponseEntity<Page<DadosDetalhamentoComprasEstoque>> findByIdCompras(
 			@PathVariable(name = "id") Long id,
 			@PageableDefault(size = 10, sort = {"estoque"}) Pageable pageable){
 		var compraEstoque = service.findById(id, pageable);
