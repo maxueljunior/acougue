@@ -1,0 +1,1 @@
+ALTER TABLE tb_cliente DROP COLUMN lucratividade;

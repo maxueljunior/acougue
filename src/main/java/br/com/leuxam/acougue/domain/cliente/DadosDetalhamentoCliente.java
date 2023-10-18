@@ -16,13 +16,15 @@ public record DadosDetalhamentoCliente(
 		Sexo sexo,
 		@JsonFormat(pattern = "dd/MM/yyyy")
 		LocalDate dataNascimento,
-		Endereco endereco,
-		BigDecimal lucratividade
+		Endereco endereco
+//		BigDecimal lucratividade
 		) {
 
 	public DadosDetalhamentoCliente(Cliente cliente) {
 		this(cliente.getId(), cliente.getNome(), cliente.getSobrenome(), cliente.getTelefone(),
-				cliente.getSexo(), cliente.getDataNascimento(), cliente.getEndereco(), cliente.getLucratividade());
+				cliente.getSexo(), cliente.getDataNascimento(),
+				cliente.getEndereco()
+				/*, cliente.getLucratividade()*/);
 	}
 
 }

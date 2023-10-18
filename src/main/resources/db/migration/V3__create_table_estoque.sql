@@ -1,4 +1,4 @@
-CREATE TABLE `tb_estoque` (
+CREATE TABLE IF NOT EXISTS `tb_estoque` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `data_compra` date DEFAULT NULL,
   `data_validade` date DEFAULT NULL,

@@ -1,11 +1,12 @@
 package br.com.leuxam.acougue.domain.cliente;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,12 +43,15 @@ public class Cliente {
 	@Embedded
 	private Endereco endereco;
 	
-	private BigDecimal lucratividade;
+//	private BigDecimal lucratividade;
 	
 	@Enumerated(EnumType.STRING)
 	private Sexo sexo;
 	
 	private Boolean ativo;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<ClienteEstoque> clientesEstoque;
 	
 	public Cliente(DadosCriarCliente dados) {
 		this.nome = dados.nome();
@@ -54,7 +59,7 @@ public class Cliente {
 		this.telefone = dados.telefone();
 		this.dataNascimento = dados.dataNascimento();
 		if(dados.endereco() != null) this.endereco = new Endereco(dados.endereco());
-		this.lucratividade = new BigDecimal("53.00");
+//		this.lucratividade = new BigDecimal("53.00");
 		this.sexo = dados.sexo();
 		this.ativo = true;
 	}

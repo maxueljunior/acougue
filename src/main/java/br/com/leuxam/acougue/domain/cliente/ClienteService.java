@@ -1,5 +1,8 @@
 package br.com.leuxam.acougue.domain.cliente;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,16 +10,26 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.AtivadoException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
+import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
 import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
 	
 	private ClienteRepository clienteRepository;
+	
+	private ClienteEstoqueRepository clienteEstoqueRepository;
+	
+	private EstoqueRepository estoqueRepository;
 
 	@Autowired
-	public ClienteService(ClienteRepository clienteRepository) {
+	public ClienteService(ClienteRepository clienteRepository,
+			ClienteEstoqueRepository clienteEstoqueRepository,
+			EstoqueRepository estoqueRepository) {
 		this.clienteRepository = clienteRepository;
+		this.clienteEstoqueRepository = clienteEstoqueRepository;
+		this.estoqueRepository = estoqueRepository;
 	}
 	
 	@Transactional
@@ -24,6 +37,10 @@ public class ClienteService {
 		
 		var cliente = new Cliente(dados);
 		clienteRepository.save(cliente);
+		
+		var listaId = estoqueRepository.findIdsAll();
+		
+		listaId.forEach(System.out::println);
 		
 		return new DadosDetalhamentoCliente(cliente);
 	}

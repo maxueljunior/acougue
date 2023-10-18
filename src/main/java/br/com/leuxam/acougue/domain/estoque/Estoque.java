@@ -3,6 +3,7 @@ package br.com.leuxam.acougue.domain.estoque;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
@@ -47,6 +48,9 @@ public class Estoque {
 	
 	@OneToMany(mappedBy = "estoque")
 	private List<ComprasEstoque> comprasEstoque;
+	
+	@OneToMany(mappedBy = "estoque")
+	private List<ClienteEstoque> clientesEstoque;
 	
 	public Estoque(DadosCriarEstoque dados) {
 		this.descricao = dados.descricao();
