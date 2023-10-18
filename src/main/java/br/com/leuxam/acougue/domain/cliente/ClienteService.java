@@ -1,7 +1,7 @@
 package br.com.leuxam.acougue.domain.cliente;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.AtivadoException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
 import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,12 @@ public class ClienteService {
 		
 		var listaId = estoqueRepository.findIdsAll();
 		
-		listaId.forEach(System.out::println);
+		listaId.forEach(x -> {
+			var estoque = estoqueRepository.getReferenceById(x.id());
+			var clienteEstoque = new ClienteEstoque(null, estoque, cliente,
+					new BigDecimal("53.00"), LocalDateTime.now());
+			clienteEstoqueRepository.save(clienteEstoque);
+		});
 		
 		return new DadosDetalhamentoCliente(cliente);
 	}

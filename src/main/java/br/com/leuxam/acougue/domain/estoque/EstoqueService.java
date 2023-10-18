@@ -1,28 +1,51 @@
 package br.com.leuxam.acougue.domain.estoque;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.ValidacaoException;
+import br.com.leuxam.acougue.domain.cliente.ClienteRepository;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 
 @Service
 public class EstoqueService {
 	
 	private EstoqueRepository estoqueRepository;
+	
+	private ClienteRepository clienteRepository;
+	
+	private ClienteEstoqueRepository clienteEstoqueRepository;
 
 	@Autowired
-	public EstoqueService(EstoqueRepository estoqueRepository) {
+	public EstoqueService(EstoqueRepository estoqueRepository,
+			ClienteRepository clienteRepository,
+			ClienteEstoqueRepository clienteEstoqueRepository) {
 		this.estoqueRepository = estoqueRepository;
+		this.clienteRepository = clienteRepository;
+		this.clienteEstoqueRepository = clienteEstoqueRepository;
 	}
 	
 	@Transactional
 	public DadosDetalhamentoEstoque create(DadosCriarEstoque dados) {
 		var estoque = new Estoque(dados);
 		estoqueRepository.save(estoque);
+		
+		var listaId = clienteRepository.findIdAlls();
+		
+		listaId.forEach(c -> {
+			var cliente = clienteRepository.getReferenceById(c.id());
+			var clienteEstoque = new ClienteEstoque(null, estoque, cliente,
+					new BigDecimal("53"), LocalDateTime.now());
+			clienteEstoqueRepository.save(clienteEstoque);
+		});
+		
 		return new DadosDetalhamentoEstoque(estoque);
 	}
 

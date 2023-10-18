@@ -1,5 +1,6 @@
 package br.com.leuxam.acougue.domain.cliente;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,5 +26,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 			Pageable pageable);
 
 	Optional<Cliente> findByIdAndAtivoTrue(Long id);
+	
+	@Query("""
+			SELECT new br.com.leuxam.acougue.domain.cliente.IdCliente(c.id)
+			FROM Cliente c
+			""")
+	List<IdCliente> findIdAlls();
 	
 }
