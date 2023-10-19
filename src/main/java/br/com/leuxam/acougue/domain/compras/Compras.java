@@ -1,6 +1,7 @@
 package br.com.leuxam.acougue.domain.compras;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
@@ -38,6 +39,8 @@ public class Compras {
 	
 	@OneToMany(mappedBy = "compras")
 	private List<ComprasEstoque> comprasEstoque;
+	
+	private LocalDateTime data;
 
 	/*
 	 * 

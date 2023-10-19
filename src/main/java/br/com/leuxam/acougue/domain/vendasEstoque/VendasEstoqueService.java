@@ -1,11 +1,17 @@
 package br.com.leuxam.acougue.domain.vendasEstoque;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.ExisteException;
+import br.com.leuxam.acougue.domain.compras.ComprasRepository;
+import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoqueRepository;
 import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import jakarta.transaction.Transactional;
@@ -19,12 +25,16 @@ public class VendasEstoqueService {
 	
 	private EstoqueRepository estoqueRepository;
 	
+	private ComprasRepository comprasRepository;
+	
 	@Autowired
 	public VendasEstoqueService(VendasEstoqueRepository vendasEstoqueRepository,
-			VendasRepository vendasRepository, EstoqueRepository estoqueRepository) {
+			VendasRepository vendasRepository, EstoqueRepository estoqueRepository,
+			ComprasRepository comprasRepository) {
 		this.vendasEstoqueRepository = vendasEstoqueRepository;
 		this.vendasRepository = vendasRepository;
 		this.estoqueRepository = estoqueRepository;
+		this.comprasRepository = comprasRepository;
 	}
 
 	@Transactional
@@ -43,6 +53,13 @@ public class VendasEstoqueService {
 		var vendasEstoque = new VendasEstoque(dados, vendas.get(), estoque.get());
 		vendasEstoqueRepository.save(vendasEstoque);
 		
+		var dataRecente = comprasRepository.searchDataRecente(estoque.get());
+		var precoRecente = comprasRepository.searchPrecoRecente(estoque.get(), dataRecente);
+		
+		var lucratividade = (dados.valorUnitario().divide(precoRecente,2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)
+				.multiply(new BigDecimal("100"));
+		
+		System.out.println(lucratividade);
 		return new DadosDetalhamentoVendaEstoque(vendasEstoque);
 	}
 

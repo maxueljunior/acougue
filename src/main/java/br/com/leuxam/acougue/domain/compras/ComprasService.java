@@ -1,6 +1,7 @@
 package br.com.leuxam.acougue.domain.compras;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class ComprasService {
 		
 		var fornecedor = fornecedorRepository.getReferenceById(dados.idFornecedor());
 		
-		var compras = new Compras(null, fornecedor, new BigDecimal("0.0"), null);
+		var compras = new Compras(null, fornecedor, new BigDecimal("0.0"), null, LocalDateTime.now());
 		comprasRepository.save(compras);
 		return new DadosDetalhamentoCompras(compras);
 	}
