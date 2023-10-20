@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.ExisteException;
+import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoqueRepository;
 import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
@@ -27,14 +28,17 @@ public class VendasEstoqueService {
 	
 	private ComprasRepository comprasRepository;
 	
+	private ClienteEstoqueRepository clienteEstoqueRepository;
+	
 	@Autowired
 	public VendasEstoqueService(VendasEstoqueRepository vendasEstoqueRepository,
 			VendasRepository vendasRepository, EstoqueRepository estoqueRepository,
-			ComprasRepository comprasRepository) {
+			ComprasRepository comprasRepository, ClienteEstoqueRepository clienteEstoqueRepository) {
 		this.vendasEstoqueRepository = vendasEstoqueRepository;
 		this.vendasRepository = vendasRepository;
 		this.estoqueRepository = estoqueRepository;
 		this.comprasRepository = comprasRepository;
+		this.clienteEstoqueRepository = clienteEstoqueRepository;
 	}
 
 	@Transactional
@@ -59,7 +63,11 @@ public class VendasEstoqueService {
 		var lucratividade = (dados.valorUnitario().divide(precoRecente,2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)
 				.multiply(new BigDecimal("100"));
 		
-		System.out.println(lucratividade);
+		var clienteLucratividade = clienteEstoqueRepository.findByClienteAndEstoque(
+				vendas.get().getCliente(), estoque.get());
+		
+		clienteLucratividade.atualizar(lucratividade);
+		
 		return new DadosDetalhamentoVendaEstoque(vendasEstoque);
 	}
 

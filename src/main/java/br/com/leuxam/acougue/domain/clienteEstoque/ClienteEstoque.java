@@ -41,4 +41,9 @@ public class ClienteEstoque {
 	
 	@JoinColumn(name = "data_atualizado")
 	private LocalDateTime dataAtualizado;
+
+	public void atualizar(BigDecimal lucratividade) {
+		this.lucratividade = lucratividade;
+		this.dataAtualizado = LocalDateTime.now();
+	}
 }
