@@ -1,6 +1,8 @@
 package br.com.leuxam.acougue.domain.clienteEstoque;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,5 +15,8 @@ public class ClienteEstoqueService {
 		this.clienteEstoqueRepository = clienteEstoqueRepository;
 	}
 
-	
+	public Page<ResumoLucratividade> resumoLucratividade(Pageable pageable){
+		var resumo = clienteEstoqueRepository.gerarResumoLucratividade(pageable);
+		return resumo.map(ResumoLucratividade::new);
+	}
 }

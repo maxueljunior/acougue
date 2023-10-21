@@ -4,4 +4,7 @@ public record ResumoLucratividade(
 		String descricao,
 		Double total) {
 	
+	public ResumoLucratividade(ResumoLucratividade r) {
+		this(r.descricao, r.total);
+	}
 }

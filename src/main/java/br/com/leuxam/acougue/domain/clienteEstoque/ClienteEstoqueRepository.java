@@ -1,7 +1,7 @@
 package br.com.leuxam.acougue.domain.clienteEstoque;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +21,5 @@ public interface ClienteEstoqueRepository extends JpaRepository<ClienteEstoque, 
 			WHERE ce.estoque = e
 			GROUP BY e.descricao
 			""")
-	List<ResumoLucratividade> gerarResumoLucratividade();
+	Page<ResumoLucratividade> gerarResumoLucratividade(Pageable pageable);
 }
