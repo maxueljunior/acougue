@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
+import br.com.leuxam.acougue.domain.estoqueData.EstoqueData;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import jakarta.persistence.Entity;
@@ -32,13 +33,13 @@ public class Estoque {
 	private Long id;
 	
 	private String descricao;
-	private Double quantidade;
+//	private Double quantidade;
 	
-	@JoinColumn(name = "data_compra")
-	private LocalDate dataCompra;
-	
-	@JoinColumn(name = "data_validade")
-	private LocalDate dataValidade;
+//	@JoinColumn(name = "data_compra")
+//	private LocalDate dataCompra;
+//	
+//	@JoinColumn(name = "data_validade")
+//	private LocalDate dataValidade;
 	
 	@Enumerated(EnumType.STRING)
 	private Unidade unidade;
@@ -52,34 +53,37 @@ public class Estoque {
 	@OneToMany(mappedBy = "estoque")
 	private List<ClienteEstoque> clientesEstoque;
 	
+	@OneToMany(mappedBy = "estoque")
+	private List<EstoqueData> estoqueData;
+	
 	public Estoque(DadosCriarEstoque dados) {
 		this.descricao = dados.descricao();
 		this.unidade = dados.unidade();
-		this.quantidade = 0.0;
-		if (dados.quantidade() != null) this.quantidade = dados.quantidade();
-		this.dataCompra = LocalDate.of(1900, 1, 1);
-		this.dataValidade = LocalDate.of(1900, 1, 1);
+//		this.quantidade = 0.0;
+//		if (dados.quantidade() != null) this.quantidade = dados.quantidade();
+//		this.dataCompra = LocalDate.of(1900, 1, 1);
+//		this.dataValidade = LocalDate.of(1900, 1, 1);
 	}
 
 	public void atualizar(DadosAtualizarEstoque dados) {
 		if(dados.descricao() != null) this.descricao = dados.descricao();
 	}
 
-	public void atualizarQuantidadeEstoque(Double quantidade) {
-		this.quantidade += quantidade;
-		this.dataCompra = LocalDate.now();
-		this.dataValidade = LocalDate.now().plusMonths(1);
-	}
-
-	public void atualizarQuantidadeEstoque(ComprasEstoque comprasEstoque) {
-		this.quantidade -= comprasEstoque.getQuantidade();
-	}
-
-	public void atualizar(DadosCriarVendaEstoque dados) {
-		this.quantidade -= dados.quantidade();
-	}
-
-	public void atualizar(VendasEstoque vendasEstoque) {
-		this.quantidade += vendasEstoque.getQuantidade();
-	}
+//	public void atualizarQuantidadeEstoque(Double quantidade) {
+//		this.quantidade += quantidade;
+//		this.dataCompra = LocalDate.now();
+//		this.dataValidade = LocalDate.now().plusMonths(1);
+//	}
+//
+//	public void atualizarQuantidadeEstoque(ComprasEstoque comprasEstoque) {
+//		this.quantidade -= comprasEstoque.getQuantidade();
+//	}
+//
+//	public void atualizar(DadosCriarVendaEstoque dados) {
+//		this.quantidade -= dados.quantidade();
+//	}
+//
+//	public void atualizar(VendasEstoque vendasEstoque) {
+//		this.quantidade += vendasEstoque.getQuantidade();
+//	}
 }

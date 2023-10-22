@@ -1,7 +1,6 @@
 package br.com.leuxam.acougue.domain.vendasEstoque;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Service;
 import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
-import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoqueRepository;
 import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
+import br.com.leuxam.acougue.domain.estoqueData.EstoqueDataRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import jakarta.transaction.Transactional;
 
@@ -30,15 +29,19 @@ public class VendasEstoqueService {
 	
 	private ClienteEstoqueRepository clienteEstoqueRepository;
 	
+	private EstoqueDataRepository estoqueDataRepository;
+	
 	@Autowired
 	public VendasEstoqueService(VendasEstoqueRepository vendasEstoqueRepository,
 			VendasRepository vendasRepository, EstoqueRepository estoqueRepository,
-			ComprasRepository comprasRepository, ClienteEstoqueRepository clienteEstoqueRepository) {
+			ComprasRepository comprasRepository, ClienteEstoqueRepository clienteEstoqueRepository,
+			EstoqueDataRepository estoqueDataRepository) {
 		this.vendasEstoqueRepository = vendasEstoqueRepository;
 		this.vendasRepository = vendasRepository;
 		this.estoqueRepository = estoqueRepository;
 		this.comprasRepository = comprasRepository;
 		this.clienteEstoqueRepository = clienteEstoqueRepository;
+		this.estoqueDataRepository = estoqueDataRepository;
 	}
 
 	@Transactional
@@ -50,9 +53,16 @@ public class VendasEstoqueService {
 		
 		var vendas = vendasRepository.findById(dados.idVendas());
 		var estoque = estoqueRepository.findById(dados.idEstoque());
+		var estoqueData = estoqueDataRepository.findByEstoqueAndDataCompra(estoque.get(), dados.dataEstoque());
+		
+		if(!estoqueData.isPresent()) throw new ExisteException("O item " + dados.idEstoque() + " na data " + dados.dataEstoque() + " não existe");
+		
+		estoqueData.get().atualizarQuantidade(dados.quantidade());
+		
+		if(estoqueData.get().getQuantidade() <= 0) estoqueDataRepository.delete(estoqueData.get());
 		
 		vendas.get().atualizar(dados);
-		estoque.get().atualizar(dados);
+//		estoque.get().atualizar(dados);
 		
 		var vendasEstoque = new VendasEstoque(dados, vendas.get(), estoque.get());
 		vendasEstoqueRepository.save(vendasEstoque);
@@ -98,7 +108,7 @@ public class VendasEstoqueService {
 		if(!vendaEstoque.isPresent()) throw new ExisteException("A venda nº " + idVendas + " não contem o produto nº " + idEstoque);
 		
 		vendas.get().atualizar(vendaEstoque.get());
-		estoque.get().atualizar(vendaEstoque.get());
+//		estoque.get().atualizar(vendaEstoque.get());
 		
 		vendasEstoqueRepository.delete(vendaEstoque.get());
 	}
