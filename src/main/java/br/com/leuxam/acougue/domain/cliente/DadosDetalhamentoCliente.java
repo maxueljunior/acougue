@@ -23,8 +23,7 @@ public record DadosDetalhamentoCliente(
 	public DadosDetalhamentoCliente(Cliente cliente) {
 		this(cliente.getId(), cliente.getNome(), cliente.getSobrenome(), cliente.getTelefone(),
 				cliente.getSexo(), cliente.getDataNascimento(),
-				cliente.getEndereco()
-				/*, cliente.getLucratividade()*/);
+				cliente.getEndereco());
 	}
 
 }

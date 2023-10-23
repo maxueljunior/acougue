@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.leuxam.acougue.domain.cliente.Cliente;
+import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import jakarta.persistence.Entity;

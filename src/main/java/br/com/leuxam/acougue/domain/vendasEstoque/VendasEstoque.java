@@ -46,4 +46,9 @@ public class VendasEstoque {
 		this.valorUnitario = dados.valorUnitario();
 		this.quantidade = dados.quantidade();
 	}
+
+	public void atualizar(DadosAtualizarVendaEstoque dados) {
+		if(dados.quantidade() != null) this.quantidade = dados.quantidade();
+		if(dados.valorUnitario() != null) this.valorUnitario = dados.valorUnitario();
+	}
 }

@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosDetalhamentoVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoqueService;
@@ -57,6 +59,15 @@ public class VendasEstoqueController {
 			@PathVariable(name = "idEstoque") Long idEstoque) {
 		service.delete(idVendas, idEstoque);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/{idVendas}/{idEstoque}")
+	public ResponseEntity<DadosDetalhamentoVendaEstoque> update(
+			@PathVariable(name = "idVendas") Long idVendas,
+			@PathVariable(name = "idEstoque") Long idEstoque,
+			@RequestBody @Valid DadosAtualizarVendaEstoque dados){
+		var vendaEstoque = service.update(idVendas, idEstoque, dados);
+		return ResponseEntity.ok().body(vendaEstoque);
 	}
 }
 

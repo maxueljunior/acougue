@@ -43,6 +43,11 @@ public class EstoqueData {
 		this.quantidade -= quantidade;
 	}
 
+	public void atualizarQuantidade(Double quantidade, Double quantidadeAntiga) {
+		var valorTotal = this.quantidade + quantidadeAntiga;
+		this.quantidade = valorTotal - quantidade;
+	}
+
 }
 
 

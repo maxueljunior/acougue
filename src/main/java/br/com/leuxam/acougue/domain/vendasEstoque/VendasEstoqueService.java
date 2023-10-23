@@ -112,6 +112,45 @@ public class VendasEstoqueService {
 		
 		vendasEstoqueRepository.delete(vendaEstoque.get());
 	}
+	
+	@Transactional
+	public DadosDetalhamentoVendaEstoque update(Long idVendas, Long idEstoque,
+			DadosAtualizarVendaEstoque dados) {
+		if(!vendasRepository.existsById(idVendas)) throw new ExisteException("A venda nº " + idVendas + " não existe");
+		
+		if(!estoqueRepository.existsById(idEstoque)) throw new ExisteException("O item nº " + idEstoque + " não existe");
+		
+		var vendas = vendasRepository.findById(idVendas);
+		var estoque = estoqueRepository.findById(idEstoque);
+		
+		var vendaEstoque = vendasEstoqueRepository.findByVendasAndEstoque(vendas.get(), estoque.get());
+		
+		var quantidadeAntiga = vendaEstoque.get().getQuantidade();
+		
+		vendaEstoque.get().atualizar(dados);
+		
+		var estoqueData = estoqueDataRepository.findByEstoqueAndDataCompra(estoque.get(), dados.dataEstoque());
+		if(!estoqueData.isPresent()) throw new ExisteException("O item " + idEstoque + " na data " + dados.dataEstoque() + " não existe");
+		
+		estoqueData.get().atualizarQuantidade(dados.quantidade(), quantidadeAntiga);
+		
+		if(estoqueData.get().getQuantidade() <= 0) estoqueDataRepository.delete(estoqueData.get());
+		
+		vendas.get().atualizar(vendaEstoque.get());
+		
+		var dataRecente = comprasRepository.searchDataRecente(estoque.get());
+		var precoRecente = comprasRepository.searchPrecoRecente(estoque.get(), dataRecente);
+		
+		var lucratividade = (dados.valorUnitario().divide(precoRecente,2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)
+				.multiply(new BigDecimal("100"));
+		
+		var clienteLucratividade = clienteEstoqueRepository.findByClienteAndEstoque(
+				vendas.get().getCliente(), estoque.get());
+		
+		clienteLucratividade.atualizar(lucratividade);
+		
+		return new DadosDetalhamentoVendaEstoque(vendaEstoque.get());
+	}
 }
 
 

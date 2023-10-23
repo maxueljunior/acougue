@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.RepresentationModel;
 
 import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.acougue.domain.AtivadoException;
@@ -63,6 +64,8 @@ public class ClienteService {
 		var cliente = clienteRepository.findByIdAndAtivoTrue(id);
 		
 		if(!cliente.isPresent()) throw new ValidacaoException("Cliente não existe ou está desativado");
+		
+//		linkTo(Cliente.class).slash(cliente.get().getId()).withSelfRel();
 		
 		return new DadosDetalhamentoCliente(cliente.get());
 	}
