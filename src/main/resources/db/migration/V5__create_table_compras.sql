@@ -3,6 +3,9 @@ CREATE TABLE IF NOT EXISTS `tb_compras` (
   `valor_total` decimal(38,2) DEFAULT NULL,
   `fornecedor_id` bigint DEFAULT NULL,
   `data` datetime(6) DEFAULT NULL,
+  `dat` BLOB DEFAULT NULL,
+  `file_name` VARCHAR(255) DEFAULT NULL,
+  `file_type` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK7tynx64nk4k4ilihswgyfdlt5` (`fornecedor_id`),
   CONSTRAINT `FK7tynx64nk4k4ilihswgyfdlt5` FOREIGN KEY (`fornecedor_id`) REFERENCES `tb_fornecedor` (`id`)

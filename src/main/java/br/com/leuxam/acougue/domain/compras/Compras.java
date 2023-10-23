@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -41,14 +42,31 @@ public class Compras {
 	private List<ComprasEstoque> comprasEstoque;
 	
 	private LocalDateTime data;
-
-	/*
-	 * 
-	 * Aqui ficara faltando a parte de download e upload de Pdf's para deixarem eles
-	 * salvos e conseguir consulta-lós através do Id
-	 * 
-	 * 
-	 */
+	
+	@Lob
+	private byte[] dat;
+	
+	@JoinColumn(name = "file_name")
+	private String fileName;
+	
+	@JoinColumn(name = "file_type")
+	private String fileType;
+	
+	public Compras(Long id, Fornecedor fornecedor, BigDecimal valorTotal, List<ComprasEstoque> comprasEstoque,
+			LocalDateTime data) {
+		this.id = id;
+		this.fornecedor = fornecedor;
+		this.valorTotal = valorTotal;
+		this.comprasEstoque = comprasEstoque;
+		this.data = data;
+	}
+	
+	public Compras(Long id, byte[] dat, String fileName, String fileType) {
+		this.id = id;
+		this.dat = dat;
+		this.fileName = fileName;
+		this.fileType = fileType;
+	}
 
 	public void atualizar(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
