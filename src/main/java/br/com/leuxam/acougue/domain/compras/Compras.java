@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosCompras;
 import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoque;
 import br.com.leuxam.acougue.domain.comprasEstoque.DadosCriarComprasEstoque;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
@@ -13,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -41,32 +41,28 @@ public class Compras {
 	@OneToMany(mappedBy = "compras")
 	private List<ComprasEstoque> comprasEstoque;
 	
+	@OneToMany(mappedBy = "compras")
+	private List<ArquivosCompras> arquivosCompras;
+	
 	private LocalDateTime data;
 	
-	@Lob
-	private byte[] dat;
+//	@Lob
+//	private byte[] dat;
+//	
+//	@JoinColumn(name = "file_name")
+//	private String fileName;
+//	
+//	@JoinColumn(name = "file_type")
+//	private String fileType;
 	
-	@JoinColumn(name = "file_name")
-	private String fileName;
-	
-	@JoinColumn(name = "file_type")
-	private String fileType;
-	
-	public Compras(Long id, Fornecedor fornecedor, BigDecimal valorTotal, List<ComprasEstoque> comprasEstoque,
-			LocalDateTime data) {
-		this.id = id;
-		this.fornecedor = fornecedor;
-		this.valorTotal = valorTotal;
-		this.comprasEstoque = comprasEstoque;
-		this.data = data;
-	}
-	
-	public Compras(Long id, byte[] dat, String fileName, String fileType) {
-		this.id = id;
-		this.dat = dat;
-		this.fileName = fileName;
-		this.fileType = fileType;
-	}
+//	public Compras(Long id, Fornecedor fornecedor, BigDecimal valorTotal, List<ComprasEstoque> comprasEstoque,
+//			LocalDateTime data) {
+//		this.id = id;
+//		this.fornecedor = fornecedor;
+//		this.valorTotal = valorTotal;
+//		this.comprasEstoque = comprasEstoque;
+//		this.data = data;
+//	}
 
 	public void atualizar(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;

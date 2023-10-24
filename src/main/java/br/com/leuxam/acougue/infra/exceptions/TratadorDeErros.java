@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.com.leuxam.acougue.domain.AtivadoException;
 import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
+import br.com.leuxam.acougue.domain.arquivosCompras.FileException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
@@ -21,8 +22,8 @@ public class TratadorDeErros {
 		return ResponseEntity.badRequest().body(errors);
 	}
 	
-	@ExceptionHandler(ValidacaoException.class)
-	public ResponseEntity ErroBuscaPorId404(ValidacaoException ex) {
+	@ExceptionHandler({ValidacaoException.class, FileException.class})
+	public ResponseEntity ErroBuscaPorId404(RuntimeException ex) {
 		return ResponseEntity.notFound().build();
 	}
 	
