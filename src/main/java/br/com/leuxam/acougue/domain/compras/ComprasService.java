@@ -108,39 +108,4 @@ public class ComprasService {
 	 * Aqui da para fazer alguma coisa relacionada com o estado da aplicação, como
 	 * por exemplo: Em cotação, Efetuado pagamento, Finalizada, Cancelada!
 	 */
-
-//	public Compras saveAttachment(MultipartFile file) throws Exception{
-//		
-//		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//		try {
-//			if(fileName.contains("..")) {
-//				throw new Exception("Filename contains invalid path sequence... " + fileName);
-//			}
-//			if(file.getBytes().length > (1024*1024)) {
-//				throw new Exception("File size exceeds maxium limit");
-//			}
-//			
-//			Compras attachment = new Compras(null, null, null, null, null, file.getBytes(), fileName, file.getContentType());
-//			return comprasRepository.save(attachment);
-//		} catch (MaxUploadSizeExceededException e) {
-//            throw new MaxUploadSizeExceededException(file.getSize());
-//        } catch (Exception e) {
-//            throw new Exception("Could not save File: " + fileName);
-//        }
-//	}
-//	
-//	public void saveFiles(MultipartFile[] files) {
-//		Arrays.asList(files).forEach(file -> {
-//			try {
-//				saveAttachment(file);
-//			}catch (Exception e) {
-//				throw new RuntimeException(e);
-//			}
-//		});
-//	}
-//	
-//	public Compras findByIdFile(Long id) {
-//		return comprasRepository.findById(id).get();
-//	}
-
 }

@@ -1,5 +1,8 @@
 package br.com.leuxam.acougue.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.itextpdf.text.DocumentException;
 
 import br.com.leuxam.acougue.domain.compras.DadosCriarVendas;
 import br.com.leuxam.acougue.domain.vendas.DadosAtualizarVenda;
@@ -51,5 +56,16 @@ public class VendasController {
 			@RequestBody DadosAtualizarVenda dados){
 		var venda = service.update(id, dados);
 		return ResponseEntity.ok().body(venda);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<byte[]> gerarPdf(
+			@PathVariable(name = "id") Long id) throws FileNotFoundException, DocumentException{
+		var output = service.gerarPdf(id);
+		return ResponseEntity
+				.ok()
+				.header("Content-Disposition",
+						"attachment;filename=result.pdf")
+				.body(output.toByteArray());
 	}
 }
