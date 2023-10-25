@@ -1,5 +1,6 @@
 package br.com.leuxam.acougue.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.leuxam.acougue.domain.compras.ComprasService;
+import br.com.leuxam.acougue.domain.compras.ComprasDTO;
 import br.com.leuxam.acougue.domain.compras.DadosAtualizarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosCriarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosDetalhamentoCompras;
@@ -44,7 +46,7 @@ public class ComprasController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<DadosDetalhamentoCompras> findById(
+	public ResponseEntity<ComprasDTO> findById(
 			@PathVariable(name = "id") Long id){
 		var compra = service.findById(id);
 		return ResponseEntity.ok().body(compra);

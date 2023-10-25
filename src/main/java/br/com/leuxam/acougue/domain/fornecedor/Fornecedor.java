@@ -1,5 +1,7 @@
 package br.com.leuxam.acougue.domain.fornecedor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +33,7 @@ public class Fornecedor {
 	@JoinColumn(name = "nome_contato")
 	private String nomeContato;
 	
+	@JsonIgnore
 	private Boolean ativo;
 	
 	public Fornecedor(DadosCriarFornecedor dados) {

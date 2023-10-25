@@ -32,7 +32,7 @@ public class Compras {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	private Fornecedor fornecedor;
 
 	@JoinColumn(name = "valor_total")
