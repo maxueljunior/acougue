@@ -1,10 +1,10 @@
 package br.com.leuxam.acougue.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.leuxam.acougue.domain.compras.ComprasService;
 import br.com.leuxam.acougue.domain.compras.ComprasDTO;
+import br.com.leuxam.acougue.domain.compras.ComprasService;
 import br.com.leuxam.acougue.domain.compras.DadosAtualizarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosCriarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosDetalhamentoCompras;
@@ -39,7 +39,7 @@ public class ComprasController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Page<DadosDetalhamentoCompras>> findAll(
+	public ResponseEntity<PagedModel<EntityModel<ComprasDTO>>> findAll(
 			@PageableDefault(size = 5, sort = {"fornecedor"}) Pageable pageable){
 		var compras = service.findAll(pageable);
 		return ResponseEntity.ok().body(compras);
@@ -59,42 +59,6 @@ public class ComprasController {
 		var compra = service.update(id, dados);
 		return ResponseEntity.ok().body(compra);
 	}
-	
-//	@PostMapping("/upload-one")
-//	public ResponseEntity<DadosArquivoCompras> uploadFile(
-//			@RequestParam("file") MultipartFile file) throws Exception{
-//		Compras compras = null;
-//		String downloadUrl = "";
-//		
-//		compras = service.saveAttachment(file);
-//		downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(compras.getId().toString()).toUriString();
-//		return ResponseEntity.ok().body(new DadosArquivoCompras(compras.getFileName(), downloadUrl, file.getContentType(), file.getSize()));
-//	}
-//	
-//	@PostMapping("/upload-multiple")
-//	public ResponseEntity<List<DadosArquivoCompras>> uploadMultipleFiles(
-//			@RequestParam("files") MultipartFile[] files) throws Exception{
-//		List<DadosArquivoCompras> responseList = new ArrayList<>();
-//		for (MultipartFile file : files) {
-//			Compras compras = null;
-//			String downloadUrl = "";
-//			
-//			compras = service.saveAttachment(file);
-//			downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(compras.getId().toString()).toUriString();
-//			responseList.add(new DadosArquivoCompras(compras.getFileName(), downloadUrl, file.getContentType(), file.getSize()));
-//		}
-//		return ResponseEntity.ok().body(responseList);
-//	}
-//	
-//	@GetMapping("/download/{id}")
-//	public ResponseEntity<byte[]> downloadArquivo(
-//			@PathVariable(name = "id") Long id){
-//		Compras file = service.findByIdFile(id);
-//		return ResponseEntity.ok()
-//                .header("Content-Disposition", "attachment; filename=" + file.getFileName())
-//                .body(file.getDat());
-//	}
-	
 }
 
 

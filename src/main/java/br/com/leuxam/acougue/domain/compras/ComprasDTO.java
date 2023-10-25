@@ -2,12 +2,15 @@ package br.com.leuxam.acougue.domain.compras;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosCompras;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
 
 public class ComprasDTO extends RepresentationModel<ComprasDTO>{
@@ -20,13 +23,26 @@ public class ComprasDTO extends RepresentationModel<ComprasDTO>{
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime data;
 	
+	@JsonIgnore
+	private List<ArquivosCompras> arquivosCompras;
+	
 	public ComprasDTO() {}
 	
-	public ComprasDTO(Long id, BigDecimal valorTotal, Fornecedor fornecedor, LocalDateTime data) {
+	public ComprasDTO(Long id, BigDecimal valorTotal, Fornecedor fornecedor, LocalDateTime data,
+			List<ArquivosCompras> arquivosCompras) {
 		this.id = id;
 		this.valorTotal = valorTotal;
 		this.fornecedor = fornecedor;
 		this.data = data;
+		this.arquivosCompras = arquivosCompras;
+	}
+
+	public List<ArquivosCompras> getArquivosCompras() {
+		return arquivosCompras;
+	}
+
+	public void setArquivosCompras(List<ArquivosCompras> arquivosCompras) {
+		this.arquivosCompras = arquivosCompras;
 	}
 
 	public Long getId() {
