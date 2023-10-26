@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class VendasDTO extends RepresentationModel<VendasDTO>{
 	
@@ -18,6 +19,7 @@ public class VendasDTO extends RepresentationModel<VendasDTO>{
 	private BigDecimal valorTotal;
 	private Long idCliente;
 	
+	@JsonIgnore
 	private String fileName;
 	
 	public VendasDTO() {}
