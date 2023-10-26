@@ -1,5 +1,6 @@
 package br.com.leuxam.acougue.domain.vendas;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -19,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -49,6 +51,12 @@ public class Vendas {
 	@Enumerated(EnumType.STRING)
 	private CondicaoPagamento condicaoPagamento;
 	
+	@Lob
+	private byte[] data;
+	
+	@JoinColumn(name = "file_name")
+	private String fileName;
+	
 	@OneToMany(mappedBy = "vendas")
 	private List<VendasEstoque> vendasEstoque;
 	
@@ -72,6 +80,11 @@ public class Vendas {
 	public void atualizar(VendasEstoque vendaEstoque) {
 		var valorTotal = this.valorTotal.subtract(vendaEstoque.getValorUnitario().multiply(BigDecimal.valueOf(vendaEstoque.getQuantidade())));
 		this.valorTotal = valorTotal;
+	}
+
+	public void arquivarPdf(ByteArrayOutputStream outputStream, String tituloArquivo) {
+		this.data = outputStream.toByteArray();
+		this.fileName = tituloArquivo;
 	}
 
 }

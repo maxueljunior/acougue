@@ -1,7 +1,16 @@
 package br.com.leuxam.acougue.domain.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -18,12 +27,13 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import br.com.leuxam.acougue.domain.vendas.Vendas;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 
 public class Utils {
 	
 	public static ByteArrayOutputStream GeradorDePdf(List<VendasEstoque> vendasEstoque,
-			Long id) throws DocumentException {
+			Vendas vendas) throws DocumentException{
 		Document document = new Document(PageSize.A5);
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -48,21 +58,26 @@ public class Utils {
 
         Paragraph info = new Paragraph();
         info.setFont(textFont);
-        info.add("NOME DA RAZÃO SOCIAL COM DE INFORMATIC LTDA\n");
+//        info.add("NOME DA RAZÃO SOCIAL COM DE INFORMATIC LTDA\n");
+        info.add("CNPJ:11.111.111/0001-11\n");
         info.add("Rua dos Equipamentos, 9 - Sobreloja 101 e 102\n");
         info.add("Centro - 20000-000 - Rio de Janeiro/RJ\n");
         info.add("(21) 1111-2222 / 3344-5566\n");
-        info.add("CNPJ:11.111.111/0001-11                                    IE:11.222.333\n");
+//        info.add("CNPJ:11.111.111/0001-11                                    IE:11.222.333\n");
         info.setAlignment(Element.ALIGN_CENTER);
         
         document.add(info);
-
-        Paragraph clientInfo = new Paragraph("CLIENTE: CONSUMIDOR FINAL", textFont);
+        
+        var nomeCliente = vendas.getCliente().getNome() + " " + vendas.getCliente().getSobrenome();
+        Paragraph clientInfo = new Paragraph("CLIENTE: " + nomeCliente, textFont);
         clientInfo.setAlignment(Element.ALIGN_LEFT);
         document.add(clientInfo);
         
-        Paragraph hourInfo = new Paragraph("01/04/2023 10:15                                               Nº 000001", textFont);
-        hourInfo.setAlignment(Element.ALIGN_CENTER);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        var data = formatter.format(vendas.getDataVenda());
+        var vendaFormatada = StringUtils.leftPad(vendas.getId().toString(), 6, "0");
+        Paragraph hourInfo = new Paragraph(data + "                                               Nº " + vendaFormatada, textFont);
+        hourInfo.setAlignment(Element.ALIGN_LEFT);
         document.add(hourInfo);
 
         PdfPTable table = new PdfPTable(3);
@@ -85,25 +100,35 @@ public class Utils {
         
         table2.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         
-        for (int i = 0; i < 2; i++) {
-        	table2.addCell(new Phrase("00001", smallTextFont));
-        	table2.addCell(new Phrase("NOME DE ALGUM ITEM AQUI",smallTextFont));
-        	table2.addCell(new Phrase("250,00", smallTextFont));
+        vendasEstoque.forEach(ve -> {
+        	var codigo = ve.getEstoque().getId();
+        	var descricao = ve.getEstoque().getDescricao();
+        	var quantidade = ve.getQuantidade();
+        	var precoUnitario = ve.getValorUnitario();
+        	var valorTotal = precoUnitario.multiply(new BigDecimal(quantidade)).setScale(2, RoundingMode.HALF_EVEN);
+        	
+        	String codigoFormatado = StringUtils.leftPad(codigo.toString(), 6, "0");
 
+        	table2.addCell(new Phrase(codigoFormatado, smallTextFont));
+        	table2.addCell(new Phrase(descricao.toUpperCase(),smallTextFont));
+        	table2.addCell(new Phrase(valorTotal.toString(), smallTextFont));
+        	
+        	String quantidadeFormatada = StringUtils.rightPad(quantidade.toString(), 4, "0");
         	table2.addCell(" ");
-        	table2.addCell(new Phrase("01 x 100,00", smallTextFont));
+        	table2.addCell(new Phrase(quantidadeFormatada + " KG x R$ " + precoUnitario, smallTextFont));
         	table2.addCell(" ");
-        }
+        });
         
         document.add(espace);
         document.add(table2);
         document.add(espace);
         
-		
+		var totalVenda = vendas.getValorTotal().setScale(2, RoundingMode.HALF_EVEN);
+		var condicao = vendas.getCondicaoPagamento().toString();
         Paragraph total = new Paragraph();
         total.setFont(textFont);
-        total.add("Valor Total da Nota R$                                           250,00\n\n");
-        total.add("FORMA DE PGTO.: Á VISTA");
+        total.add("Valor Total da Nota R$                                           " + totalVenda + "\n\n");
+        total.add("FORMA DE PGTO.: " + condicao);
         document.add(total);
         document.add(new Paragraph("\n"));
         
@@ -118,9 +143,9 @@ public class Utils {
         table3.addCell(new Phrase("R$ VALOR", textHeaderFont));
         table3.addCell(new Phrase("TIPO PGTO", textHeaderFont));
         
-        table3.addCell(new Phrase("01/04/2023", textFont));
-        table3.addCell(new Phrase("R$ 250,00", textFont));
-        table3.addCell(new Phrase("PIX", textFont));
+        table3.addCell(new Phrase(data, textFont));
+        table3.addCell(new Phrase("R$ " + totalVenda, textFont));
+        table3.addCell(new Phrase(condicao, textFont));
         
         document.add(table3);
         document.add(espace);
@@ -135,6 +160,8 @@ public class Utils {
         
         document.add(infoFinal);
         document.close();
+        
+        
         
 		return outputStream;
 	}

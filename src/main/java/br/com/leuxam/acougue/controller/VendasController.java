@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -50,6 +52,13 @@ public class VendasController {
 		return ResponseEntity.ok().body(vendas);
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<DadosDetalhamentoVendas> findById(
+			@PathVariable(name = "id") Long id){
+		var vendas = service.findById(id);
+		return ResponseEntity.ok().body(vendas);
+	}
+	
 	@PatchMapping("/{id}")
 	public ResponseEntity<DadosDetalhamentoVendas> update(
 			@PathVariable(name = "id") Long id,
@@ -58,14 +67,25 @@ public class VendasController {
 		return ResponseEntity.ok().body(venda);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<byte[]> gerarPdf(
+	@GetMapping("/gerar-cupom/{id}")
+	public ResponseEntity<Resource> gerarPdf(
 			@PathVariable(name = "id") Long id) throws FileNotFoundException, DocumentException{
 		var output = service.gerarPdf(id);
+		ByteArrayResource resource = new ByteArrayResource(output.toByteArray());
 		return ResponseEntity
 				.ok()
 				.header("Content-Disposition",
-						"attachment;filename=result.pdf")
-				.body(output.toByteArray());
+						"attachment;filename=venda "+ id +".pdf")
+				.body(resource);
+	}
+	
+	@GetMapping("/download/{id}")
+	public ResponseEntity<Resource> downloadPdf(
+			@PathVariable(name = "id") Long id){
+		var vendas = service.findByIdAndArchive(id);
+		ByteArrayResource resource = new ByteArrayResource(vendas.getData());
+		return ResponseEntity.ok()
+				.header("Content-Disposition", "attachment;filename="+vendas.getFileName())
+				.body(resource);
 	}
 }
