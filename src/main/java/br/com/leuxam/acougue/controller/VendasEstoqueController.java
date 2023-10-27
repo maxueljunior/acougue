@@ -19,15 +19,31 @@ import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosDetalhamentoVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoqueService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/itens/vendas")
+@Tag(name = "Inserção de Produtos na Venda", description = "Inserção de Produtos na Venda")
 public class VendasEstoqueController {
 	
 	@Autowired
 	private VendasEstoqueService service;
 	
+	@Operation(summary = "Alocar um produto na venda")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoVendaEstoque.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "400", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PostMapping
 	public ResponseEntity<DadosDetalhamentoVendaEstoque> save(
 			@RequestBody @Valid DadosCriarVendaEstoque dados,
@@ -38,6 +54,13 @@ public class VendasEstoqueController {
 		return ResponseEntity.created(uri).body(vendaEstoque);
 	}
 	
+	@Operation(summary = "Recuperar todos os produtos alocados em vendas")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoVendaEstoque.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<Page<DadosDetalhamentoVendaEstoque>> findAll(
 			@PageableDefault(size = 10, sort = {"id"}) Pageable pageable){
@@ -45,6 +68,14 @@ public class VendasEstoqueController {
 		return ResponseEntity.ok().body(vendasEstoque);
 	}
 	
+	@Operation(summary = "Recuperar todos os produtos alocados em uma venda")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoVendaEstoque.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<Page<DadosDetalhamentoVendaEstoque>> findByIdVendas(
 			@PathVariable(name = "id") Long id,
@@ -53,6 +84,13 @@ public class VendasEstoqueController {
 		return ResponseEntity.ok().body(vendaEstoque);
 	}
 	
+	@Operation(summary = "Deletar um produto alocado em uma venda")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Excluido" ,content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@DeleteMapping("/{idVendas}/{idEstoque}")
 	public ResponseEntity delete(
 			@PathVariable(name = "idVendas") Long idVendas,
@@ -61,6 +99,14 @@ public class VendasEstoqueController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Operation(summary = "Atualizar um produto alocado em uma venda")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoVendaEstoque.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PutMapping("/{idVendas}/{idEstoque}")
 	public ResponseEntity<DadosDetalhamentoVendaEstoque> update(
 			@PathVariable(name = "idVendas") Long idVendas,

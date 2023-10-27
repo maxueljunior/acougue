@@ -22,15 +22,31 @@ import br.com.leuxam.acougue.domain.cliente.ClienteService;
 import br.com.leuxam.acougue.domain.cliente.DadosAtualizarCliente;
 import br.com.leuxam.acougue.domain.cliente.DadosCriarCliente;
 import br.com.leuxam.acougue.domain.cliente.DadosDetalhamentoCliente;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/clientes")
+@Tag(description = "Clientes", name = "Clientes")
 public class ClienteController {
 	
 	@Autowired
 	private ClienteService service;
 	
+	@Operation(summary = "Salvar")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCliente.class))}),
+			@ApiResponse(responseCode = "400", content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PostMapping
 	public ResponseEntity<DadosDetalhamentoCliente> save(
 			@RequestBody @Valid DadosCriarCliente dados,
@@ -40,6 +56,14 @@ public class ClienteController {
 		return ResponseEntity.created(uri).body(cliente);
 	}
 	
+	@Operation(summary = "Recuperar todos com ou sem busca por nome")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCliente.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<Page<DadosDetalhamentoCliente>> findAll(
 			@PageableDefault(size = 10, sort = {"nome"}) Pageable pageable,
@@ -48,6 +72,14 @@ public class ClienteController {
 		return ResponseEntity.ok().body(clientes);
 	}
 	
+	@Operation(summary = "Recuperar por id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCliente.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<DadosDetalhamentoCliente> findById(
 			@PathVariable(name = "id") Long id){
@@ -55,6 +87,15 @@ public class ClienteController {
 		return ResponseEntity.ok().body(cliente);
 	}
 	
+	@Operation(summary = "Atualizar informações")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCliente.class))}),
+			@ApiResponse(responseCode = "400", content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<DadosDetalhamentoCliente> update(
 			@PathVariable(name = "id") Long id,
@@ -63,6 +104,13 @@ public class ClienteController {
 		return ResponseEntity.ok().body(cliente);
 	}
 	
+	@Operation(summary = "Ativar")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Cliente ativado!" ,content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PatchMapping("/{id}")
 	public ResponseEntity ativar(
 			@PathVariable(name = "id") Long id){
@@ -70,7 +118,13 @@ public class ClienteController {
 		return ResponseEntity.ok().body("Cliente ativado!");
 	}
 	
-	
+	@Operation(summary = "Ativar")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Desativado" ,content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity desativar(
 			@PathVariable(name = "id") Long id) {

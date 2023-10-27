@@ -15,10 +15,17 @@ import br.com.leuxam.acougue.domain.usuario.DadosLogin;
 import br.com.leuxam.acougue.domain.usuario.Usuario;
 import br.com.leuxam.acougue.infra.security.DadosAutenticaticao;
 import br.com.leuxam.acougue.infra.security.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/login")
+@Tag(description = "Login", name = "Login")
 public class AuthenticationController {
 	
 	@Autowired
@@ -27,11 +34,17 @@ public class AuthenticationController {
 	@Autowired
 	private TokenService tokenService;
 	
+	@Operation(summary = "Autenticação")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosAutenticaticao.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PostMapping
 	public ResponseEntity<DadosAutenticaticao> login(
 			@RequestBody @Valid DadosLogin dados){
 		
-		System.out.println("ab");
 		var authenticate = new UsernamePasswordAuthenticationToken(dados.username(), dados.password());
 		
 		try {

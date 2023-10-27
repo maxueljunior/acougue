@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,29 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosComprasService;
 import br.com.leuxam.acougue.domain.arquivosCompras.DadosDetalhamentoArquivo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/arquivos")
+@Tag(description = "Arquivos de Compras", name = "Arquivos de Compras")
 public class ArquivosComprasController {
 
 	@Autowired
 	private ArquivosComprasService service;
 	
+	@Operation(summary = "Upload")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoArquivo.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content),
+	})
 	@PostMapping("/compras/{id}/one")
 	public ResponseEntity<DadosDetalhamentoArquivo> uploadOneFile(
 			@RequestParam("file") MultipartFile file,
@@ -44,6 +60,15 @@ public class ArquivosComprasController {
 						file.getContentType(), file.getSize(), downloadUrl));
 	}
 	
+	@Operation(summary = "Download")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", headers = @Header(name = "Content-Disposition"),
+					content = {@Content(mediaType = "application/pdf",
+					schema = @Schema(implementation = Resource.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping("/compras/{id}/download")
 	public ResponseEntity<Resource> downloadFile(
 			@PathVariable(name = "id") Long id){

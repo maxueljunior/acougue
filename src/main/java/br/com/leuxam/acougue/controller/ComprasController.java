@@ -20,15 +20,31 @@ import br.com.leuxam.acougue.domain.compras.ComprasService;
 import br.com.leuxam.acougue.domain.compras.DadosAtualizarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosCriarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosDetalhamentoCompras;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/compras")
+@Tag(description = "Compras", name = "Compras")
 public class ComprasController {
 	
 	@Autowired
 	private ComprasService service;
 	
+	@Operation(summary = "Salvar")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCompras.class))}),
+			@ApiResponse(responseCode = "400", content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PostMapping
 	public ResponseEntity<DadosDetalhamentoCompras> save(
 			@RequestBody @Valid DadosCriarCompras dados,
@@ -38,6 +54,13 @@ public class ComprasController {
 		return ResponseEntity.created(uri).body(compra);
 	}
 	
+	@Operation(summary = "Recuperar todas")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = ComprasDTO.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<PagedModel<EntityModel<ComprasDTO>>> findAll(
 			@PageableDefault(size = 5, sort = {"fornecedor"}) Pageable pageable){
@@ -45,6 +68,14 @@ public class ComprasController {
 		return ResponseEntity.ok().body(compras);
 	}
 	
+	@Operation(summary = "Recuperar por Id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = ComprasDTO.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<ComprasDTO> findById(
 			@PathVariable(name = "id") Long id){
@@ -52,6 +83,14 @@ public class ComprasController {
 		return ResponseEntity.ok().body(compra);
 	}
 	
+	@Operation(summary = "Atualizar informações")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCompras.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<DadosDetalhamentoCompras> update(
 			@PathVariable(name = "id") Long id,

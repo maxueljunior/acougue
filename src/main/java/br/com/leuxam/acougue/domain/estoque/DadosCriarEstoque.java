@@ -7,7 +7,6 @@ public record DadosCriarEstoque(
 		@NotBlank
 		String descricao,
 		@NotNull
-		Unidade unidade,
-		Double quantidade) {
+		Unidade unidade) {
 
 }
