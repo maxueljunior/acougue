@@ -29,18 +29,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosComprasRepository;
-import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosComprasService;
 import br.com.leuxam.acougue.domain.cliente.Cliente;
 import br.com.leuxam.acougue.domain.cliente.ClienteRepository;
 import br.com.leuxam.acougue.domain.cliente.Sexo;
 import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
-import br.com.leuxam.acougue.domain.compras.ComprasRepository;
 import br.com.leuxam.acougue.domain.compras.DadosCriarVendas;
 import br.com.leuxam.acougue.domain.vendas.DadosDetalhamentoVendas;
 import br.com.leuxam.acougue.domain.vendas.Vendas;
@@ -69,18 +68,10 @@ class VendasControllerTest {
 	@MockBean
 	private VendasEstoqueRepository vendasEstoqueRepository;
 
-	@MockBean
-	private ModelMapper modelMapper;
-	
-	private ArquivosComprasService serviceArquivos;
-
-	@MockBean
-	private ArquivosComprasRepository arquivosComprasRepository;
-
-	@MockBean
-	private ComprasRepository comprasRepository;
-	
-	@MockBean
+//	@Autowired
+//	private ModelMapper modelMapper;
+//	
+	@Autowired
 	private PagedResourcesAssembler<VendasDTO> assembler;
 	
 	@Autowired
@@ -90,15 +81,13 @@ class VendasControllerTest {
 	private JacksonTester<DadosDetalhamentoVendas> dadosDetalhamentoVendas;
 	
 	@Autowired
-	private JacksonTester<VendasDTO> vendaDTO;
+	private JacksonTester<List<VendasDTO>> vendaDTO;
 	
 	
 	@BeforeAll
 	void beforeAll() {
 		service = new VendasService(vendasRepository, clienteRepository,
-				vendasEstoqueRepository, assembler, modelMapper);
-		
-		serviceArquivos = new ArquivosComprasService(arquivosComprasRepository, comprasRepository);
+				vendasEstoqueRepository);
 	}
 	
 	@Test
@@ -156,12 +145,14 @@ class VendasControllerTest {
 		var vendasDTO = mockVendasDTO(vendas);
 		
 		when(vendasRepository.findAll(any(Pageable.class))).thenReturn(vendas);
-		when(modelMapper.map(any(), any())).thenReturn(vendasDTO);
 		
 		var result = mvc.perform(get("/vendas")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();
 		
+		var jsonEsperado = vendaDTO.write(vendasDTO).getJson();
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).contains(jsonEsperado);
 		
 	}
 
@@ -210,7 +201,7 @@ class VendasControllerTest {
 		return new PageImpl<>(lista);
 	}
 	
-	private Page<VendasDTO> mockVendasDTO(Page<Vendas> lista){
+	private List<VendasDTO> mockVendasDTO(Page<Vendas> lista){
 		List<VendasDTO> listaDTO = new ArrayList<>();
 		
 		for (Vendas vendas : lista) {
@@ -218,7 +209,7 @@ class VendasControllerTest {
 					vendas.getValorTotal(), vendas.getCliente().getId(), vendas.getFileName()));
 		}
 		
-		return new PageImpl<>(listaDTO);
+		return listaDTO;
 	}
 	
 	private Vendas mockVenda(Cliente cliente) {

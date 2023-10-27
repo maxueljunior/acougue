@@ -36,21 +36,18 @@ public class VendasService {
 	
 	private VendasEstoqueRepository vendasEstoqueRepository;
 	
-	private ArquivosComprasService service;
-	
+	@Autowired
 	private ModelMapper modelMapper;
 	
+	@Autowired
 	private PagedResourcesAssembler<VendasDTO> assembler;
 	
 	@Autowired
 	public VendasService(VendasRepository vendasRepository,
-			ClienteRepository clienteRepository, VendasEstoqueRepository vendasEstoqueRepository,
-			PagedResourcesAssembler<VendasDTO> assembler, ModelMapper modelMapper) {
+			ClienteRepository clienteRepository, VendasEstoqueRepository vendasEstoqueRepository) {
 		this.vendasRepository = vendasRepository;
 		this.clienteRepository = clienteRepository;
 		this.vendasEstoqueRepository = vendasEstoqueRepository;
-		this.assembler = assembler;
-		this.modelMapper = modelMapper;
 	}
 
 	@Transactional
