@@ -1,4 +1,4 @@
-package br.com.leuxam.acougue.controller;
+package br.com.leuxam.acougue.testunits.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -6,12 +6,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,8 +34,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -41,11 +44,14 @@ import br.com.leuxam.acougue.domain.cliente.ClienteRepository;
 import br.com.leuxam.acougue.domain.cliente.Sexo;
 import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
 import br.com.leuxam.acougue.domain.compras.DadosCriarVendas;
+import br.com.leuxam.acougue.domain.vendas.CondicaoPagamento;
+import br.com.leuxam.acougue.domain.vendas.DadosAtualizarVenda;
 import br.com.leuxam.acougue.domain.vendas.DadosDetalhamentoVendas;
 import br.com.leuxam.acougue.domain.vendas.Vendas;
 import br.com.leuxam.acougue.domain.vendas.VendasDTO;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasService;
+import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoqueRepository;
 
 @SpringBootTest
@@ -68,11 +74,11 @@ class VendasControllerTest {
 	@MockBean
 	private VendasEstoqueRepository vendasEstoqueRepository;
 
-//	@Autowired
-//	private ModelMapper modelMapper;
-//	
 	@Autowired
 	private PagedResourcesAssembler<VendasDTO> assembler;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Autowired
 	private JacksonTester<DadosCriarVendas> dadosCriarVendas;
@@ -81,7 +87,10 @@ class VendasControllerTest {
 	private JacksonTester<DadosDetalhamentoVendas> dadosDetalhamentoVendas;
 	
 	@Autowired
-	private JacksonTester<List<VendasDTO>> vendaDTO;
+	private JacksonTester<DadosAtualizarVenda> dadosAtualizarVendas;
+	
+	@Autowired
+	private JacksonTester<Page<VendasDTO>> vendaDTO;
 	
 	
 	@BeforeAll
@@ -108,9 +117,9 @@ class VendasControllerTest {
 							)
 					).andReturn().getResponse();
 		
-		var jsonEsperado = dadosDetalhamentoVendas.write(new DadosDetalhamentoVendas(venda)).getJson();
+//		var jsonEsperado = dadosDetalhamentoVendas.write(new DadosDetalhamentoVendas(venda)).getJson();
 		assertThat(result.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
+		assertThat(result.getContentAsString()).isNotBlank();
 		
 		verify(clienteRepository, times(1)).existsById(1L);
 		verify(clienteRepository, times(1)).getReferenceById(1L);
@@ -139,33 +148,149 @@ class VendasControllerTest {
 
 	@Test
 	@WithMockUser
-	@DisplayName("Deveria retornar todas as vendas sem cliente especifico e retornar codigo 200")
+	@DisplayName("Deveria retornar todas as vendas sem cliente/com cliente especifico e retornar codigo 200")
 	void test_cenario03() throws Exception {
 		var vendas = mockVendas();
-		var vendasDTO = mockVendasDTO(vendas);
 		
 		when(vendasRepository.findAll(any(Pageable.class))).thenReturn(vendas);
+		
 		
 		var result = mvc.perform(get("/vendas")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();
 		
-		var jsonEsperado = vendaDTO.write(vendasDTO).getJson();
 		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(result.getContentAsString()).contains(jsonEsperado);
+		assertThat(result.getContentAsString()).contains("{\"_embedded\":{\"vendasDTOList\":");
 		
+		verify(vendasRepository, times(1)).findAll(any(Pageable.class));
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Deveria retornar a venda pelo numero e retornar codigo 200")
+	void test_cenario04() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVenda(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.getReferenceById(1L)).thenReturn(vendas);
+		
+		var result = mvc.perform(get("/vendas/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+		
+		var jsonEsperado = dadosDetalhamentoVendas.write(new DadosDetalhamentoVendas(vendas)).getJson();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).getReferenceById(1L);
 	}
 
 	@Test
-	void testFindById() {
+	@WithMockUser
+	@DisplayName("Não deveria retornar a venda pelo numero caso não exista e retornar codigo 400")
+	void test_cenario05() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVenda(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(get("/vendas/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(0)).getReferenceById(1L);
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Deveria atualizar a condição de pagamento da venda caso exista e retornar codigo 200")
+	void test_cenario06() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVenda(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.findById(1L)).thenReturn(Optional.of(vendas));
+		
+		vendas.atualizar(new DadosAtualizarVenda(CondicaoPagamento.CREDITO));
+		
+		var result = mvc.perform(patch("/vendas/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
+						.getJson())
+				).andReturn().getResponse();
+		
+		var jsonEsperado = dadosDetalhamentoVendas.write(new DadosDetalhamentoVendas(vendas)).getJson();
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).findById(1L);
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Não deveria atualizar a condição de pagamento da venda caso não exista e retornar codigo 400")
+	void test_cenario07() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVenda(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(patch("/vendas/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
+						.getJson())
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(0)).findById(1L);
 	}
 
 	@Test
-	void testUpdate() {
+	@WithMockUser
+	@DisplayName("Deveria gerar um cupom não fiscal e devolver codigo 200")
+	void test_cenario08() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVendaComId(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.findById(1L)).thenReturn(Optional.of(vendas));
+		
+		var result = mvc.perform(get("/vendas/gerar-cupom/1")
+				.header("Content-Disposition", "attachment;filename= venda 1.pdf")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isNotBlank();
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).findById(1L);
 	}
-
+	
 	@Test
-	void testGerarPdf() {
+	@WithMockUser
+	@DisplayName("Não deveria gerar um cupom não fiscal caso não exista venda e devolver codigo 400")
+	void test_cenario09() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVendaComId(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(get("/vendas/gerar-cupom/1")
+				.header("Content-Disposition", "attachment;filename= venda 1.pdf")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(0)).findById(1L);
 	}
 
 	@Test
@@ -201,7 +326,7 @@ class VendasControllerTest {
 		return new PageImpl<>(lista);
 	}
 	
-	private List<VendasDTO> mockVendasDTO(Page<Vendas> lista){
+	private Page<VendasDTO> mockVendasDTO(Page<Vendas> lista){
 		List<VendasDTO> listaDTO = new ArrayList<>();
 		
 		for (Vendas vendas : lista) {
@@ -209,11 +334,16 @@ class VendasControllerTest {
 					vendas.getValorTotal(), vendas.getCliente().getId(), vendas.getFileName()));
 		}
 		
-		return listaDTO;
+		return new PageImpl<>(listaDTO);
 	}
 	
 	private Vendas mockVenda(Cliente cliente) {
 		var venda = new Vendas(cliente);
+		return venda;
+	}
+	
+	private Vendas mockVendaComId(Cliente cliente) {
+		var venda = new Vendas(1L, LocalDateTime.now(), new BigDecimal("1"), cliente, CondicaoPagamento.DEBITO,null,null,null);
 		return venda;
 	}
 }

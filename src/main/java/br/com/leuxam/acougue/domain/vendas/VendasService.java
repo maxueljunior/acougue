@@ -98,18 +98,18 @@ public class VendasService {
 	public ByteArrayOutputStream gerarPdf(Long id){
 		if(!vendasRepository.existsById(id)) throw new ExisteException("Não existe venda nº " + id);
 		
-		var vendas = vendasRepository.findById(id).get();
+		var vendas = vendasRepository.findById(id);
 		var vendasEstoque = vendasEstoqueRepository.findAllVendasEstoque(id);
 		ByteArrayOutputStream outputStream = null;
 		
 		try {
-			outputStream = Utils.GeradorDePdf(vendasEstoque, vendas);
+			outputStream = Utils.GeradorDePdf(vendasEstoque, vendas.get());
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
 		
 		String tituloArquivo = "venda " + id + ".pdf";
-		vendas.arquivarPdf(outputStream, tituloArquivo);
+		vendas.get().arquivarPdf(outputStream, tituloArquivo);
 		
 		return outputStream;
 	}
