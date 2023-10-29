@@ -2,9 +2,12 @@ package br.com.leuxam.acougue.testunits.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +34,18 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import br.com.leuxam.acougue.controller.VendasController;
 import br.com.leuxam.acougue.domain.cliente.Cliente;
 import br.com.leuxam.acougue.domain.cliente.ClienteRepository;
 import br.com.leuxam.acougue.domain.cliente.Sexo;
@@ -51,7 +58,6 @@ import br.com.leuxam.acougue.domain.vendas.Vendas;
 import br.com.leuxam.acougue.domain.vendas.VendasDTO;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasService;
-import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoqueRepository;
 
 @SpringBootTest
@@ -76,9 +82,6 @@ class VendasControllerTest {
 
 	@Autowired
 	private PagedResourcesAssembler<VendasDTO> assembler;
-	
-	@Autowired
-	private ModelMapper modelMapper;
 	
 	@Autowired
 	private JacksonTester<DadosCriarVendas> dadosCriarVendas;
@@ -151,9 +154,9 @@ class VendasControllerTest {
 	@DisplayName("Deveria retornar todas as vendas sem cliente/com cliente especifico e retornar codigo 200")
 	void test_cenario03() throws Exception {
 		var vendas = mockVendas();
+		var vendasDTO = mockVendasDTO(vendas);
 		
 		when(vendasRepository.findAll(any(Pageable.class))).thenReturn(vendas);
-		
 		
 		var result = mvc.perform(get("/vendas")
 				.contentType(MediaType.APPLICATION_JSON))
@@ -198,7 +201,7 @@ class VendasControllerTest {
 		when(vendasRepository.existsById(1L)).thenReturn(false);
 		
 		var result = mvc.perform(get("/vendas/1")
-				.contentType(MediaType.APPLICATION_JSON))
+					.contentType(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();
 		
 		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -219,8 +222,8 @@ class VendasControllerTest {
 		vendas.atualizar(new DadosAtualizarVenda(CondicaoPagamento.CREDITO));
 		
 		var result = mvc.perform(patch("/vendas/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
 						.getJson())
 				).andReturn().getResponse();
 		
@@ -242,8 +245,8 @@ class VendasControllerTest {
 		when(vendasRepository.existsById(1L)).thenReturn(false);
 		
 		var result = mvc.perform(patch("/vendas/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(dadosAtualizarVendas.write(new DadosAtualizarVenda(CondicaoPagamento.CREDITO))
 						.getJson())
 				).andReturn().getResponse();
 		
@@ -264,7 +267,7 @@ class VendasControllerTest {
 		when(vendasRepository.findById(1L)).thenReturn(Optional.of(vendas));
 		
 		var result = mvc.perform(get("/vendas/gerar-cupom/1")
-				.header("Content-Disposition", "attachment;filename= venda 1.pdf")
+					.header("Content-Disposition", "attachment;filename= venda 1.pdf")
 				).andReturn().getResponse();
 		
 		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -294,7 +297,43 @@ class VendasControllerTest {
 	}
 
 	@Test
-	void testDownloadPdf() {
+	@WithMockUser
+	@DisplayName("Deveria fazer um download do cupom não fiscal caso já tenha sido gerado e devolver codigo 200")
+	void test_cenario10() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVendaComId(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.getReferenceById(1L)).thenReturn(vendas);
+		
+		var result = mvc.perform(get("/vendas/download/1")
+					.header("Content-Disposition", "attachment;filename=venda 1.pdf")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isNotBlank();
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).getReferenceById(1L);
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Não deveria fazer um download do cupom não fiscal caso não tenha sido gerado e devolver codigo 404")
+	void test_cenario11() throws Exception {
+		var cliente = mockCliente();
+		var vendas = mockVenda(cliente);
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.getReferenceById(1L)).thenReturn(vendas);
+		
+		var result = mvc.perform(get("/vendas/download/1")
+					.header("Content-Disposition", "attachment;filename=venda 1.pdf")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).getReferenceById(1L);
 	}
 	
 	private Cliente mockCliente() {
@@ -343,7 +382,8 @@ class VendasControllerTest {
 	}
 	
 	private Vendas mockVendaComId(Cliente cliente) {
-		var venda = new Vendas(1L, LocalDateTime.now(), new BigDecimal("1"), cliente, CondicaoPagamento.DEBITO,null,null,null);
+		byte[] bytes = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05};
+		var venda = new Vendas(1L, LocalDateTime.now(), new BigDecimal("1"), cliente, CondicaoPagamento.DEBITO,bytes,"venda 1.pdf",null);
 		return venda;
 	}
 }

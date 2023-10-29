@@ -79,7 +79,6 @@ public class VendasService {
 		});
 		
 		Link link = linkTo(methodOn(VendasController.class).findAll(pageable, idCliente)).withSelfRel();
-		
 		return assembler.toModel(vendasDTO, link);
 //		return vendas.map(DadosDetalhamentoVendas::new);
 	}

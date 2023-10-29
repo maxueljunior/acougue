@@ -1,0 +1,15 @@
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.EntityModel;
+import org.mockito.Mockito;
+
+// Crie um mock para o PagedModel
+PagedModel<EntityModel<VendasDTO>> pagedModel = Mockito.mock(PagedModel.class);
+
+// Defina o comportamento do mock (por exemplo, ao chamar getContent())
+List<EntityModel<VendasDTO>> content = new ArrayList<>();
+// Adicione os itens ao conteúdo do PagedModel
+content.add(EntityModel.of(new VendasDTO(...))); // Adicione os dados desejados
+// Defina o comportamento do getContent()
+Mockito.when(pagedModel.getContent()).thenReturn(content);
+
+// Agora você pode usar esse PagedModel mock em seus testes
