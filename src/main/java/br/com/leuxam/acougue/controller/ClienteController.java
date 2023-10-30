@@ -118,7 +118,7 @@ public class ClienteController {
 		return ResponseEntity.ok().body("Cliente ativado!");
 	}
 	
-	@Operation(summary = "Ativar")
+	@Operation(summary = "Desativar")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Desativado" ,content = @Content),
 			@ApiResponse(responseCode = "403", content = @Content),
