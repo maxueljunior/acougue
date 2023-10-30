@@ -18,9 +18,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "Usuario")
 @Table(name = "tb_usuario")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario implements UserDetails{
 	
 	private static final long serialVersionUID = 1L;

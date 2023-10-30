@@ -5,14 +5,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +30,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -47,6 +51,7 @@ import br.com.leuxam.acougue.domain.estoqueData.EstoqueDataRepository;
 import br.com.leuxam.acougue.domain.vendas.CondicaoPagamento;
 import br.com.leuxam.acougue.domain.vendas.Vendas;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
+import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosDetalhamentoVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
@@ -84,6 +89,12 @@ class VendasEstoqueControllerTest {
 	
 	@Autowired
 	private JacksonTester<DadosDetalhamentoVendaEstoque> dadosDetalhamento;
+
+	@Autowired
+	private JacksonTester<DadosAtualizarVendaEstoque> dadosAtualizar;
+	
+	@Autowired
+	private JacksonTester<List<DadosDetalhamentoVendaEstoque>> dadosListDetalhamento;
 
 	@Autowired
 	private JacksonTester<DadosCriarVendaEstoque> dadosCriar;
@@ -124,7 +135,6 @@ class VendasEstoqueControllerTest {
 		
 		assertThat(result.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
-		System.out.println(jsonEsperado);
 		
 		verify(vendasRepository, times(1)).existsById(1L);
 		verify(estoqueRepository, times(1)).existsById(1L);
@@ -173,22 +183,198 @@ class VendasEstoqueControllerTest {
 	@Test
 	@WithMockUser
 	@DisplayName("Deveria retornar todas as vendas de produtos de todos os produtos e vendas e codigo 200")
-	void test_cenario03() {
-		var vendasEstoque = mockPageVendasProdutos();
+	void test_cenario03() throws Exception {
+		var vendasEstoque = mockListVendasProdutos();
 		
-		when(vendasEstoqueRepository.findAll(any(Pageable.class))).thenReturn(vendasEstoque);
+		when(vendasEstoqueRepository.findAll(any(Pageable.class)))
+			.thenReturn(new PageImpl<>(vendasEstoque));
+		
+		var result = mvc.perform(get("/itens/vendas")
+					.contentType(MediaType.APPLICATION_JSON)
+				).andReturn().getResponse();
+		
+		
+		var jsonEsperado = dadosListDetalhamento.write(vendasEstoque.stream()
+				.map(DadosDetalhamentoVendaEstoque::new).collect(Collectors.toList())).getJson();
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).contains(jsonEsperado);
+		verify(vendasEstoqueRepository, times(1)).findAll(any(Pageable.class));
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Deveria retornar uma lista de produtos vinculados ao id da venda passado e devolver codigo 200")
+	void test_cenario04() throws Exception {
+		var vendasEstoque = mockListVendasProdutos();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(vendasEstoqueRepository.findByVendas(any(), any(Pageable.class)))
+			.thenReturn(new PageImpl<>(vendasEstoque));
+		
+		var result = mvc.perform(get("/itens/vendas/1")
+					.contentType(MediaType.APPLICATION_JSON)
+				).andReturn().getResponse();
+		
+		var jsonEsperado = dadosListDetalhamento.write(
+				vendasEstoque.stream().map(DadosDetalhamentoVendaEstoque::new)
+				.collect(Collectors.toList())).getJson();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).contains(jsonEsperado);
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasEstoqueRepository, times(1)).findByVendas(any(), any(Pageable.class));
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Não deveria retornar uma lista de produtos vinculados ao id da venda caso ela não exista e devolver codigo 400")
+	void test_cenario05() throws Exception {
+		var vendasEstoque = mockListVendasProdutos();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(get("/itens/vendas/1")
+					.contentType(MediaType.APPLICATION_JSON)
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(vendasEstoqueRepository, times(0)).findByVendas(any(), any(Pageable.class));
 	}
 
 	@Test
-	void testFindByIdVendas() {
+	@WithMockUser
+	@DisplayName("Deveria deletar caso tenha o produto alocado na venda e retornar codigo 204")
+	void test_cenario06() throws Exception {
+		var venda = mockVendas();
+		var estoque = mockProduto();
+		var vendaEstoque = mockVendaProdutos();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(estoqueRepository.existsById(1L)).thenReturn(true);
+		when(vendasRepository.findById(1L)).thenReturn(Optional.of(venda));
+		when(estoqueRepository.findById(1L)).thenReturn(Optional.of(estoque));
+		when(vendasEstoqueRepository.findByVendasAndEstoque(any(), any())).thenReturn(Optional.of(vendaEstoque));
+		
+		var result = mvc.perform(delete("/itens/vendas/1/1")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(estoqueRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).findById(1L);
+		verify(estoqueRepository, times(1)).findById(1L);
+		verify(vendasEstoqueRepository, times(1)).findByVendasAndEstoque(any(), any());
+		verify(vendasEstoqueRepository, times(1)).delete(vendaEstoque);
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("Não deveria deletar caso tenha o produto alocado na venda e retornar codigo 400")
+	void test_cenario07() throws Exception {
+		var venda = mockVendas();
+		var estoque = mockProduto();
+		var vendaEstoque = mockVendaProdutos();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(delete("/itens/vendas/1/1")
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(estoqueRepository, times(0)).existsById(1L);
+		verify(vendasRepository, times(0)).findById(1L);
+		verify(estoqueRepository, times(0)).findById(1L);
+		verify(vendasEstoqueRepository, times(0)).findByVendasAndEstoque(any(), any());
+		verify(vendasEstoqueRepository, times(0)).delete(vendaEstoque);
 	}
 
+	
 	@Test
-	void testDelete() {
+	@WithMockUser
+	@DisplayName("Deveria atualizar os dados do produto alocado na venda e devolver codigo 200")
+	void test_cenario08() throws IOException, Exception {
+		var venda = mockVendas();
+		var estoque = mockProduto();
+		var vendaEstoque = mockVendaProdutos();
+		var estoqueData = mockEstoqueData();
+		var clienteEstoque = mockClienteEstoque();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(true);
+		when(estoqueRepository.existsById(1L)).thenReturn(true);
+		
+		when(vendasRepository.findById(1L)).thenReturn(Optional.of(venda));
+		when(estoqueRepository.findById(1L)).thenReturn(Optional.of(estoque));
+		
+		when(vendasEstoqueRepository.findByVendasAndEstoque(any(), any())).thenReturn(Optional.of(vendaEstoque));
+		
+		when(estoqueDataRepository.findByEstoqueAndDataCompra(any(), any())).thenReturn(Optional.of(estoqueData));
+		
+		when(comprasRepository.searchDataRecente(any())).thenReturn(LocalDateTime.now());
+		when(comprasRepository.searchPrecoRecente(any(), any())).thenReturn(new BigDecimal("15.00"));
+		when(clienteEstoqueRepository.findByClienteAndEstoque(any(), any())).thenReturn(clienteEstoque);
+		
+		var result = mvc.perform(put("/itens/vendas/1/1")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(dadosAtualizar
+								.write(new DadosAtualizarVendaEstoque(2.0, new BigDecimal("100"),
+										LocalDate.of(1999, 1, 1)))
+								.getJson())
+				).andReturn().getResponse();
+		vendaEstoque.atualizar(new DadosAtualizarVendaEstoque(2.0, new BigDecimal("100"),
+										LocalDate.of(1999, 1, 1)));
+		var jsonEsperado = dadosDetalhamento.write(new DadosDetalhamentoVendaEstoque(vendaEstoque)).getJson();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(estoqueRepository, times(1)).existsById(1L);
+		verify(vendasRepository, times(1)).findById(1L);
+		verify(estoqueRepository, times(1)).findById(1L);
+		verify(vendasEstoqueRepository, times(1)).findByVendasAndEstoque(any(), any());
+		verify(estoqueDataRepository, times(1)).findByEstoqueAndDataCompra(any(), any());
+		verify(comprasRepository, times(1)).searchDataRecente(any());
+		verify(comprasRepository, times(1)).searchPrecoRecente(any(), any());
+		verify(clienteEstoqueRepository, times(1)).findByClienteAndEstoque(any(), any());
 	}
-
+	
 	@Test
-	void testUpdate() {
+	@WithMockUser
+	@DisplayName("Não deveria atualizar os dados do produto alocado na venda se estiverem incorretos e devolver codigo 400")
+	void test_cenario09() throws IOException, Exception {
+		var venda = mockVendas();
+		var estoque = mockProduto();
+		var vendaEstoque = mockVendaProdutos();
+		var estoqueData = mockEstoqueData();
+		var clienteEstoque = mockClienteEstoque();
+		
+		when(vendasRepository.existsById(1L)).thenReturn(false);
+		
+		var result = mvc.perform(put("/itens/vendas/1/1")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(dadosAtualizar
+								.write(new DadosAtualizarVendaEstoque(2.0, new BigDecimal("100"),
+										LocalDate.of(1999, 1, 1)))
+								.getJson())
+				).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(vendasRepository, times(1)).existsById(1L);
+		verify(estoqueRepository, times(0)).existsById(1L);
+		verify(vendasRepository, times(0)).findById(1L);
+		verify(estoqueRepository, times(0)).findById(1L);
+		verify(vendasEstoqueRepository, times(0)).findByVendasAndEstoque(any(), any());
+		verify(estoqueDataRepository, times(0)).findByEstoqueAndDataCompra(any(), any());
+		verify(comprasRepository, times(0)).searchDataRecente(any());
+		verify(comprasRepository, times(0)).searchPrecoRecente(any(), any());
+		verify(clienteEstoqueRepository, times(0)).findByClienteAndEstoque(any(), any());
 	}
 	
 	private Cliente mockCliente() {
@@ -229,13 +415,13 @@ class VendasEstoqueControllerTest {
 		return clienteEstoque;
 	}
 	
-	private Page<VendasEstoque> mockPageVendasProdutos(){
+	private List<VendasEstoque> mockListVendasProdutos(){
 		List<VendasEstoque> result = new ArrayList<>();
 		
 		for(int i = 0; i < 5; i++) {
 			result.add(mockVendaProdutos());
 		}
 		
-		return new PageImpl<>(result);
+		return result;
 	}
 }

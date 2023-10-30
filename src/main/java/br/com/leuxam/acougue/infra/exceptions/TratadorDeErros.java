@@ -2,6 +2,8 @@ package br.com.leuxam.acougue.infra.exceptions;
 
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +14,7 @@ import br.com.leuxam.acougue.domain.AtivadoException;
 import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
 import br.com.leuxam.acougue.domain.arquivosCompras.FileException;
+import br.com.leuxam.acougue.domain.usuario.CredencialsException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
@@ -30,6 +33,11 @@ public class TratadorDeErros {
 	@ExceptionHandler({AtivadoException.class, ExisteException.class})
 	public ResponseEntity ErroAtivacao400(RuntimeException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
+	
+	@ExceptionHandler(CredencialsException.class)
+	public ResponseEntity Erro403(RuntimeException ex) {
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 	}
 	
 	public record DadosErro(String field, String message) {

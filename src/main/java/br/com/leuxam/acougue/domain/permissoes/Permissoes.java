@@ -11,9 +11,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "Permissoes")
 @Table(name = "tb_permissoes")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Permissoes implements GrantedAuthority{
 	
 	private static final long serialVersionUID = 1L;
