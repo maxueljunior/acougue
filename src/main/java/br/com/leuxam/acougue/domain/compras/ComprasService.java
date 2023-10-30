@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -29,18 +28,18 @@ public class ComprasService {
 	private ComprasRepository comprasRepository;
 
 	private FornecedorRepository fornecedorRepository;
-
+	
+	@Autowired
 	private ModelMapper modelMapper;
 	
+	@Autowired
 	private PagedResourcesAssembler<ComprasDTO> assembler;
 
 	@Autowired
-	public ComprasService(ComprasRepository comprasRepository, FornecedorRepository fornecedorRepository,
-			ModelMapper modelMapper, PagedResourcesAssembler<ComprasDTO> assembler) {
+	public ComprasService(ComprasRepository comprasRepository, FornecedorRepository fornecedorRepository) {
 		this.comprasRepository = comprasRepository;
 		this.fornecedorRepository = fornecedorRepository;
-		this.modelMapper = modelMapper;
-		this.assembler = assembler;
+
 	}
 
 	@Transactional
