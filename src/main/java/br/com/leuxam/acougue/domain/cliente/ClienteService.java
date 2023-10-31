@@ -38,18 +38,18 @@ public class ClienteService {
 	public DadosDetalhamentoCliente save(DadosCriarCliente dados) {
 		
 		var cliente = new Cliente(dados);
-		clienteRepository.save(cliente);
+		var clienteSalvo = clienteRepository.save(cliente);
 		
 		var listaId = estoqueRepository.findIdsAll();
 		
 		listaId.forEach(x -> {
 			var estoque = estoqueRepository.getReferenceById(x.id());
-			var clienteEstoque = new ClienteEstoque(null, estoque, cliente,
+			var clienteEstoque = new ClienteEstoque(null, estoque, clienteSalvo,
 					new BigDecimal("53.00"), LocalDateTime.now());
 			clienteEstoqueRepository.save(clienteEstoque);
 		});
 		
-		return new DadosDetalhamentoCliente(cliente);
+		return new DadosDetalhamentoCliente(clienteSalvo);
 	}
 
 	public Page<DadosDetalhamentoCliente> findAllByAtivoAndNome(Pageable pageable, String nome) {

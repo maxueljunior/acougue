@@ -39,9 +39,8 @@ public class ComprasService {
 	public ComprasService(ComprasRepository comprasRepository, FornecedorRepository fornecedorRepository) {
 		this.comprasRepository = comprasRepository;
 		this.fornecedorRepository = fornecedorRepository;
-
 	}
-
+	
 	@Transactional
 	public DadosDetalhamentoCompras create(DadosCriarCompras dados) {
 
@@ -51,7 +50,7 @@ public class ComprasService {
 		var fornecedor = fornecedorRepository.getReferenceById(dados.idFornecedor());
 
 		var compras = new Compras(null, fornecedor, new BigDecimal("0.0"), null, null, LocalDateTime.now());
-		comprasRepository.save(compras);
+		compras = comprasRepository.save(compras);
 		return new DadosDetalhamentoCompras(compras);
 	}
 

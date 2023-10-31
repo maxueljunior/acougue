@@ -55,7 +55,7 @@ public class ComprasEstoqueService {
 		
 		var compraEstoque = new ComprasEstoque(null, estoque, compras.get(), dados.precoUnitario(), dados.quantidade());
 		
-		comprasEstoqueRepository.save(compraEstoque);
+		compraEstoque = comprasEstoqueRepository.save(compraEstoque);
 		
 		return new DadosDetalhamentoComprasEstoque(compraEstoque);
 	}

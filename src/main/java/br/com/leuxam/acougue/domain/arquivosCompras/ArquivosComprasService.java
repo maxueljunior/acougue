@@ -40,7 +40,7 @@ public class ArquivosComprasService {
 			}
 			ArquivosCompras arquivosCompras = new ArquivosCompras(null, compras, file.getBytes(),
 					fileName, file.getContentType());
-			arquivosComprasRepository.save(arquivosCompras);
+			arquivosCompras = arquivosComprasRepository.save(arquivosCompras);
 			return arquivosCompras;
 		}catch(MaxUploadSizeExceededException | IOException e) {
 			throw new MaxUploadSizeExceededException(file.getSize());
