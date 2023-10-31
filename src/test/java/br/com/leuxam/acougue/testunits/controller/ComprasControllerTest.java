@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -35,9 +36,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosCompras;
 import br.com.leuxam.acougue.domain.compras.Compras;
-import br.com.leuxam.acougue.domain.compras.ComprasDTO;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
 import br.com.leuxam.acougue.domain.compras.ComprasService;
+import br.com.leuxam.acougue.domain.compras.DadosAtualizarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosCriarCompras;
 import br.com.leuxam.acougue.domain.compras.DadosDetalhamentoCompras;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
@@ -65,6 +66,9 @@ class ComprasControllerTest {
 
 	@Autowired
 	private JacksonTester<DadosDetalhamentoCompras> dadosDetalhamento;
+
+	@Autowired
+	private JacksonTester<DadosAtualizarCompras> dadosAtualizar;
 	
 	@BeforeAll
 	void beforeAll() {
@@ -176,7 +180,61 @@ class ComprasControllerTest {
 		verify(comprasRepository, times(0)).findById(1L);
 	}
 	
+	@Test
+	@WithMockUser
+	@DisplayName("Deveria atualizar caso fornecedor exista e retornar codigo HTTP 200")
+	void test_cenario06() throws IOException, Exception {
+		var compras = mockCompras();
+		var fornecedor = mockFornecedor2();
+		
+		when(comprasRepository.findById(1L)).thenReturn(Optional.of(compras));
+		when(fornecedorRepository.existsById(2L)).thenReturn(true);
+		when(fornecedorRepository.getReferenceById(2L)).thenReturn(fornecedor);
+		
+		var result = mvc.perform(put("/compras/1")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(
+										dadosAtualizar.write(new DadosAtualizarCompras(2L)).getJson()
+									)
+						).andReturn().getResponse();
+		
+		compras.atualizar(fornecedor);
+		var jsonEsperado = dadosDetalhamento.write(new DadosDetalhamentoCompras(compras)).getJson();
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.getContentAsString()).isEqualTo(jsonEsperado);
+		
+		verify(comprasRepository, times(1)).findById(1L);
+		verify(fornecedorRepository, times(1)).existsById(2L);
+		verify(fornecedorRepository, times(1)).getReferenceById(2L);
+	}
 	
+	@Test
+	@WithMockUser
+	@DisplayName("Deveria atualizar caso fornecedor exista e retornar codigo HTTP 200")
+	void test_cenario07() throws IOException, Exception {
+		var compras = mockCompras();
+		var fornecedor = mockFornecedor2();
+		
+		when(comprasRepository.findById(1L)).thenReturn(Optional.of(compras));
+		when(fornecedorRepository.existsById(2L)).thenReturn(false);
+		
+		var result = mvc.perform(put("/compras/1")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(
+										dadosAtualizar.write(new DadosAtualizarCompras(2L)).getJson()
+									)
+						).andReturn().getResponse();
+		
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		
+		verify(comprasRepository, times(1)).findById(1L);
+		verify(fornecedorRepository, times(1)).existsById(2L);
+		verify(fornecedorRepository, times(0)).getReferenceById(2L);
+	}
+	
+	private Fornecedor mockFornecedor2() {
+		return new Fornecedor(2L, "razao social 2", "cnpj 2", "telefone 2", "contato 2", true);
+	}
 	
 	private Fornecedor mockFornecedor() {
 		return new Fornecedor(1L, "razao social", "cnpj", "telefone", "contato", true);
