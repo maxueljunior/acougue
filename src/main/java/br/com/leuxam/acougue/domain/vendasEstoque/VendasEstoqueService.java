@@ -80,12 +80,14 @@ public class VendasEstoqueService {
 		
 		return new DadosDetalhamentoVendaEstoque(vendasEstoque);
 	}
-
+	
+	@Transactional
 	public Page<DadosDetalhamentoVendaEstoque> findAll(Pageable pageable) {
 		var vendasEstoque = vendasEstoqueRepository.findAll(pageable);
 		return vendasEstoque.map(DadosDetalhamentoVendaEstoque::new);
 	}
-
+	
+	@Transactional
 	public Page<DadosDetalhamentoVendaEstoque> findById(Long id, Pageable pageable) {
 		if(!vendasRepository.existsById(id)) throw new ExisteException("A venda nº " + id + " não existe");
 		

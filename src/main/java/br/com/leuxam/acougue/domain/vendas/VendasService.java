@@ -58,11 +58,12 @@ public class VendasService {
 		var cliente = clienteRepository.getReferenceById(dados.idCliente());
 		
 		var vendas = new Vendas(cliente);
-		vendasRepository.save(vendas);
+		vendas = vendasRepository.save(vendas);
 		
 		return new DadosDetalhamentoVendas(vendas);
 	}
-
+	
+	@Transactional
 	public PagedModel<EntityModel<VendasDTO>> findAll(Pageable pageable, String idCliente) {
 		Page<Vendas> vendas = null;
 		
@@ -112,7 +113,8 @@ public class VendasService {
 		
 		return outputStream;
 	}
-
+	
+	@Transactional
 	public Vendas findByIdAndArchive(Long id) {
 		
 		if(!vendasRepository.existsById(id)) throw new ExisteException("Não existe venda nº " + id);
@@ -123,7 +125,8 @@ public class VendasService {
 		
 		return vendas;
 	}
-
+	
+	@Transactional
 	public DadosDetalhamentoVendas findById(Long id) {
 		if(!vendasRepository.existsById(id)) throw new ExisteException("Não existe venda nº " + id);
 		

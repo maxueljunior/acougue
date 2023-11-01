@@ -20,8 +20,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,28 +44,30 @@ import br.com.leuxam.acougue.domain.estoqueData.EstoqueData;
 import br.com.leuxam.acougue.domain.estoqueData.EstoqueDataRepository;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class ComprasEstoqueServiceTest {
 	
+	@InjectMocks
 	private ComprasEstoqueService service;
 	
-	@MockBean
+	@Mock
 	private ComprasEstoqueRepository comprasEstoqueRepository;
 
-	@MockBean
+	@Mock
 	private ComprasRepository comprasRepository;
 
-	@MockBean
+	@Mock
 	private EstoqueRepository estoqueRepository;
 
-	@MockBean
+	@Mock
 	private EstoqueDataRepository estoqueDataRepository;
 	
 	private Pageable pageable;
 	
 	@BeforeAll
 	void beforeAll() {
+		MockitoAnnotations.openMocks(this);
 		service = new ComprasEstoqueService(comprasEstoqueRepository,
 				comprasRepository, estoqueRepository, estoqueDataRepository);
 		pageable = PageRequest.of(0, 10);

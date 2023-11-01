@@ -35,25 +35,27 @@ public class EstoqueService {
 	@Transactional
 	public DadosDetalhamentoEstoque create(DadosCriarEstoque dados) {
 		var estoque = new Estoque(dados);
-		estoqueRepository.save(estoque);
+		var estoqueFim = estoqueRepository.save(estoque);
 		
 		var listaId = clienteRepository.findIdAlls();
 		
 		listaId.forEach(c -> {
 			var cliente = clienteRepository.getReferenceById(c.id());
-			var clienteEstoque = new ClienteEstoque(null, estoque, cliente,
+			var clienteEstoque = new ClienteEstoque(null, estoqueFim, cliente,
 					new BigDecimal("53"), LocalDateTime.now());
 			clienteEstoqueRepository.save(clienteEstoque);
 		});
 		
-		return new DadosDetalhamentoEstoque(estoque);
+		return new DadosDetalhamentoEstoque(estoqueFim);
 	}
 
+	@Transactional
 	public Page<DadosDetalhamentoEstoque> findAll(Pageable pageable) {
 		var estoque = estoqueRepository.findAll(pageable);
 		return estoque.map(DadosDetalhamentoEstoque::new);
 	}
 
+	@Transactional
 	public DadosDetalhamentoEstoque findById(Long id) {
 		var estoque = estoqueRepository.findById(id);
 		

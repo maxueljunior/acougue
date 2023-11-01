@@ -23,10 +23,11 @@ public class FornecedorService {
 	public DadosDetalhamentoFornecedor create(DadosCriarFornecedor dados) {
 		
 		var fornecedor = new Fornecedor(dados);
-		fornecedorRepository.save(fornecedor);
+		fornecedor = fornecedorRepository.save(fornecedor);
 		return new DadosDetalhamentoFornecedor(fornecedor);
 	}
 
+	@Transactional
 	public Page<DadosDetalhamentoFornecedor> searchFornecedorByAtivoTrueAndLikeRazao(
 			String razao, Pageable pageable) {
 		var fornecedores = fornecedorRepository
@@ -35,6 +36,7 @@ public class FornecedorService {
 		return fornecedores.map(DadosDetalhamentoFornecedor::new);
 	}
 
+	@Transactional
 	public DadosDetalhamentoFornecedor findByIdAndAtivoTrue(Long id) {
 		var fornecedor = fornecedorRepository.findByIdAndAtivoTrue(id);
 		

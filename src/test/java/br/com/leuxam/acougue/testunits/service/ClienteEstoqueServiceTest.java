@@ -17,8 +17,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,19 +36,21 @@ import br.com.leuxam.acougue.domain.clienteEstoque.ResumoLucratividade;
 import br.com.leuxam.acougue.domain.estoque.Estoque;
 import br.com.leuxam.acougue.domain.estoque.Unidade;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class ClienteEstoqueServiceTest {
-
+	
+	@InjectMocks
 	private ClienteEstoqueService service;
 	
-	@MockBean
+	@Mock
 	private ClienteEstoqueRepository clienteEstoqueRepository;
 	
 	private Pageable pageable;
 	
 	@BeforeAll
 	void beforeAll() {
+		MockitoAnnotations.openMocks(this);
 		service = new ClienteEstoqueService(clienteEstoqueRepository);
 		pageable = PageRequest.of(0, 15);
 	}

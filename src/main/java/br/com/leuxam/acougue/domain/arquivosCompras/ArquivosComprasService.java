@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.leuxam.acougue.domain.ValidacaoException;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ArquivosComprasService {
@@ -26,6 +27,7 @@ public class ArquivosComprasService {
 		this.comprasRepository = comprasRepository;
 	}
 	
+	@Transactional
 	public ArquivosCompras saveArchive(MultipartFile file, Long id){
 		
 		if(!comprasRepository.existsById(id)) throw new ValidacaoException("Compra nº " + id + " não existe");
@@ -47,6 +49,7 @@ public class ArquivosComprasService {
 		}
 	}
 	
+	@Transactional
 	public ArquivosCompras findByIdCompras(Long id) {
 		if(!comprasRepository.existsById(id)) throw new ValidacaoException("Compra nº " + id + " não existe");
 		

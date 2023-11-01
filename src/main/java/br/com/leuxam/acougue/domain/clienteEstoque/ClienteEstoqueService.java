@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ClienteEstoqueService {
 	
@@ -15,6 +17,7 @@ public class ClienteEstoqueService {
 		this.clienteEstoqueRepository = clienteEstoqueRepository;
 	}
 
+	@Transactional
 	public Page<ResumoLucratividade> resumoLucratividade(Pageable pageable){
 		var resumo = clienteEstoqueRepository.gerarResumoLucratividade(pageable);
 		return resumo.map(ResumoLucratividade::new);

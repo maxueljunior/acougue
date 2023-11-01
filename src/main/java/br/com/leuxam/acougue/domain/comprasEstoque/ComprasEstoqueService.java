@@ -59,7 +59,8 @@ public class ComprasEstoqueService {
 		
 		return new DadosDetalhamentoComprasEstoque(compraEstoque);
 	}
-
+	
+	@Transactional
 	public Page<DadosDetalhamentoComprasEstoque> findAll(Pageable pageable) {
 		
 		var comprasEstoque = comprasEstoqueRepository.findAll(pageable);
@@ -67,6 +68,7 @@ public class ComprasEstoqueService {
 		return comprasEstoque.map(DadosDetalhamentoComprasEstoque::new);
 	}
 
+	@Transactional
 	public Page<DadosDetalhamentoComprasEstoque> findById(Long id, Pageable pageable) {
 		
 		if(!comprasRepository.existsById(id)) throw new ExisteException("A compra nº " + id + " não existe");
@@ -75,6 +77,7 @@ public class ComprasEstoqueService {
 		return compraEstoque.map(DadosDetalhamentoComprasEstoque::new);
 	}
 
+	@Transactional
 	public void delete(Long idCompras, Long idEstoque) {
 		if(!comprasRepository.existsById(idCompras)) throw new ExisteException("A compra nº " + idCompras + " não existe");
 		

@@ -17,9 +17,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -31,21 +33,22 @@ import br.com.leuxam.acougue.domain.compras.Compras;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
 import br.com.leuxam.acougue.domain.fornecedor.Fornecedor;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class ArquivosComprasServiceTest {
 	
 	@InjectMocks
 	private ArquivosComprasService service;
 	
-	@MockBean
+	@Mock
 	private ArquivosComprasRepository arquivosComprasRepository;
 	
-	@MockBean
+	@Mock
 	private ComprasRepository comprasRepository;
 	
 	@BeforeAll
 	void beforeAll() {
+		MockitoAnnotations.openMocks(this);
 		service = new ArquivosComprasService(arquivosComprasRepository, comprasRepository);
 	}
 	
@@ -83,7 +86,7 @@ class ArquivosComprasServiceTest {
 		when(comprasRepository.existsById(1L)).thenReturn(true);
 		when(comprasRepository.getReferenceById(1L)).thenReturn(compras);
 
-		when(arquivosComprasRepository.save(any(ArquivosCompras.class))).thenReturn(arquivosCompras);
+//		when(arquivosComprasRepository.save(any(ArquivosCompras.class))).thenReturn(arquivosCompras);
 		
 		Exception exception = assertThrows(FileException.class, () ->{
 			service.saveArchive(file, 1L);

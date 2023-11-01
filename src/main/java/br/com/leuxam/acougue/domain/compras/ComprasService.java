@@ -54,6 +54,7 @@ public class ComprasService {
 		return new DadosDetalhamentoCompras(compras);
 	}
 
+	@Transactional
 	public PagedModel<EntityModel<ComprasDTO>> findAll(Pageable pageable) {
 		var compras = comprasRepository.findAll(pageable);
 		
@@ -69,7 +70,7 @@ public class ComprasService {
 		return assembler.toModel(comprasDTO, link);
 	}
 	
-
+	@Transactional
 	public ComprasDTO findById(Long id) {
 		if (!comprasRepository.existsById(id))
 			throw new ValidacaoException("Compra nº " + id + " não existe!");

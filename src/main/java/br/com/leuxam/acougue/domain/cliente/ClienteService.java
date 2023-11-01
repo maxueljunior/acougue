@@ -52,6 +52,7 @@ public class ClienteService {
 		return new DadosDetalhamentoCliente(clienteSalvo);
 	}
 
+	@Transactional
 	public Page<DadosDetalhamentoCliente> findAllByAtivoAndNome(Pageable pageable, String nome) {
 		
 		var clientes = clienteRepository.queryByFindAllByAtivoAndNome(nome, pageable);
@@ -59,6 +60,7 @@ public class ClienteService {
 		return clientes.map(DadosDetalhamentoCliente::new);
 	}
 
+	@Transactional
 	public DadosDetalhamentoCliente findByIdAndAtivo(Long id) {
 		
 		var cliente = clienteRepository.findByIdAndAtivoTrue(id);
