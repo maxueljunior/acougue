@@ -63,7 +63,6 @@ import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoqueService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestInstance(Lifecycle.PER_CLASS)
 class VendasEstoqueControllerTest {
 	

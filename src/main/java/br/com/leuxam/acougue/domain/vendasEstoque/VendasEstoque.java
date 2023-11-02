@@ -51,4 +51,8 @@ public class VendasEstoque {
 		if(dados.quantidade() != null) this.quantidade = dados.quantidade();
 		if(dados.valorUnitario() != null) this.valorUnitario = dados.valorUnitario();
 	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }
