@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/fornecedor")
+@RequestMapping("/api/fornecedor")
 @Tag(description = "Fornecedores", name = "Fornecedores")
 public class FornecedorController {
 	
