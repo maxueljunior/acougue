@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 @Tag(description = "Login", name = "Login")
 public class AuthenticationController {
 	
