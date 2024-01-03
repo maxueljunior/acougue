@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../core/material/material.module';
 import { FormLoginComponent } from './form-login/form-login.component';
+import { AsideBarComponent } from './aside-bar/aside-bar.component';
 
 @NgModule({
   declarations: [
-    FormLoginComponent
+    FormLoginComponent,
+    AsideBarComponent
   ],
   imports: [
     CommonModule,
@@ -14,7 +16,8 @@ import { FormLoginComponent } from './form-login/form-login.component';
     MaterialModule
   ],
   exports: [
-    FormLoginComponent
+    FormLoginComponent,
+    AsideBarComponent
   ]
 })
 export class SharedModule { }

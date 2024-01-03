@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormLoginComponent } from './shared/form-login/form-login.component';
+import { HomeModule } from './home/home.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,8 @@ import { FormLoginComponent } from './shared/form-login/form-login.component';
     BrowserModule,
     AppRoutingModule,
     AutenticacaoModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

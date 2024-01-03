@@ -13,11 +13,16 @@
             Senha é obrigatoria!
         </mat-error>
     </mat-form-field>
-    <button 
-        type="submit" 
-        [disabled]="!formLoginService.formLogin.valid" 
-        mat-flat-button 
+    <mat-error class="error-login" *ngIf="!formLoginService.isAutenticate">
+      Usuário e senha estão incorretos!
+    </mat-error>
+    <button
+        type="submit"
+        [disabled]="!formLoginService.formLogin.valid"
+        mat-flat-button
+        color="warn"
         class="form-login-button">
+        <mat-icon aria-hidden="true" aria-label="Example home icon" fontIcon="key"></mat-icon>
         LOGIN
     </button>
 </form>

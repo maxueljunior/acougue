@@ -18,13 +18,14 @@
         }
     }
     .form-login-button{
-        background-color: #717171;
         width: 75%;
         height: 50px;
-        color: #252525;
-        border: 2px solid #F2F2F2;
-        font-size: 20px;
+        font-size: 18px;
         font-family: var(--font-principal);
         font-weight: 700;
+    }
+    .error-login{
+      font-size: 16px;
+      margin-bottom: 5px;
     }
 }

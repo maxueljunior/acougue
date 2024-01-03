@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { AutenticacaoService } from 'src/app/autenticacao/services/autenticacao.service';
 
 @Injectable({
@@ -9,6 +10,7 @@ import { AutenticacaoService } from 'src/app/autenticacao/services/autenticacao.
 export class FormLoginService {
 
   formLogin: FormGroup;
+  isAutenticate: boolean = true;
 
   constructor(
     private autenticacaoService: AutenticacaoService,
@@ -22,16 +24,19 @@ export class FormLoginService {
 
   autentica(){
     if(this.formLogin.valid){
+      this.isAutenticate = true;
       this.autenticacaoService.autenticar(
         this.formLogin.get('username')?.value,
         this.formLogin.get('password')?.value
         ).subscribe({
           next: (value) => {
             console.log(value);
-            this.router.navigateByUrl('/');
+            this.isAutenticate = true;
+            this.router.navigateByUrl('/home');
             this.formLogin.reset();
           },
           error: (err) => {
+            this.isAutenticate = false;
             console.log(err);
           }
         })
