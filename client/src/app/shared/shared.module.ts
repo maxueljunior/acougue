@@ -4,11 +4,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../core/material/material.module';
 import { FormLoginComponent } from './form-login/form-login.component';
 import { AsideBarComponent } from './aside-bar/aside-bar.component';
+import { ContainerComponent } from './container/container.component';
 
 @NgModule({
   declarations: [
     FormLoginComponent,
-    AsideBarComponent
+    AsideBarComponent,
+    ContainerComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { AsideBarComponent } from './aside-bar/aside-bar.component';
   ],
   exports: [
     FormLoginComponent,
-    AsideBarComponent
+    AsideBarComponent,
+    ContainerComponent
   ]
 })
 export class SharedModule { }
