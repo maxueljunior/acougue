@@ -7,12 +7,12 @@ import { FormLoginService } from '../service/form-login.service';
   styleUrls: ['./form-login.component.scss']
 })
 export class FormLoginComponent {
-  
+
   constructor(public formLoginService: FormLoginService){
-    
+
   }
 
   public submit(): void{
-    console.log(this.formLoginService.formLogin.value);
+    this.formLoginService.autentica();
   }
 }
