@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormLoginComponent } from './shared/form-login/form-login.component';
 
 @NgModule({
   declarations: [

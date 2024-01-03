@@ -1,0 +1,30 @@
+
+.form-login{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 15px;
+    align-items: center;
+    .form-login-input{
+        font-size: 20px;
+        width: 75%;
+        height: 85px;
+        margin-bottom: 10px;
+        .form-login-input-label{
+            font-size: 18px;
+        }
+        input{
+            padding-top: 5px;
+        }
+    }
+    .form-login-button{
+        background-color: #717171;
+        width: 75%;
+        height: 50px;
+        color: #252525;
+        border: 2px solid #F2F2F2;
+        font-size: 20px;
+        font-family: var(--font-principal);
+        font-weight: 700;
+    }
+}
