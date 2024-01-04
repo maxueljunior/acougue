@@ -6,17 +6,17 @@ import { AppComponent } from './app.component';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home/home.module';
+import { FornecedorComponent } from './fornecedor/fornecedor.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AutenticacaoModule,
-    BrowserAnimationsModule,
-    HomeModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
