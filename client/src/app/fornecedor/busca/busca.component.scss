@@ -17,13 +17,24 @@
     }
   }
 
-  .container-form{
-    .mat-mdc-form-field{
-      width: 650px;
-    }
-    .botao{
-      height: 56px;
+  .container-busca{
+    margin-top: 50px;
+    .container-form{
+      padding: 20px;
+      .mat-mdc-form-field{
+        width: 650px;
+      }
+      .botao{
+        height: 56px;
+      }
     }
   }
+
+  // .container-table{
+  //   margin-top: 50px;
+  //   .table{
+  //     padding: 10px;
+  //   }
+  // }
 
 }

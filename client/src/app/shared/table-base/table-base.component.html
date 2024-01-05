@@ -1,0 +1,38 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Cod. </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="razaoSocial">
+      <th mat-header-cell *matHeaderCellDef> Razão Social </th>
+      <td mat-cell *matCellDef="let element"> {{element.razaoSocial}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cnpj">
+      <th mat-header-cell *matHeaderCellDef> CNPJ </th>
+      <td mat-cell *matCellDef="let element"> {{element.cnpj}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nomeContato">
+      <th mat-header-cell *matHeaderCellDef> Contato </th>
+      <td mat-cell *matCellDef="let element"> {{element.nomeContato}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefone">
+      <th mat-header-cell *matHeaderCellDef> Telefone </th>
+      <td mat-cell *matCellDef="let element"> {{element.telefone}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 [length]="size"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>

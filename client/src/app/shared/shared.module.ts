@@ -5,12 +5,16 @@ import { MaterialModule } from '../core/material/material.module';
 import { FormLoginComponent } from './form-login/form-login.component';
 import { AsideBarComponent } from './aside-bar/aside-bar.component';
 import { ContainerComponent } from './container/container.component';
+import { CardComponent } from './card/card.component';
+import { TableBaseComponent } from './table-base/table-base.component';
 
 @NgModule({
   declarations: [
     FormLoginComponent,
     AsideBarComponent,
-    ContainerComponent
+    ContainerComponent,
+    CardComponent,
+    TableBaseComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +24,9 @@ import { ContainerComponent } from './container/container.component';
   exports: [
     FormLoginComponent,
     AsideBarComponent,
-    ContainerComponent
+    ContainerComponent,
+    CardComponent,
+    TableBaseComponent
   ]
 })
 export class SharedModule { }

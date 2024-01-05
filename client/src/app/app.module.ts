@@ -7,6 +7,8 @@ import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home/home.module';
 import { FornecedorComponent } from './fornecedor/fornecedor.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,13 @@ import { FornecedorComponent } from './fornecedor/fornecedor.component';
     AutenticacaoModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

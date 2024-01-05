@@ -1,10 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { IFornecedor } from '../core/types/Fornecedor';
+import { FornecedorService } from './service/fornecedor.service';
 
 @Component({
   selector: 'app-fornecedor',
   templateUrl: './fornecedor.component.html',
   styleUrls: ['./fornecedor.component.scss']
 })
-export class FornecedorComponent {
+export class FornecedorComponent implements OnInit{
+
+  fornecedorSubscription: Subscription = new Subscription();
+  fornecedores: IFornecedor[] = [];
+
+  constructor(private fornecedorService: FornecedorService){}
+
+  ngOnInit(): void {
+    this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
+      this.fornecedores = f;
+    })
+    this.fornecedorService.findAll();
+  }
 
 }
