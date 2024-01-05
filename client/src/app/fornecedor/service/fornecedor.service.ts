@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
@@ -19,12 +19,12 @@ export class FornecedorService {
     private http: HttpClient
   ) { }
 
-  findAll(): void{
-    this.http.get<IFornecedor>(`${this.urlApi}`).subscribe(
+  findAll(page: number, size: number): void{
+    const options = new HttpParams().set('page',page).set('size',size);
+
+    this.http.get<IFornecedor>(this.urlApi, { params: options}).subscribe(
       (f) => {
-        let forns = this.fornecedorSubject.getValue();
-        console.log(f.totalElements);
-        console.log(f);
+        let forns = this.fornecedorSubject.getValue().splice(1,1);
         forns = forns.concat(f);
         this.fornecedorSubject.next(forns);
       }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IFornecedor } from '../core/types/Fornecedor';
 import { FornecedorService } from './service/fornecedor.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-fornecedor',
@@ -19,7 +20,13 @@ export class FornecedorComponent implements OnInit{
     this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
       this.fornecedores = f;
     })
-    this.fornecedorService.findAll();
+    this.fornecedorService.findAll(0,10);
   }
 
+  alteracaoPagina(event: PageEvent): void{
+    this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
+      this.fornecedores = f;
+    })
+    this.fornecedorService.findAll(event.pageIndex, event.pageSize);
+  }
 }

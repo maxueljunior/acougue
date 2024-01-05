@@ -3,7 +3,10 @@
     <app-busca></app-busca>
     <div class="container-table">
       <app-card>
-        <app-table-base class="table" [fornecedores]="fornecedores"></app-table-base>
+        <app-table-base
+         class="table"
+         [fornecedores]="fornecedores"
+         (alteracaoPagina)="alteracaoPagina($event)"></app-table-base>
       </app-card>
     </div>
   </app-container>

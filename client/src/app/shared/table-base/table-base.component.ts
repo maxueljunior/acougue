@@ -1,6 +1,5 @@
-import { NumberInput } from '@angular/cdk/coercion';
-import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 
@@ -11,9 +10,11 @@ import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 })
 export class TableBaseComponent implements AfterViewInit, OnChanges{
 
+
   displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone'];
 
   @Input() fornecedores!: IFornecedor[];
+  @Output() alteracaoPagina = new EventEmitter<PageEvent>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -22,6 +23,9 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
   ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator;
+    this.paginator.page.subscribe((event: PageEvent) => {
+      this.alteracaoPagina.emit(event);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -32,7 +36,6 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
         this.size = fornecedores[0].totalElements;
       }
     }
-    console.log('alguma coisa alterou');
   }
 }
 
