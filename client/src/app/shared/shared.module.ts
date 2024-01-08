@@ -7,6 +7,7 @@ import { AsideBarComponent } from './aside-bar/aside-bar.component';
 import { ContainerComponent } from './container/container.component';
 import { CardComponent } from './card/card.component';
 import { TableBaseComponent } from './table-base/table-base.component';
+import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { TableBaseComponent } from './table-base/table-base.component';
     AsideBarComponent,
     ContainerComponent,
     CardComponent,
-    TableBaseComponent
+    TableBaseComponent,
+    ModalCriacaoComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import { TableBaseComponent } from './table-base/table-base.component';
     AsideBarComponent,
     ContainerComponent,
     CardComponent,
-    TableBaseComponent
+    TableBaseComponent,
+    ModalCriacaoComponent
   ]
 })
 export class SharedModule { }

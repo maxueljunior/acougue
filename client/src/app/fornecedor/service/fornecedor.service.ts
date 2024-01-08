@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
+import { Content, Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 
 @Injectable({
   providedIn: 'root'
@@ -31,4 +31,11 @@ export class FornecedorService {
     )
   }
 
+  criar(dados: Fornecedor): void{
+    this.http.post<Fornecedor>(this.urlApi, dados).subscribe((f) => {
+      let forns = this.fornecedorSubject.getValue();
+      forns[0].content.unshift(f);
+      this.fornecedorSubject.next(forns);
+    })
+  }
 }

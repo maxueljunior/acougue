@@ -14,13 +14,17 @@ export class FornecedorComponent implements OnInit{
   fornecedorSubscription: Subscription = new Subscription();
   fornecedores: IFornecedor[] = [];
 
-  constructor(private fornecedorService: FornecedorService){}
+  constructor(
+    private fornecedorService: FornecedorService
+    ){
+    }
 
   ngOnInit(): void {
     this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
       this.fornecedores = f;
     })
     this.fornecedorService.findAll(0,10);
+
   }
 
   alteracaoPagina(event: PageEvent): void{

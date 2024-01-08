@@ -1,0 +1,21 @@
+.container-form{
+    margin: 15px;
+    text-align: center;
+    .formulario{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        .mat-mdc-form-field{
+            margin-bottom: 15px;
+        }
+    }
+    .mdc-button{
+        margin: 0 5px;
+    }
+    .container-actions{
+        .btn-close{
+            color: #FFFFFF;
+            background-color: red;
+        }
+    }
+}
