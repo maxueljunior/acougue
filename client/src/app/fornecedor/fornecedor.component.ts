@@ -51,6 +51,7 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   criarFornecendor(event: boolean): void{
     if(event){
       this.fornecedorService.criar(this.formBaseService.formBase.value, this.pageSize);
+      this.formBaseService.formBase.reset();
     }
   }
 }

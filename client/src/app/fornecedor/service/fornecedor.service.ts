@@ -51,6 +51,4 @@ export class FornecedorService {
       this.fornecedorSubject.next(forns);
     })
   }
-
-
 }

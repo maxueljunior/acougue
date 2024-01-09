@@ -11,7 +11,7 @@ import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 export class TableBaseComponent implements AfterViewInit, OnChanges{
 
 
-  displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone'];
+  displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone', 'acoes'];
 
   @Input() fornecedores!: Fornecedor[];
   @Input() pageable: IFornecedor | null | undefined;
@@ -40,6 +40,10 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
         this.size = pageable?.['totalElements'];
       }
     }
+  }
+
+  pegarDados(dataSource: any){
+    console.log(dataSource);
   }
 }
 
