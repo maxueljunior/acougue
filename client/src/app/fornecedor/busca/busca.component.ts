@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCriacaoComponent } from 'src/app/shared/modal-criacao/modal-criacao.component';
@@ -12,9 +12,10 @@ import { FormBaseService } from 'src/app/shared/service/form-base.service';
 export class BuscaComponent {
 
   formFornecedor: FormGroup;
-  
+  @Output() criar = new EventEmitter<boolean>();
+
   constructor(
-    private formBaseService: FormBaseService, 
+    private formBaseService: FormBaseService,
     public dialog: MatDialog){
     this.formFornecedor = this.formBaseService.criarFormulario();
     this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
@@ -22,9 +23,15 @@ export class BuscaComponent {
   }
 
   openDialog(): void {
-    this.dialog.open(ModalCriacaoComponent, {
+    let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
       width: '40%',
       height: '60%'
     });
+
+    diaglogRef.componentInstance.criacao.subscribe((resposta) => {
+      if(resposta === true){
+        this.criar.emit(resposta);
+      }
+    })
   }
 }

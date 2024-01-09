@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormBaseService } from '../service/form-base.service';
 import { FornecedorService } from 'src/app/fornecedor/service/fornecedor.service';
@@ -10,6 +10,8 @@ import { FornecedorService } from 'src/app/fornecedor/service/fornecedor.service
 })
 export class ModalCriacaoComponent {
 
+  @Output() criacao = new EventEmitter<boolean>();
+
   constructor(
     public dialogRef: MatDialogRef<ModalCriacaoComponent>,
     public formFornecedor: FormBaseService,
@@ -18,7 +20,7 @@ export class ModalCriacaoComponent {
     }
 
   criar(){
-    this.fornecedorService.criar(this.formFornecedor.formBase.value);
+    this.criacao.emit(true);
     this.dialogRef.close();
   }
 

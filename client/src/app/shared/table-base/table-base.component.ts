@@ -13,7 +13,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
   displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone'];
 
-  @Input() fornecedores!: IFornecedor[];
+  @Input() fornecedores!: Fornecedor[];
+  @Input() pageable: IFornecedor | null | undefined;
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -32,8 +33,11 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
     if (changes?.['fornecedores'] && changes?.['fornecedores'].currentValue) {
       const fornecedores = changes?.['fornecedores'].currentValue;
       if (fornecedores.length > 0) {
-        this.dataSource.data = fornecedores[0].content;
-        this.size = fornecedores[0].totalElements;
+        this.dataSource.data = fornecedores;
+      }
+      if(changes?.['pageable'] && changes?.['pageable'].currentValue){
+        const pageable = changes?.['pageable'].currentValue;
+        this.size = pageable?.['totalElements'];
       }
     }
   }

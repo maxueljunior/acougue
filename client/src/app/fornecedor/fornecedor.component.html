@@ -1,11 +1,14 @@
 <app-aside-bar>
   <app-container>
-    <app-busca></app-busca>
+    <app-busca
+      (criar)="criarFornecendor($event)"
+    ></app-busca>
     <div class="container-table">
       <app-card>
         <app-table-base
          class="table"
          [fornecedores]="fornecedores"
+         [pageable]="pageable"
          (alteracaoPagina)="alteracaoPagina($event)"></app-table-base>
       </app-card>
     </div>

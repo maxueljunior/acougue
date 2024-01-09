@@ -12,8 +12,12 @@ export class FornecedorService {
   // private fornecedorSubject = new BehaviorSubject<Fornecedor[]>([]);
   // fornecedores$ = this.fornecedorSubject.asObservable();
 
-  private fornecedorSubject = new BehaviorSubject<IFornecedor[]>([]);
+  private fornecedorSubject = new BehaviorSubject<Fornecedor[]>([]);
+  private pageableSubject = new BehaviorSubject<IFornecedor | null>(null);
+
   fornecedores$ = this.fornecedorSubject.asObservable();
+  pageable$ = this.pageableSubject.asObservable();
+
 
   constructor(
     private http: HttpClient
@@ -24,18 +28,29 @@ export class FornecedorService {
 
     this.http.get<IFornecedor>(this.urlApi, { params: options}).subscribe(
       (f) => {
-        let forns = this.fornecedorSubject.getValue().splice(1,1);
-        forns = forns.concat(f);
-        this.fornecedorSubject.next(forns);
+        const fornecedorSimples = f.content.map((forn) => ({
+          id: forn.id,
+          razaoSocial: forn.razaoSocial,
+          cnpj: forn.cnpj,
+          nomeContato: forn.nomeContato,
+          telefone: forn.telefone
+        }));
+
+        this.fornecedorSubject.next(fornecedorSimples);
+        this.pageableSubject.next(f);
       }
     )
   }
 
-  criar(dados: Fornecedor): void{
+  criar(dados: Fornecedor, pageSize: number): void{
     this.http.post<Fornecedor>(this.urlApi, dados).subscribe((f) => {
       let forns = this.fornecedorSubject.getValue();
-      forns[0].content.unshift(f);
+      forns = forns.slice(0, pageSize - 1);
+      forns.unshift(f);
+      console.log(forns);
       this.fornecedorSubject.next(forns);
     })
   }
+
+
 }
