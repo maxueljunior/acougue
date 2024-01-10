@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -8,9 +8,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ModalExclusaoComponent {
 
+  @Output() exclusao = new EventEmitter<boolean>();
+
   constructor(
     public dialogRef: MatDialogRef<ModalExclusaoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){
+  }
+
+  excluir(): void{
+    this.exclusao.emit(true);
   }
 }

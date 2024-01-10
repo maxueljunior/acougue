@@ -21,6 +21,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   @Input() pageable: IFornecedor | null | undefined;
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
   @Output() edicao = new EventEmitter<Fornecedor>();
+  @Output() exclusao = new EventEmitter<Fornecedor>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -91,9 +92,9 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
       }
     });
 
-    // dialogRef.componentInstance.edicao.subscribe((dados) => {
-    //   this.edicao.emit(dados);
-    // })
+    dialogRef.componentInstance.exclusao.subscribe((e) => {
+      this.exclusao.emit(fornecedor);
+    })
   }
 }
 

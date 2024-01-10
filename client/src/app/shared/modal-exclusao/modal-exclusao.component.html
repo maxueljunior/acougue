@@ -4,10 +4,10 @@
     <h1>Confirmação!</h1>
   </div>
   <div mat-dialog-content>
-    <h2>Deseja realmente excluir o fornecedor <span>{{ data.fornecedor.razaoSocial }}</span>?</h2>
+    <h2>Deseja realmente excluir <span>{{ data.fornecedor.razaoSocial }}</span>?</h2>
   </div>
   <div mat-dialog-actions align="center">
-    <button color="primary" mat-flat-button mat-dialog-close>SIM</button>
+    <button (click)="excluir()" color="primary" mat-flat-button mat-dialog-close>SIM</button>
     <button color="warn" mat-flat-button mat-dialog-close cdkFocusInitial>NÃO</button>
   </div>
 </div>

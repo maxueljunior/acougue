@@ -64,13 +64,20 @@ export class FornecedorService {
     });
   }
 
-  delete(id: number): void{
+  delete(id: number, pageIndex: number, pageSize: number): void{
     this.http.delete(`${this.urlApi}/${id}`).subscribe(() => {
       let forns = this.fornecedorSubject.getValue();
       let index = forns.findIndex(dados => dados.id === id);
       if(index !== -1){
         forns.splice(index, 1);
-        this.fornecedorSubject.next(forns);
+        let novoForm = [...forns];
+        this.fornecedorSubject.next(novoForm);
+
+        let totalElementos = this.pageableSubject.value!.totalElements;
+        if(totalElementos > pageSize){
+          this.findAll(pageIndex, pageSize);
+          console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
+        }
       }
     })
   }

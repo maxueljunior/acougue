@@ -61,4 +61,10 @@ export class FornecedorComponent implements OnInit, OnDestroy{
       this.formBaseService.resetarCampos();
     }
   }
+
+  excluirFornecedor(event: Fornecedor){
+    if(event){
+      this.fornecedorService.delete(event.id, this.pageIndex, this.pageSize);
+    }
+  }
 }
