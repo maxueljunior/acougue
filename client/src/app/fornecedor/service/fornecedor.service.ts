@@ -51,4 +51,11 @@ export class FornecedorService {
       this.fornecedorSubject.next(forns);
     })
   }
+
+  editar(id: number, dados: Fornecedor): void{
+    this.http.put<Fornecedor>(`${this.urlApi}/id`, dados).subscribe((f) => {
+      let forns = this.fornecedorSubject.getValue();
+      
+    });
+  }
 }

@@ -2,6 +2,9 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Simpl
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
+import { FormBaseService } from '../service/form-base.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalCriacaoComponent } from '../modal-criacao/modal-criacao.component';
 
 @Component({
   selector: 'app-table-base',
@@ -22,8 +25,14 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   dataSource = new MatTableDataSource<Fornecedor>([]);
   size: number = 0;
 
+  constructor(
+    private formularioService: FormBaseService,
+    public dialog: MatDialog
+  ){
+
+  }
+
   ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
     this.paginator.page.subscribe((event: PageEvent) => {
       this.alteracaoPagina.emit(event);
     });
@@ -42,8 +51,29 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
     }
   }
 
-  pegarDados(dataSource: any){
-    console.log(dataSource);
+  pegarDados(dataSource: Fornecedor){
+    this.formularioService.formBase.patchValue({
+      razaoSocial: dataSource.razaoSocial,
+      cnpj: dataSource.cnpj,
+      nomeContato: dataSource.nomeContato,
+      telefone: dataSource.telefone
+    });
+    this.openDialog(dataSource);
+  }
+
+  openDialog(fornecedor: Fornecedor): void {
+    let dialogRef = this.dialog.open(ModalCriacaoComponent, {
+      width: '40%',
+      height: '60%',
+      data:{
+        editar: true,
+        fornecedor: fornecedor
+      }
+    });
+
+    dialogRef.componentInstance.edicao.subscribe((e) => {
+      console.log(e);
+    })
   }
 }
 

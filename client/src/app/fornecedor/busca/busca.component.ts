@@ -25,7 +25,10 @@ export class BuscaComponent {
   openDialog(): void {
     let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
       width: '40%',
-      height: '60%'
+      height: '60%',
+      data: {
+        editar: false
+      }
     });
 
     diaglogRef.componentInstance.criacao.subscribe((resposta) => {

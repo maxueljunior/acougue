@@ -1,6 +1,9 @@
 <div class="container-form">
-  <h1>Cadastrar Fornecedor</h1>
-  <form class="formulario" [formGroup]="formFornecedor.formBase" (ngSubmit)="criar()">
+
+  <h1 *ngIf="!data.editar">Cadastrar Fornecedor</h1>
+  <h1 *ngIf="data.editar">Editar Fornecedor</h1>
+
+  <form class="formulario" [formGroup]="formFornecedor.formBase" (ngSubmit)="criarOuEditar()">
 
     <mat-form-field appearance="outline">
       <mat-label>Razão Social</mat-label>
@@ -43,7 +46,8 @@
     </mat-form-field>
 
     <div class="container-actions">
-      <button [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">ADICIONAR</button>
+      <button *ngIf="!data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">ADICIONAR</button>
+      <button *ngIf="data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">EDITAR</button>
       <button (click)="fechar()" type="button" class="btn-close" mat-flat-button>FECHAR</button>
     </div>
     
