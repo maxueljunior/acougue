@@ -9,7 +9,8 @@
          class="table"
          [fornecedores]="fornecedores"
          [pageable]="pageable"
-         (alteracaoPagina)="alteracaoPagina($event)"></app-table-base>
+         (alteracaoPagina)="alteracaoPagina($event)"
+         (edicao)="editarFornecedor($event)"></app-table-base>
       </app-card>
     </div>
   </app-container>

@@ -47,15 +47,31 @@ export class FornecedorService {
       let forns = this.fornecedorSubject.getValue();
       forns = forns.slice(0, pageSize - 1);
       forns.unshift(f);
-      console.log(forns);
       this.fornecedorSubject.next(forns);
     })
   }
 
-  editar(id: number, dados: Fornecedor): void{
-    this.http.put<Fornecedor>(`${this.urlApi}/id`, dados).subscribe((f) => {
+  editar(dadosAntigo: Fornecedor, dadosEditado: Fornecedor): void{
+    this.http.put<Fornecedor>(`${this.urlApi}/${dadosAntigo.id}`, dadosEditado).subscribe((f) => {
       let forns = this.fornecedorSubject.getValue();
-      
+      let index = forns.findIndex(dados => dados.id === dadosAntigo.id);
+
+      if(index !== -1){
+        // E necessário criar um novo array, pois se for o mesmo o Angular não dectecta que houve alguma alteração
+        let novoForns = [...forns.slice(0, index), f,...forns.slice(index + 1)]
+        this.fornecedorSubject.next(novoForns);
+      }
     });
+  }
+
+  delete(id: number): void{
+    this.http.delete(`${this.urlApi}/${id}`).subscribe(() => {
+      let forns = this.fornecedorSubject.getValue();
+      let index = forns.findIndex(dados => dados.id === id);
+      if(index !== -1){
+        forns.splice(index, 1);
+        this.fornecedorSubject.next(forns);
+      }
+    })
   }
 }

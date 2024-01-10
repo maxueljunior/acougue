@@ -7,8 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FormBaseService{
 
   formBase!: FormGroup;
-  
-  constructor(private formBuilder: FormBuilder) { 
+
+  constructor(private formBuilder: FormBuilder) {
   }
 
   criarFormulario(){
@@ -39,7 +39,11 @@ export class FormBaseService{
     // })
   }
 
-  retornaCamposFornecedor(){
+  retornaCamposFornecedor(): FormGroup{
     return this.formBase;
+  }
+
+  resetarCampos(): void{
+    this.formBase.reset();
   }
 }
