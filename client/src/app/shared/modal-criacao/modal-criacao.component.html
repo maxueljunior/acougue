@@ -1,55 +1,57 @@
 <div class="container-form">
 
-  <h1 *ngIf="!data.editar">Cadastrar Fornecedor</h1>
-  <h1 *ngIf="data.editar">Editar Fornecedor</h1>
+  <h2 *ngIf="!data.editar">Cadastrar Fornecedor</h2>
+  <h2 *ngIf="data.editar">Editar Fornecedor</h2>
 
-  <form class="formulario" [formGroup]="formFornecedor.formBase" (ngSubmit)="criarOuEditar()">
+  <mat-dialog-content class="mat-typography">
+    <form class="formulario" [formGroup]="formFornecedor.formBase" (ngSubmit)="criarOuEditar()">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Razão Social</mat-label>
-      <input matInput placeholder="Ex: MaxSoft LTDA." formControlName="razaoSocial">
-      <mat-error
-       *ngIf="formFornecedor.formBase.get('razaoSocial')?.errors?.['required'] &&
-       (formFornecedor.formBase.get('razaoSocial')?.touched || formFornecedor.formBase.get('razaoSocial')?.dirty)">
-        Razão social é obrigatorio!
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Razão Social</mat-label>
+        <input matInput placeholder="Ex: MaxSoft LTDA." formControlName="razaoSocial">
+        <mat-error
+        *ngIf="formFornecedor.formBase.get('razaoSocial')?.errors?.['required'] &&
+        (formFornecedor.formBase.get('razaoSocial')?.touched || formFornecedor.formBase.get('razaoSocial')?.dirty)">
+          Razão social é obrigatorio!
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>CNPJ</mat-label>
-      <input matInput placeholder="Ex: 96.014.849/0001-93" formControlName="cnpj">
-      <mat-error
-       *ngIf="formFornecedor.formBase.get('cnpj')?.errors?.['required'] &&
-       (formFornecedor.formBase.get('cnpj')?.touched || formFornecedor.formBase.get('cnpj')?.dirty)">
-        CNPJ é obrigatorio!
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>CNPJ</mat-label>
+        <input matInput placeholder="Ex: 96.014.849/0001-93" formControlName="cnpj">
+        <mat-error
+        *ngIf="formFornecedor.formBase.get('cnpj')?.errors?.['required'] &&
+        (formFornecedor.formBase.get('cnpj')?.touched || formFornecedor.formBase.get('cnpj')?.dirty)">
+          CNPJ é obrigatorio!
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Nome do Contato</mat-label>
-      <input matInput placeholder="Ex: Fulano da silva" formControlName="nomeContato">
-      <mat-error
-       *ngIf="formFornecedor.formBase.get('nomeContato')?.errors?.['required'] &&
-       (formFornecedor.formBase.get('nomeContato')?.touched || formFornecedor.formBase.get('nomeContato')?.dirty)">
-        Nome do contato é obrigatorio!
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome do Contato</mat-label>
+        <input matInput placeholder="Ex: Fulano da silva" formControlName="nomeContato">
+        <mat-error
+        *ngIf="formFornecedor.formBase.get('nomeContato')?.errors?.['required'] &&
+        (formFornecedor.formBase.get('nomeContato')?.touched || formFornecedor.formBase.get('nomeContato')?.dirty)">
+          Nome do contato é obrigatorio!
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Telefone</mat-label>
-      <input matInput placeholder="Ex: (16) 99232-6060" formControlName="telefone">
-      <mat-error
-       *ngIf="formFornecedor.formBase.get('telefone')?.errors?.['required'] &&
-       (formFornecedor.formBase.get('telefone')?.touched || formFornecedor.formBase.get('telefone')?.dirty)">
-        Telefone é obrigatorio!
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput placeholder="Ex: (16) 99232-6060" formControlName="telefone">
+        <mat-error
+        *ngIf="formFornecedor.formBase.get('telefone')?.errors?.['required'] &&
+        (formFornecedor.formBase.get('telefone')?.touched || formFornecedor.formBase.get('telefone')?.dirty)">
+          Telefone é obrigatorio!
+        </mat-error>
+      </mat-form-field>
 
-    <div class="container-actions">
-      <button *ngIf="!data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">ADICIONAR</button>
-      <button *ngIf="data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">EDITAR</button>
-      <button (click)="fechar()" type="button" class="btn-close" mat-flat-button>FECHAR</button>
-    </div>
-    
-  </form>
+      <div class="container-actions">
+        <button *ngIf="!data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">ADICIONAR</button>
+        <button *ngIf="data.editar" [disabled]="!this.formFornecedor.formBase.valid" type="submit" mat-flat-button color="primary">EDITAR</button>
+        <button (click)="fechar()" type="button" class="btn-close" mat-flat-button>FECHAR</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+
 </div>

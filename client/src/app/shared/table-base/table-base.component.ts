@@ -5,6 +5,7 @@ import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 import { FormBaseService } from '../service/form-base.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCriacaoComponent } from '../modal-criacao/modal-criacao.component';
+import { ModalExclusaoComponent } from '../modal-exclusao/modal-exclusao.component';
 
 @Component({
   selector: 'app-table-base',
@@ -52,17 +53,21 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
     }
   }
 
-  pegarDados(dataSource: Fornecedor){
+  editar(dataSource: Fornecedor){
     this.formularioService.formBase.patchValue({
       razaoSocial: dataSource.razaoSocial,
       cnpj: dataSource.cnpj,
       nomeContato: dataSource.nomeContato,
       telefone: dataSource.telefone
     });
-    this.openDialog(dataSource);
+    this.openDialogEditar(dataSource);
   }
 
-  openDialog(fornecedor: Fornecedor): void {
+  excluir(dataSource: Fornecedor){
+    this.openDialogExcluir(dataSource);
+  }
+
+  openDialogEditar(fornecedor: Fornecedor): void {
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: '40%',
       height: '60%',
@@ -75,6 +80,20 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
     dialogRef.componentInstance.edicao.subscribe((dados) => {
       this.edicao.emit(dados);
     })
+  }
+
+  openDialogExcluir(fornecedor: Fornecedor): void {
+    let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+      width: '40%',
+      height: '30%',
+      data:{
+        fornecedor: fornecedor
+      }
+    });
+
+    // dialogRef.componentInstance.edicao.subscribe((dados) => {
+    //   this.edicao.emit(dados);
+    // })
   }
 }
 

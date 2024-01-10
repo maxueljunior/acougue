@@ -8,6 +8,7 @@ import { ContainerComponent } from './container/container.component';
 import { CardComponent } from './card/card.component';
 import { TableBaseComponent } from './table-base/table-base.component';
 import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
+import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
     ContainerComponent,
     CardComponent,
     TableBaseComponent,
-    ModalCriacaoComponent
+    ModalCriacaoComponent,
+    ModalExclusaoComponent
   ],
   imports: [
     CommonModule,
