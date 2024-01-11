@@ -9,7 +9,7 @@
         <form class="container-form">
           <mat-form-field appearance="outline">
             <mat-label>Digite a razão social</mat-label>
-            <input matInput placeholder="Ex: MATERIAL ANGULAR LTDA.">
+            <input (keydown)="realizandoBusca()" matInput placeholder="Ex: MATERIAL ANGULAR LTDA." [formControl]="campoBusca">
           </mat-form-field>
           <button class="botao" mat-flat-button color="warn">Buscar</button>
         </form>
@@ -17,5 +17,5 @@
       </div>
     </app-card>
   </div>
-  
+
 </div>

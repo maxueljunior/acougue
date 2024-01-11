@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import { ModalCriacaoComponent } from 'src/app/shared/modal-criacao/modal-criacao.component';
 import { FormBaseService } from 'src/app/shared/service/form-base.service';
+
+const PAUSA = 300;
 
 @Component({
   selector: 'app-busca',
@@ -11,15 +14,20 @@ import { FormBaseService } from 'src/app/shared/service/form-base.service';
 })
 export class BuscaComponent {
 
+  campoBusca = new FormControl();
   formFornecedor: FormGroup;
   @Output() criar = new EventEmitter<boolean>();
+  @Output() buscaRazaoSocial = new EventEmitter<FormControl>();
 
   constructor(
     private formBaseService: FormBaseService,
     public dialog: MatDialog){
     this.formFornecedor = this.formBaseService.criarFormulario();
     this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
-    // console.log(this.formFornecedor.value);
+  }
+
+  realizandoBusca(): void{
+    this.buscaRazaoSocial.emit(this.campoBusca);
   }
 
   openDialog(): void {

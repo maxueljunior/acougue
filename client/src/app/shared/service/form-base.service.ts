@@ -30,13 +30,6 @@ export class FormBaseService{
     })
     this.formBase = formGroup;
     return this.formBase;
-
-    // formGroup = this.formBuilder.group({
-    //   razaoSocial:['', Validators.required],
-    //   cnpj:['', Validators.required],
-    //   nomeContato:['', Validators.required],
-    //   telefone:['', Validators.required]
-    // })
   }
 
   retornaCamposFornecedor(): FormGroup{

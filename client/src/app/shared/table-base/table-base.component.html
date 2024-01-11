@@ -1,5 +1,5 @@
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+  <table mat-table [dataSource]="dataSource"  *ngIf="fornecedores.length > 0 else semConteudo">
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Cod. </th>
@@ -30,10 +30,10 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <button mat-flat-button (click)="editar(element)">
-          <mat-icon>edit</mat-icon>
+          <mat-icon class="icon-edit">edit</mat-icon>
         </button>
         <button mat-flat-button (click)="excluir(element)">
-          <mat-icon>delete</mat-icon>
+          <mat-icon class="icon-delete">delete</mat-icon>
         </button>
       </td>
     </ng-container>
@@ -42,10 +42,15 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+
   <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                 [length]="size"
-                 [pageSize]="10"
-                 showFirstLastButtons
-                 aria-label="Select page of periodic elements">
+                [length]="size"
+                [pageSize]="10"
+                showFirstLastButtons
+                aria-label="Select page of periodic elements">
   </mat-paginator>
 </div>
+
+<ng-template #semConteudo>
+  Nenhum conteudo encontrado...
+</ng-template>

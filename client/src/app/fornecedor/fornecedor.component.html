@@ -2,6 +2,7 @@
   <app-container>
     <app-busca
       (criar)="criarFornecendor($event)"
+      (buscaRazaoSocial)="buscaRazaoSocial($event)"
     ></app-busca>
     <div class="container-table">
       <app-card>
@@ -14,5 +15,6 @@
          (exclusao)="excluirFornecedor($event)"></app-table-base>
       </app-card>
     </div>
+    <div *ngIf="fornecedoresEncontrados$ | async as listaFornecedores"></div>
   </app-container>
 </app-aside-bar>

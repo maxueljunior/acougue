@@ -1,8 +1,12 @@
 button{
   margin: 5px;
 
-  mat-icon{
+  .icon-edit{
     color: green;
+  }
+
+  .icon-delete{
+    color: red;
   }
 }
 

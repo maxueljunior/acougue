@@ -23,8 +23,11 @@ export class FornecedorService {
     private http: HttpClient
   ) { }
 
-  findAll(page: number, size: number): void{
-    const options = new HttpParams().set('page',page).set('size',size);
+  findAll(page: number, size: number, razao: string): void{
+    const options = new HttpParams()
+      .set('page',page)
+      .set('size',size)
+      .set('q', razao);
 
     this.http.get<IFornecedor>(this.urlApi, { params: options}).subscribe(
       (f) => {
@@ -64,7 +67,7 @@ export class FornecedorService {
     });
   }
 
-  delete(id: number, pageIndex: number, pageSize: number): void{
+  delete(id: number, pageIndex: number, pageSize: number, razao: string): void{
     this.http.delete(`${this.urlApi}/${id}`).subscribe(() => {
       let forns = this.fornecedorSubject.getValue();
       let index = forns.findIndex(dados => dados.id === id);
@@ -75,8 +78,8 @@ export class FornecedorService {
 
         let totalElementos = this.pageableSubject.value!.totalElements;
         if(totalElementos > pageSize){
-          this.findAll(pageIndex, pageSize);
-          console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
+          this.findAll(pageIndex, pageSize, razao);
+          // console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
         }
       }
     })

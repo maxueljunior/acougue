@@ -36,7 +36,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   }
 
   ngAfterViewInit() {
-    this.paginator.page.subscribe((event: PageEvent) => {
+    this.paginator?.['page'].subscribe((event: PageEvent) => {
       this.alteracaoPagina.emit(event);
     });
   }
