@@ -1,16 +1,23 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 import { FormBaseService } from '../service/form-base.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCriacaoComponent } from '../modal-criacao/modal-criacao.component';
 import { ModalExclusaoComponent } from '../modal-exclusao/modal-exclusao.component';
+import { CustomPaginatorIntl } from 'src/app/core/utils/CustomPaginatorIntl';
 
 @Component({
   selector: 'app-table-base',
   templateUrl: './table-base.component.html',
-  styleUrls: ['./table-base.component.scss']
+  styleUrls: ['./table-base.component.scss'],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: CustomPaginatorIntl
+    }
+  ]
 })
 export class TableBaseComponent implements AfterViewInit, OnChanges{
 
@@ -36,6 +43,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   }
 
   ngAfterViewInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Registros por pagina';
     this.paginator?.['page'].subscribe((event: PageEvent) => {
       this.alteracaoPagina.emit(event);
     });

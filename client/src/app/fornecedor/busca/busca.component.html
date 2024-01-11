@@ -10,10 +10,14 @@
           <mat-form-field appearance="outline">
             <mat-label>Digite a razão social</mat-label>
             <input matInput placeholder="Ex: MATERIAL ANGULAR LTDA." [formControl]="campoBusca">
+            <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
-          <button class="botao" mat-flat-button color="warn">Buscar</button>
+          <!-- <button class="botao" mat-flat-button color="warn">Buscar</button> -->
         </form>
-        <button (click)="openDialog()" class="btn-criar" mat-flat-button color="primary">CADASTRAR</button>
+        <button (click)="openDialog()" class="btn-criar" mat-flat-button color="primary" extended>
+          <mat-icon>save</mat-icon>
+          CADASTRAR
+        </button>
       </div>
     </app-card>
   </div>
