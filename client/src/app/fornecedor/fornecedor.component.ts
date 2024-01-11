@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap, tap } from 'rxjs';
 import { Fornecedor, IFornecedor } from '../core/types/Fornecedor';
 import { FornecedorService } from './service/fornecedor.service';
 import { PageEvent } from '@angular/material/paginator';
@@ -72,11 +72,27 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   }
 
   buscaRazaoSocial(event: FormControl){
-    this.fornecedoresEncontrados$ = event.valueChanges
-    .pipe(
-      debounceTime(500),
-      tap((valorDigitado) => this.fornecedorService.findAll(0,this.pageSize, valorDigitado)),
-      tap((valorDigitado) => this.razaoSocial = valorDigitado)
-    )
+    this.fornecedoresEncontrados$ = event.valueChanges.pipe(
+      debounceTime(300),
+      tap((valorDigitado) => {
+        this.razaoSocial = valorDigitado;
+        this.fornecedorService.findAll(0, this.pageSize, valorDigitado);
+        console.log(`${valorDigitado} <- Valor digitado ${this.razaoSocial} <- Razão social armazenada`);
+      }),
+      switchMap(() => {
+        return EMPTY;
+      }),
+      catchError(error => {
+        console.error('Erro na requisição', error);
+        return EMPTY
+      })
+    );
+    // this.fornecedoresEncontrados$ = event.valueChanges
+    // .pipe(
+    //   debounceTime(700),
+    //   tap((valorDigitado) => this.fornecedorService.findAll(0,this.pageSize, valorDigitado)),
+    //   tap((valorDigitado) => this.razaoSocial = valorDigitado),
+    //   tap((valorDigitado) => console.log(`${valorDigitado} <- Valor digitado ${this.razaoSocial} <- Razão social armazenada`))
+    // )
   }
 }
