@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
@@ -12,12 +12,13 @@ const PAUSA = 300;
   templateUrl: './busca.component.html',
   styleUrls: ['./busca.component.scss']
 })
-export class BuscaComponent {
+export class BuscaComponent implements OnInit{
 
   campoBusca = new FormControl();
   formFornecedor: FormGroup;
   @Output() criar = new EventEmitter<boolean>();
-  @Output() buscaRazaoSocial = new EventEmitter<FormControl>();
+  // @Output() buscaRazaoSocial = new EventEmitter<FormControl>();
+  @Output() buscaRazaoSocial = new EventEmitter<string>();
 
   constructor(
     private formBaseService: FormBaseService,
@@ -26,8 +27,12 @@ export class BuscaComponent {
     this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
   }
 
-  realizandoBusca(): void{
-    this.buscaRazaoSocial.emit(this.campoBusca);
+  ngOnInit(): void {
+    this.campoBusca.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((valorDigitado) => {
+        this.buscaRazaoSocial.emit(valorDigitado);
+      });
   }
 
   openDialog(): void {

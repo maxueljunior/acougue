@@ -71,28 +71,8 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     }
   }
 
-  buscaRazaoSocial(event: FormControl){
-    this.fornecedoresEncontrados$ = event.valueChanges.pipe(
-      debounceTime(300),
-      tap((valorDigitado) => {
-        this.razaoSocial = valorDigitado;
-        this.fornecedorService.findAll(0, this.pageSize, valorDigitado);
-        console.log(`${valorDigitado} <- Valor digitado ${this.razaoSocial} <- Razão social armazenada`);
-      }),
-      switchMap(() => {
-        return EMPTY;
-      }),
-      catchError(error => {
-        console.error('Erro na requisição', error);
-        return EMPTY
-      })
-    );
-    // this.fornecedoresEncontrados$ = event.valueChanges
-    // .pipe(
-    //   debounceTime(700),
-    //   tap((valorDigitado) => this.fornecedorService.findAll(0,this.pageSize, valorDigitado)),
-    //   tap((valorDigitado) => this.razaoSocial = valorDigitado),
-    //   tap((valorDigitado) => console.log(`${valorDigitado} <- Valor digitado ${this.razaoSocial} <- Razão social armazenada`))
-    // )
+  buscaRazaoSocial(event: string){
+    this.razaoSocial = event;
+    this.fornecedorService.findAll(0,this.pageSize, this.razaoSocial);
   }
 }
