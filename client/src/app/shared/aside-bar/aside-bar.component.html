@@ -1,4 +1,19 @@
 <div class="container">
+
+  <!-- <mat-toolbar class="aside-toolbar-secundaria">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>My App</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-toolbar> -->
+
   <mat-toolbar class="aside-toolbar">
 
     <div class="aside-toolbar-logo"></div>
@@ -8,15 +23,16 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row class="row-actions">
-      <button mat-flat-button color="warn">
+      <button mat-flat-button color="warn" (click)="logout($event)">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="logout">
         </mat-icon>
-        Logout</button>
+        Logout
+      </button>
     </mat-toolbar-row>
 
     <mat-toolbar-row class="row-itens">
       <mat-icon class="icon-home">home</mat-icon>
-      <span>
+      <span (click)="navegarParaHome($event)">
         Home
       </span>
     </mat-toolbar-row>
@@ -30,7 +46,7 @@
     </mat-toolbar-row>
     <mat-toolbar-row class="row-itens">
       <mat-icon class="icon-home">group</mat-icon>
-      <span>Fornecedores</span>
+      <span (click)="navegarParaFornecedores($event)">Fornecedores</span>
     </mat-toolbar-row>
     <mat-toolbar-row class="row-itens">
       <mat-icon class="icon-home">inventory</mat-icon>
@@ -41,6 +57,7 @@
       <span>Clientes</span>
     </mat-toolbar-row>
   </mat-toolbar>
+
   <ng-content></ng-content>
 </div>
 

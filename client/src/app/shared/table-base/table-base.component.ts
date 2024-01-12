@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
@@ -34,12 +34,18 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
   dataSource = new MatTableDataSource<Fornecedor>([]);
   size: number = 0;
+  tamanhoTela!: number;
 
   constructor(
     private formularioService: FormBaseService,
     public dialog: MatDialog
   ){
 
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event){
+    this.tamanhoTela = window.innerWidth;
   }
 
   ngAfterViewInit() {
@@ -93,8 +99,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
   openDialogExcluir(fornecedor: Fornecedor): void {
     let dialogRef = this.dialog.open(ModalExclusaoComponent, {
-      width: '40%',
-      height: '30%',
+      width: '20%',
+      height: '40%',
       data:{
         fornecedor: fornecedor
       }

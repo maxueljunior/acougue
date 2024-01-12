@@ -114,7 +114,7 @@ export class FornecedorService {
 
   verificaStatusErro(statusErro: number): void{
     if(statusErro === 403){
-      this.openSnackBar('Você não está logado!', 'falha')
+      this.openSnackBar('Sua sessão expirou!', 'falha')
     }else{
       this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
     }

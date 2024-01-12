@@ -1,15 +1,17 @@
-button{
-  margin: 5px;
+table{
+  // border: 1px solid red;
+  button{
+    margin: 5px;
 
-  .icon-edit{
-    color: green;
-  }
+    .icon-edit{
+      color: green;
+    }
 
-  .icon-delete{
-    color: red;
+    .icon-delete{
+      color: red;
+    }
   }
 }
-
 .sem-conteudo{
   p{
     font-family: var(--font-secundaria);
@@ -18,3 +20,9 @@ button{
     padding-top: 5px;
   }
 }
+
+// @media screen and (max-width: 480px) {
+//   .mdc-data-table__cel, .mdc-data-table__header-cell{
+//     padding: 0 2px 0 2px;
+//   }
+// }

@@ -32,6 +32,7 @@ export class ModalCriacaoComponent {
   }
 
   fechar(){
+    this.formFornecedor.formBase.reset();
     this.dialogRef.close();
   }
 }

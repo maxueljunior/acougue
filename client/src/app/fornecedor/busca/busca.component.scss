@@ -19,16 +19,15 @@
 
   .container-busca{
     margin-top: 50px;
-
-    .teste{
-      display: flex;
-      align-items: center;
-    }
+    width: 100%;
     .container-form{
       padding: 20px;
-      width: 60%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       .mat-mdc-form-field{
-        width: 650px;
+        width: 30%;
+        font-size: 14px;
       }
       .botao{
         height: 56px;
@@ -41,7 +40,6 @@
     }
   }
 }
-
   // .container-table{
   //   margin-top: 50px;
   //   .table{

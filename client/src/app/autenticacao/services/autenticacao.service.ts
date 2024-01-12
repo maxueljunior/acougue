@@ -1,8 +1,10 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, of, tap } from 'rxjs';
 import { Authentication } from 'src/app/core/types/Types';
 import { TokenService } from './token.service';
+import { SnackMensagemComponent } from 'src/app/shared/snack-mensagem/snack-mensagem.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ export class AutenticacaoService {
 
   constructor(
     private http: HttpClient,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar
     ) { }
 
   autenticar(username: string, password: string): Observable<HttpResponse<Authentication>>{
@@ -22,9 +25,32 @@ export class AutenticacaoService {
       ).pipe(
         tap((response) => {
           const authToken = response.body?.token || '';
-          console.log(authToken);
           this.tokenService.salvarToken(authToken);
+        }),
+        catchError((err) => {
+          this.verificaStatusErro(err.status);
+          return EMPTY;
         })
       )
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro !== 403){
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }else{
+      this.openSnackBar('Usuario e senha estão incorretos!', 'falha')
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
   }
 }
