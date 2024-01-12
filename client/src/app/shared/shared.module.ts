@@ -9,6 +9,7 @@ import { CardComponent } from './card/card.component';
 import { TableBaseComponent } from './table-base/table-base.component';
 import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
 import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.component';
+import { SnackMensagemComponent } from './snack-mensagem/snack-mensagem.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.componen
     CardComponent,
     TableBaseComponent,
     ModalCriacaoComponent,
-    ModalExclusaoComponent
+    ModalExclusaoComponent,
+    SnackMensagemComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.componen
     ContainerComponent,
     CardComponent,
     TableBaseComponent,
-    ModalCriacaoComponent
+    ModalCriacaoComponent,
+    SnackMensagemComponent
   ]
 })
 export class SharedModule { }

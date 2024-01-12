@@ -1,0 +1,8 @@
+<span [ngClass]="data.estilo" matSnackBarLabel>
+  {{ data.mensagem }}
+</span>
+<span [ngClass]="data.estilo" matSnackBarActions>
+  <button mat-button matSnackBarAction (click)="snackBarRef.dismissWithAction()">
+    <mat-icon>close</mat-icon>
+  </button>
+</span>

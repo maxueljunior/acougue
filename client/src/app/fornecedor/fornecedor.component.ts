@@ -5,6 +5,8 @@ import { FornecedorService } from './service/fornecedor.service';
 import { PageEvent } from '@angular/material/paginator';
 import { FormBaseService } from '../shared/service/form-base.service';
 import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 
 @Component({
   selector: 'app-fornecedor',
@@ -25,19 +27,23 @@ export class FornecedorComponent implements OnInit, OnDestroy{
 
   constructor(
     private fornecedorService: FornecedorService,
-    private formBaseService: FormBaseService
+    private formBaseService: FormBaseService,
+    private snackBar: MatSnackBar
     ){
     }
 
   ngOnInit(): void {
-    this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
-      this.fornecedores = f;
-    })
-    this.pageableSubscription = this.fornecedorService.pageable$.subscribe((p) => {
-      this.pageable = p;
-    })
-    this.fornecedorService.findAll(0,10, this.razaoSocial);
-
+    try{
+      this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
+        this.fornecedores = f;
+      })
+      this.pageableSubscription = this.fornecedorService.pageable$.subscribe((p) => {
+        this.pageable = p;
+      })
+      this.fornecedorService.findAll(0,10, this.razaoSocial);
+    }catch(error){
+      console.log('deu erro');
+    }
   }
 
   ngOnDestroy(): void {

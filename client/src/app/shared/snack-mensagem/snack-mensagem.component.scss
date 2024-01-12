@@ -1,0 +1,32 @@
+:host {
+  display: flex;
+}
+
+.sucesso{
+  background-color: green;
+  color: #FFFFFF;
+  font-family: var(--font-secundaria);
+  font-size: 14px;
+  font-weight: bold;
+  button{
+    mat-icon{
+      color:white
+    }
+  }
+}
+
+.falha{
+  background-color: red;
+  color: #FFFFFF;
+  font-family: var(--font-secundaria);
+  font-size: 14px;
+  font-weight: bold;
+  button{
+    mat-icon{
+      color:white
+    }
+  }
+}
+
+
+
