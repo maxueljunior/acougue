@@ -99,8 +99,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
   openDialogExcluir(fornecedor: Fornecedor): void {
     let dialogRef = this.dialog.open(ModalExclusaoComponent, {
-      width: '20%',
-      height: '40%',
+      // width: '20%',
+      // height: '40%',
       data:{
         fornecedor: fornecedor
       }
