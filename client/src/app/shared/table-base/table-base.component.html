@@ -1,7 +1,12 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource"  *ngIf="fornecedores.length > 0 else semConteudo">
 
-    <ng-container matColumnDef="id">
+    <ng-container *ngFor="let coluna of colunasResponsivas" [matColumnDef]="coluna.atributo">
+      <th mat-header-cell *matHeaderCellDef>{{ coluna.nome | titlecase }}</th>
+      <td mat-cell *matCellDef="let elemento">{{ elemento[coluna.atributo] }}</td>
+    </ng-container>
+
+    <!-- <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Cod. </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
@@ -24,7 +29,7 @@
     <ng-container matColumnDef="telefone">
       <th mat-header-cell *matHeaderCellDef> Telefone </th>
       <td mat-cell *matCellDef="let element"> {{element.telefone}} </td>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -38,8 +43,9 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="telaResponsiva ? displayedColumns : displayedesColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: telaResponsiva ? displayedColumns : displayedesColumns;"></tr>
+
   </table>
 
 

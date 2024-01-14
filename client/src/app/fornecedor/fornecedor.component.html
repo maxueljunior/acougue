@@ -10,6 +10,8 @@
          class="table"
          [fornecedores]="fornecedores"
          [pageable]="pageable"
+         [colunas]="colunas"
+         [colunasResponsivas]="colunasResponsivas"
          (alteracaoPagina)="alteracaoPagina($event)"
          (edicao)="editarFornecedor($event)"
          (exclusao)="excluirFornecedor($event)"></app-table-base>

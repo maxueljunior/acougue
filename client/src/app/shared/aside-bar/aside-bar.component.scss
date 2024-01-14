@@ -60,9 +60,27 @@
     }
   }
 
-  // .aside-toolbar-secundaria{
-  //    display: none;
-  // }
+  .aside-toolbar-secundaria{
+     display: none;
+  }
+}
+
+@media screen and (max-width:769px){
+  .container{
+    flex-direction: column;
+    .aside-toolbar{
+      display: none;
+    }
+
+    .aside-toolbar-secundaria{
+      display: inline;
+      width: 100%;
+      background-color: #3E3E3E;
+      .example-spacer{
+        flex: 1 1 auto;
+      }
+    }
+  }
 }
 
 // @media screen and (max-width: 480px) {

@@ -7,6 +7,7 @@ import { FormBaseService } from '../shared/service/form-base.service';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
+import { Responsivo } from '../core/types/Types';
 
 @Component({
   selector: 'app-fornecedor',
@@ -24,6 +25,19 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   pageIndex: number = 0;
   pageSize: number = 10;
   razaoSocial: string = '';
+
+  colunas: Responsivo[] = [
+    {nome: "Codigo", atributo: "id"},
+    {nome: "Razão Social", atributo: "razaoSocial"},
+  ]
+
+  colunasResponsivas: Responsivo[] = [
+    {nome: "Codigo", atributo: "id"},
+    {nome: "Razão Social", atributo: "razaoSocial"},
+    {nome: "CNPJ", atributo: "cnpj"},
+    {nome: "Nome do Contato", atributo: "nomeContato"},
+    {nome: "Telefone", atributo: "telefone"},
+  ]
 
   constructor(
     private fornecedorService: FornecedorService,

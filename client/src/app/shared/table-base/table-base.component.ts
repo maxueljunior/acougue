@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalCriacaoComponent } from '../modal-criacao/modal-criacao.component';
 import { ModalExclusaoComponent } from '../modal-exclusao/modal-exclusao.component';
 import { CustomPaginatorIntl } from 'src/app/core/utils/CustomPaginatorIntl';
+import { Responsivo } from 'src/app/core/types/Types';
+import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-table-base',
@@ -23,6 +25,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
 
 
   displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone', 'acoes'];
+  displayedesColumns: string[] = ['id', 'razaoSocial', 'acoes'];
 
   @Input() fornecedores!: Fornecedor[];
   @Input() pageable: IFornecedor | null | undefined;
@@ -30,11 +33,17 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   @Output() edicao = new EventEmitter<Fornecedor>();
   @Output() exclusao = new EventEmitter<Fornecedor>();
 
+  // Os atributos abaixo tem como objetivo de tentar transformar a tabela em responsiva....
+  @Input() colunas!: Responsivo[];
+  @Input() colunasResponsivas!: Responsivo[];
+  // Fim responsividade
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource = new MatTableDataSource<Fornecedor>([]);
   size: number = 0;
   tamanhoTela!: number;
+  telaResponsiva: boolean = true;
 
   constructor(
     private formularioService: FormBaseService,
@@ -44,8 +53,15 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event){
+  onResize(event: Event) {
     this.tamanhoTela = window.innerWidth;
+    if(this.tamanhoTela >= 769){
+      this.telaResponsiva = true;
+    }else{
+      this.telaResponsiva = false;
+    }
+
+    console.log(this.telaResponsiva);
   }
 
   ngAfterViewInit() {
