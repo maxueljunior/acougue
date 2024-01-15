@@ -14,6 +14,14 @@ export class AsideBarComponent {
     private tokenService: TokenService){
   }
 
+  navegadorParaProdutos(event: any){
+    this.router.navigate(['produtos'])
+  }
+
+  navegadorParaClientes(event: any){
+    this.router.navigate(['clientes'])
+  }
+
   navegarParaFornecedores(event: any){
     this.router.navigate(['fornecedores'])
   }

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
+import { debounceTime} from 'rxjs';
 import { ModalCriacaoComponent } from 'src/app/shared/modal-criacao/modal-criacao.component';
 import { FormBaseService } from 'src/app/shared/service/form-base.service';
 
@@ -36,12 +36,12 @@ export class BuscaComponent implements OnInit{
   }
 
   openDialog(): void {
-    let tamWidth = window.innerWidth * 0.50;
-    let tamHeigth = window.innerHeight * 0.60;
+    let tamWidth = window.innerWidth * 0.40;
+    let tamHeigth = window.innerHeight * 0.80;
 
     let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: tamWidth.toString(),
-      height: tamHeigth.toString(),
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
       data: {
         editar: false
       }
