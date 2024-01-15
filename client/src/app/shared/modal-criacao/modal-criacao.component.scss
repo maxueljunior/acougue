@@ -21,3 +21,10 @@
         }
     }
 }
+
+@media screen and (max-width:769px){
+  .mat-mdc-dialog-surface{
+    width: 80%;
+    height: 50%;
+  }
+}

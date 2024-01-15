@@ -36,9 +36,12 @@ export class BuscaComponent implements OnInit{
   }
 
   openDialog(): void {
+    let tamWidth = window.innerWidth * 0.50;
+    let tamHeigth = window.innerHeight * 0.60;
+
     let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: '40%',
-      height: '60%',
+      width: tamWidth.toString(),
+      height: tamHeigth.toString(),
       data: {
         editar: false
       }

@@ -26,7 +26,7 @@
       justify-content: space-between;
       align-items: center;
       .mat-mdc-form-field{
-        width: 30%;
+        width: 60%;
         font-size: 14px;
       }
       .botao{
@@ -37,9 +37,17 @@
       width: 250px;
       height: 50px;
       margin-bottom: 12px;
+      margin-left: 12px;
     }
   }
 }
+
+@media screen and (max-width:769px){
+  .container-form{
+     flex-direction: column;
+  }
+}
+
   // .container-table{
   //   margin-top: 50px;
   //   .table{

@@ -108,9 +108,13 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   }
 
   openDialogEditar(fornecedor: Fornecedor): void {
+
+    let tamWidth = window.innerWidth * 0.50;
+    let tamHeigth = window.innerHeight * 0.60;
+
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: '40%',
-      height: '60%',
+      width: tamWidth.toString(),
+      height: tamHeigth.toString(),
       data:{
         editar: true,
         fornecedor: fornecedor
