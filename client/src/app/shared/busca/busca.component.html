@@ -1,14 +1,14 @@
 <div class="container">
   <div class="container-description">
-    <p>Fornecedores</p>
+    <p>{{ titulo }}</p>
   </div>
 
   <div class="container-busca">
     <app-card>
         <div class="container-form">
           <mat-form-field appearance="outline">
-            <mat-label>Digite a razão social</mat-label>
-            <input matInput placeholder="Ex: MATERIAL ANGULAR LTDA." [formControl]="campoBusca">
+            <mat-label>{{ textoLabel }}</mat-label>
+            <input matInput [placeholder]="textoPlaceholder" [formControl]="campoBusca">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
           <button (click)="openDialog()" class="btn-criar" mat-flat-button color="primary" extended>

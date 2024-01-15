@@ -16,9 +16,6 @@ export class FormBaseService{
 
     })
     return this.formBase;
-    // return this.formBuilder.group({
-
-    // });
   }
 
   adicionaCamposFornecedor(formGroup: FormGroup){
@@ -32,7 +29,23 @@ export class FormBaseService{
     return this.formBase;
   }
 
-  retornaCamposFornecedor(): FormGroup{
+  adicionaCamposCliente(formGroup: FormGroup){
+    formGroup = this.formBuilder.group({
+      nome:['', Validators.required],
+      sobrenome:['', Validators.required],
+      telefone:['', Validators.required],
+      dataNascimento:[new Date(), Validators.required],
+      endereco: this.formBuilder.group({
+        rua: ['',Validators.required],
+        bairro:['',Validators.required],
+        numero:[0, Validators.required]
+      })
+    })
+    this.formBase = formGroup;
+    return this.formBase;
+  }
+
+  retornaCampos(): FormGroup{
     return this.formBase;
   }
 

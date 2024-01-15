@@ -17,9 +17,9 @@ export class ModalCriacaoComponent {
   constructor(
     public dialogRef: MatDialogRef<ModalCriacaoComponent>,
     public formFornecedor: FormBaseService,
-    public fornecedorService: FornecedorService,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+      console.log(this.formFornecedor.formBase.value)
     }
 
   criarOuEditar(){

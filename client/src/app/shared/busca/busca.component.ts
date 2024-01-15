@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { debounceTime} from 'rxjs';
@@ -15,16 +15,15 @@ const PAUSA = 300;
 export class BuscaComponent implements OnInit{
 
   campoBusca = new FormControl();
-  formFornecedor: FormGroup;
   @Output() criar = new EventEmitter<boolean>();
-  // @Output() buscaRazaoSocial = new EventEmitter<FormControl>();
   @Output() buscaRazaoSocial = new EventEmitter<string>();
 
+  @Input() textoLabel: string = '';
+  @Input() textoPlaceholder: string = '';
+  @Input() titulo: string = '';
+
   constructor(
-    private formBaseService: FormBaseService,
     public dialog: MatDialog){
-    this.formFornecedor = this.formBaseService.criarFormulario();
-    this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
   }
 
   ngOnInit(): void {

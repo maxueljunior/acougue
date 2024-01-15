@@ -4,7 +4,7 @@ import { Fornecedor, IFornecedor } from '../core/types/Fornecedor';
 import { FornecedorService } from './service/fornecedor.service';
 import { PageEvent } from '@angular/material/paginator';
 import { FormBaseService } from '../shared/service/form-base.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 import { Responsivo } from '../core/types/Types';
@@ -26,6 +26,8 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   pageSize: number = 10;
   razaoSocial: string = '';
 
+  formFornecedor: FormGroup;
+
   colunas: Responsivo[] = [
     {nome: "Codigo", atributo: "id"},
     {nome: "Razão Social", atributo: "razaoSocial"},
@@ -44,6 +46,8 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     private formBaseService: FormBaseService,
     private snackBar: MatSnackBar
     ){
+      this.formFornecedor = this.formBaseService.criarFormulario();
+      this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
     }
 
   ngOnInit(): void {

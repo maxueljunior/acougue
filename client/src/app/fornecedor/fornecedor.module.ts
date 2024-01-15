@@ -5,14 +5,12 @@ import { FornecedorRoutingModule } from './fornecedor-routing.module';
 import { FornecedorComponent } from './fornecedor.component';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../core/material/material.module';
-import { BuscaComponent } from './busca/busca.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
-    FornecedorComponent,
-    BuscaComponent
+    FornecedorComponent
   ],
   imports: [
     CommonModule,
