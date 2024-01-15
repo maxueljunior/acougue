@@ -1,17 +1,47 @@
 <div class="container">
 
   <mat-toolbar class="aside-toolbar-secundaria">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>My App</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon>share</mat-icon>
-    </button>
+    <div class="aside-toolbar-menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="btn-icon">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu class="providers-menu" #menu="matMenu">
+        <button mat-menu-item class="mat-item" (click)="navegarParaHome($event)">
+          <mat-icon class="icon-home">home</mat-icon>
+          <span>
+            Home
+          </span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon class="icon-home">shopping_cart</mat-icon>
+          <span>Vendas</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon class="icon-home">point_of_sale</mat-icon>
+          <span>Compras</span>
+        </button>
+        <button mat-menu-item (click)="navegarParaFornecedores($event)">
+          <mat-icon class="icon-home">group</mat-icon>
+          <span>Fornecedores</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon class="icon-home">inventory</mat-icon>
+          <span>Produtos</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon class="icon-home">group</mat-icon>
+          <span>Clientes</span>
+        </button>
+      </mat-menu>
+    </div>
+    <div class="aside-toolbar-info">
+      <p>Bem vindo, rodrigo!</p>
+      <button mat-flat-button color="warn" (click)="logout($event)">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="logout">
+        </mat-icon>
+        Logout
+      </button>
+    </div>
   </mat-toolbar>
 
   <mat-toolbar class="aside-toolbar">

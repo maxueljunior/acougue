@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
@@ -10,7 +10,7 @@ const PAUSA = 300;
 @Component({
   selector: 'app-busca',
   templateUrl: './busca.component.html',
-  styleUrls: ['./busca.component.scss']
+  styleUrls: ['./busca.component.scss'],
 })
 export class BuscaComponent implements OnInit{
 

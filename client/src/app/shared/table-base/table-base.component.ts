@@ -21,7 +21,7 @@ import { debounceTime, fromEvent, map, startWith } from 'rxjs';
     }
   ]
 })
-export class TableBaseComponent implements AfterViewInit, OnChanges{
+export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
 
 
   displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone', 'acoes'];
@@ -50,6 +50,15 @@ export class TableBaseComponent implements AfterViewInit, OnChanges{
     public dialog: MatDialog
   ){
 
+  }
+
+  ngOnInit(): void {
+    this.tamanhoTela = window.innerWidth;
+    if(this.tamanhoTela >= 769){
+      this.telaResponsiva = true;
+    }else{
+      this.telaResponsiva = false;
+    }
   }
 
   @HostListener('window:resize', ['$event'])
