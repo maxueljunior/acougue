@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { debounceTime} from 'rxjs';
-import { ModalCriacaoComponent } from 'src/app/shared/modal-criacao/modal-criacao.component';
+import { ModalCriacaoComponent } from 'src/app/fornecedor/modal-criacao/modal-criacao.component';
 import { FormBaseService } from 'src/app/shared/service/form-base.service';
 
 const PAUSA = 300;
@@ -37,7 +37,7 @@ export class BuscaComponent implements OnInit{
   openDialog(): void {
     let tamWidth = window.innerWidth * 0.40;
     let tamHeigth = window.innerHeight * 0.80;
-
+    
     let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,
       height: `${tamHeigth}px`,

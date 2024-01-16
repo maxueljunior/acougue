@@ -8,6 +8,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 import { Responsivo } from '../core/types/Types';
+import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalExclusaoComponent } from '../shared/modal-exclusao/modal-exclusao.component';
 
 @Component({
   selector: 'app-fornecedor',
@@ -47,7 +50,8 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   constructor(
     private fornecedorService: FornecedorService,
     private formBaseService: FormBaseService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
     ){
       this.formFornecedor = this.formBaseService.criarFormulario();
       this.formFornecedor = this.formBaseService.adicionaCamposFornecedor(this.formFornecedor);
@@ -87,15 +91,66 @@ export class FornecedorComponent implements OnInit, OnDestroy{
 
   editarFornecedor(event: Fornecedor){
     if(event){
-      this.fornecedorService.editar(event, this.formBaseService.formBase.value);
-      this.formBaseService.resetarCampos();
+      this.formBaseService.formBase.patchValue({
+        razaoSocial: event.razaoSocial,
+        cnpj: event.cnpj,
+        nomeContato: event.nomeContato,
+        telefone: event.telefone
+      });
+      this.openDialogEditar(event);
     }
+
+    // if(event){
+    //   this.fornecedorService.editar(event, this.formBaseService.formBase.value);
+    //   this.formBaseService.resetarCampos();
+    // }
+  }
+
+  openDialogEditar(fornecedor: Fornecedor): void {
+
+    let tamWidth = window.innerWidth * 0.40;
+    let tamHeigth = window.innerHeight * 0.80;
+
+    let dialogRef = this.dialog.open(ModalCriacaoComponent, {
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
+      data:{
+        editar: true,
+        fornecedor: fornecedor
+      }
+    });
+
+    dialogRef.componentInstance.edicao.subscribe((dados) => {
+      // console.log(dados);
+      // console.log(this.formBaseService.formBase.value);
+      this.fornecedorService.editar(fornecedor, this.formBaseService.formBase.value);
+      this.formBaseService.resetarCampos();
+    })
   }
 
   excluirFornecedor(event: Fornecedor){
     if(event){
-      this.fornecedorService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
+      this.openDialogExcluir(event);
     }
+    // if(event){
+    //   this.fornecedorService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
+    // }
+  }
+
+  openDialogExcluir(fornecedor: Fornecedor): void {
+    let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+      // width: '20%',
+      // height: '40%',
+      data:{
+        fornecedor: fornecedor
+      }
+    });
+
+    dialogRef.componentInstance.exclusao.subscribe((e) => {
+      if(e === true){
+        this.fornecedorService.delete(fornecedor.id, this.pageIndex, this.pageSize, this.razaoSocial);
+      }
+    })
   }
 
   buscaRazaoSocial(event: string){

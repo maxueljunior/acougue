@@ -6,11 +6,13 @@ import { FornecedorComponent } from './fornecedor.component';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../core/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
 
 
 @NgModule({
   declarations: [
-    FornecedorComponent
+    FornecedorComponent,
+    ModalCriacaoComponent
   ],
   imports: [
     CommonModule,

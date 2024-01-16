@@ -7,7 +7,7 @@ import { AsideBarComponent } from './aside-bar/aside-bar.component';
 import { ContainerComponent } from './container/container.component';
 import { CardComponent } from './card/card.component';
 import { TableBaseComponent } from './table-base/table-base.component';
-import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
+import { ModalCriacaoComponent } from '../fornecedor/modal-criacao/modal-criacao.component';
 import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.component';
 import { SnackMensagemComponent } from './snack-mensagem/snack-mensagem.component';
 import { BuscaComponent } from './busca/busca.component';
@@ -19,7 +19,6 @@ import { BuscaComponent } from './busca/busca.component';
     ContainerComponent,
     CardComponent,
     TableBaseComponent,
-    ModalCriacaoComponent,
     ModalExclusaoComponent,
     SnackMensagemComponent,
     BuscaComponent
@@ -35,7 +34,6 @@ import { BuscaComponent } from './busca/busca.component';
     ContainerComponent,
     CardComponent,
     TableBaseComponent,
-    ModalCriacaoComponent,
     SnackMensagemComponent,
     BuscaComponent
   ]

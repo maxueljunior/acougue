@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 import { FormBaseService } from '../service/form-base.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalCriacaoComponent } from '../modal-criacao/modal-criacao.component';
+import { ModalCriacaoComponent } from '../../fornecedor/modal-criacao/modal-criacao.component';
 import { ModalExclusaoComponent } from '../modal-exclusao/modal-exclusao.component';
 import { CustomPaginatorIntl } from 'src/app/core/utils/CustomPaginatorIntl';
 import { Responsivo } from 'src/app/core/types/Types';
@@ -30,8 +30,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @Input() dados!: any[];
   @Input() pageable: any | null | undefined;
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
-  @Output() edicao = new EventEmitter<Fornecedor>();
-  @Output() exclusao = new EventEmitter<Fornecedor>();
+  @Output() edicao = new EventEmitter<any>();
+  @Output() exclusao = new EventEmitter<any>();
 
   // Os atributos abaixo tem como objetivo de tentar transformar a tabela em responsiva....
   @Input() colunas!: Responsivo[];
@@ -97,51 +97,59 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
     }
   }
 
-  editar(dataSource: Fornecedor){
-    this.formularioService.formBase.patchValue({
-      razaoSocial: dataSource.razaoSocial,
-      cnpj: dataSource.cnpj,
-      nomeContato: dataSource.nomeContato,
-      telefone: dataSource.telefone
-    });
-    this.openDialogEditar(dataSource);
+  editar(data: any){
+    this.edicao.emit(data);
   }
 
-  excluir(dataSource: Fornecedor){
-    this.openDialogExcluir(dataSource);
+  excluir(data: any){
+    this.exclusao.emit(data);
   }
 
-  openDialogEditar(fornecedor: Fornecedor): void {
+  // editar(dataSource: Fornecedor){
+  //   this.formularioService.formBase.patchValue({
+  //     razaoSocial: dataSource.razaoSocial,
+  //     cnpj: dataSource.cnpj,
+  //     nomeContato: dataSource.nomeContato,
+  //     telefone: dataSource.telefone
+  //   });
+  //   this.openDialogEditar(dataSource);
+  // }
 
-    let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.80;
+  // excluir(dataSource: Fornecedor){
+  //   this.openDialogExcluir(dataSource);
+  // }
 
-    let dialogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
-      data:{
-        editar: true,
-        fornecedor: fornecedor
-      }
-    });
+  // openDialogEditar(fornecedor: Fornecedor): void {
 
-    dialogRef.componentInstance.edicao.subscribe((dados) => {
-      this.edicao.emit(dados);
-    })
-  }
+  //   let tamWidth = window.innerWidth * 0.40;
+  //   let tamHeigth = window.innerHeight * 0.80;
 
-  openDialogExcluir(fornecedor: Fornecedor): void {
-    let dialogRef = this.dialog.open(ModalExclusaoComponent, {
-      // width: '20%',
-      // height: '40%',
-      data:{
-        fornecedor: fornecedor
-      }
-    });
+  //   let dialogRef = this.dialog.open(ModalCriacaoComponent, {
+  //     width: `${tamWidth}px`,
+  //     height: `${tamHeigth}px`,
+  //     data:{
+  //       editar: true,
+  //       fornecedor: fornecedor
+  //     }
+  //   });
 
-    dialogRef.componentInstance.exclusao.subscribe((e) => {
-      this.exclusao.emit(fornecedor);
-    })
-  }
+  //   dialogRef.componentInstance.edicao.subscribe((dados) => {
+  //     this.edicao.emit(dados);
+  //   })
+  // }
+
+  // openDialogExcluir(fornecedor: Fornecedor): void {
+  //   let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+  //     // width: '20%',
+  //     // height: '40%',
+  //     data:{
+  //       fornecedor: fornecedor
+  //     }
+  //   });
+
+  //   dialogRef.componentInstance.exclusao.subscribe((e) => {
+  //     this.exclusao.emit(fornecedor);
+  //   })
+  // }
 }
 
