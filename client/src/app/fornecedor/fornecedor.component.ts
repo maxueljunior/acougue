@@ -41,6 +41,9 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     {nome: "Telefone", atributo: "telefone"},
   ]
 
+  displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone', 'acoes'];
+  displayedesColumns: string[] = ['id', 'razaoSocial', 'acoes'];
+
   constructor(
     private fornecedorService: FornecedorService,
     private formBaseService: FormBaseService,

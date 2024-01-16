@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Cliente, ICliente } from '../core/types/Cliente';
 import { ClienteService } from './service/cliente.service';
 import { Subscription } from 'rxjs';
+import { Responsivo } from '../core/types/Types';
 
 @Component({
   selector: 'app-clientes',
@@ -18,6 +19,27 @@ export class ClientesComponent implements OnInit{
 
   clienteSubscription = new Subscription();
   pageableSubscription = new Subscription();
+
+  colunas: Responsivo[] = [
+    {nome: "Codigo", atributo: "id"},
+    {nome: "Nome", atributo: "nome"},
+    {nome: "Telefone", atributo: "telefone"},
+  ]
+
+  colunasResponsivas: Responsivo[] = [
+    {nome: "Codigo", atributo: "id"},
+    {nome: "Nome", atributo: "nome"},
+    {nome: "Sobrenome", atributo: "sobrenome"},
+    {nome: "Telefone", atributo: "telefone"},
+    {nome: "Sexo", atributo: "sexo"},
+    {nome: "Data de Nascimento", atributo: "dataNascimento"},
+    {nome: "Rua", atributo: "endereco.rua"},
+    {nome: "Bairro", atributo: "endereco.bairro"},
+    {nome: "Numero", atributo: "endereco.numero"},
+  ]
+
+  displayedColumns: string[] = ['id', 'nome', 'sobrenome', 'telefone', 'sexo', 'dataNascimento', 'endereco.rua', 'endereco.bairro', 'endereco.numero', 'acoes'];
+  displayedesColumns: string[] = ['id', 'nome', 'telefone', 'acoes'];
 
   constructor(
     private formBaseService: FormBaseService,
@@ -42,5 +64,5 @@ export class ClientesComponent implements OnInit{
     console.log(this.clientes);
   }
 
-  
+
 }

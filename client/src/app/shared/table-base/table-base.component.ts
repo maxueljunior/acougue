@@ -24,11 +24,11 @@ import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
 
 
-  displayedColumns: string[] = ['id', 'razaoSocial', 'cnpj', 'nomeContato', 'telefone', 'acoes'];
-  displayedesColumns: string[] = ['id', 'razaoSocial', 'acoes'];
+  @Input() displayedColumns: string[] = [];
+  @Input() displayedesColumns: string[] = [];
 
-  @Input() fornecedores!: Fornecedor[];
-  @Input() pageable: IFornecedor | null | undefined;
+  @Input() dados!: any[];
+  @Input() pageable: any | null | undefined;
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
   @Output() edicao = new EventEmitter<Fornecedor>();
   @Output() exclusao = new EventEmitter<Fornecedor>();
@@ -50,6 +50,10 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
     public dialog: MatDialog
   ){
 
+  }
+
+  getNestedPropertyValue(obj: any, path: string): any {
+    return path.split('.').reduce((acc, current) => acc[current], obj);
   }
 
   ngOnInit(): void {
@@ -81,10 +85,10 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.['fornecedores'] && changes?.['fornecedores'].currentValue) {
-      const fornecedores = changes?.['fornecedores'].currentValue;
-      if (fornecedores.length > 0) {
-        this.dataSource.data = fornecedores;
+    if (changes?.['dados'] && changes?.['dados'].currentValue) {
+      const dados = changes?.['dados'].currentValue;
+      if (dados.length > 0) {
+        this.dataSource.data = dados;
       }
       if(changes?.['pageable'] && changes?.['pageable'].currentValue){
         const pageable = changes?.['pageable'].currentValue;

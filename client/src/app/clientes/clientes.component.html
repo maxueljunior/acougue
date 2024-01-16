@@ -7,7 +7,16 @@
         </app-busca>
         <div class="container-table">
         <app-card>
-            <!-- <app-table-base></app-table-base> -->
+            <app-table-base
+            class="table"
+            [dados]="clientes"
+            [pageable]="pageable"
+            [colunas]="colunas"
+            [displayedColumns]="displayedColumns"
+            [displayedesColumns]="displayedesColumns"
+            [colunasResponsivas]="colunasResponsivas"
+            >
+            </app-table-base>
         </app-card>
         </div>
     </app-container>

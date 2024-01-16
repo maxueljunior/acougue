@@ -11,9 +11,11 @@
       <app-card>
         <app-table-base
          class="table"
-         [fornecedores]="fornecedores"
+         [dados]="fornecedores"
          [pageable]="pageable"
          [colunas]="colunas"
+         [displayedColumns]="displayedColumns"
+         [displayedesColumns]="displayedesColumns"
          [colunasResponsivas]="colunasResponsivas"
          (alteracaoPagina)="alteracaoPagina($event)"
          (edicao)="editarFornecedor($event)"
