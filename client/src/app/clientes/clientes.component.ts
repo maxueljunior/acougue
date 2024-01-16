@@ -5,6 +5,8 @@ import { Cliente, ICliente } from '../core/types/Cliente';
 import { ClienteService } from './service/cliente.service';
 import { Subscription } from 'rxjs';
 import { Responsivo } from '../core/types/Types';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
 
 @Component({
   selector: 'app-clientes',
@@ -43,7 +45,8 @@ export class ClientesComponent implements OnInit{
 
   constructor(
     private formBaseService: FormBaseService,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private dialog: MatDialog
   ){
     this.formCliente = formBaseService.criarFormulario();
     this.formCliente = formBaseService.adicionaCamposCliente(this.formCliente);
@@ -62,7 +65,28 @@ export class ClientesComponent implements OnInit{
 
     this.clienteService.findAll(0, 10, '');
     console.log(this.clientes);
+
+    this.dialog.open(ModalCriacaoComponent, {
+      width: "70%",
+      height: "60%",
+      data:{
+        editar: false
+      }
+    })
   }
+
+  // editarCliente(event: Cliente){
+  //   if(event){
+  //     this.formBaseService.formBase.patchValue({
+  //       nome: event.nome,
+  //       sobrenome: event.nome,
+  //       telefone: event.telefone,
+  //       dataNascimento: event.dataNascimento,
+  //       endereco: event.endereco
+  //     })
+  //     this.openDialogEditar(event);
+  //   }
+  // }
 
 
 }

@@ -1,0 +1,74 @@
+<div class="container-form">
+
+    <h2 *ngIf="!data.editar">Cadastrar Cliente</h2>
+    <h2 *ngIf="data.editar">Editar Cliente</h2>
+  
+    <mat-dialog-content class="mat-typography">
+      <form class="formulario" [formGroup]="formBaseService.formBase" (ngSubmit)="criarOuEditar()">
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome">
+          <mat-error
+          *ngIf="formBaseService.formBase.get('nome')?.errors?.['required'] &&
+          (formBaseService.formBase.get('nome')?.touched || formBaseService.formBase.get('nome')?.dirty)">
+            Nome é obrigatorio!
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Sobrenome</mat-label>
+          <input matInput formControlName="sobrenome">
+          <mat-error
+          *ngIf="formBaseService.formBase.get('sobrenome')?.errors?.['required'] &&
+          (formBaseService.formBase.get('sobrenome')?.touched || formBaseService.formBase.get('sobrenome')?.dirty)">
+            Sobrenome é obrigatorio!
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Selecione</mat-label>
+          <mat-select formControlName="sexo">
+            <mat-option value="M">Masculino</mat-option>
+            <mat-option value="F">Feminino</mat-option>
+          </mat-select>
+          <mat-error
+          *ngIf="formBaseService.formBase.get('sexo')?.errors?.['required'] &&
+          (formBaseService.formBase.get('sexo')?.touched || formBaseService.formBase.get('sexo')?.dirty || formBaseService.formBase.get('sexo')?.errors?.['focused'])">
+            Sexo é obrigatorio!
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data de Nascimento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dataNascimento">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+          *ngIf="formBaseService.formBase.get('dataNascimento')?.errors?.['required'] &&
+          (formBaseService.formBase.get('dataNascimento')?.touched || formBaseService.formBase.get('dataNascimento')?.dirty)">
+            Sexo é obrigatorio!
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput placeholder="Ex: (16) 99232-6060" formControlName="telefone">
+          <mat-error
+          *ngIf="formBaseService.formBase.get('telefone')?.errors?.['required'] &&
+          (formBaseService.formBase.get('telefone')?.touched || formBaseService.formBase.get('telefone')?.dirty)">
+            Telefone é obrigatorio!
+          </mat-error>
+        </mat-form-field>
+  
+        <div class="container-actions">
+          <button *ngIf="!data.editar" [disabled]="!this.formBaseService.formBase.valid" type="submit" mat-flat-button color="primary">ADICIONAR</button>
+          <button *ngIf="data.editar" [disabled]="!this.formBaseService.formBase.valid" type="submit" mat-flat-button color="primary">EDITAR</button>
+          <button (click)="fechar()" type="button" class="btn-close" mat-flat-button>FECHAR</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  
+  </div>
+  

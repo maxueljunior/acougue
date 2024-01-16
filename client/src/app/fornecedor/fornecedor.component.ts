@@ -99,11 +99,6 @@ export class FornecedorComponent implements OnInit, OnDestroy{
       });
       this.openDialogEditar(event);
     }
-
-    // if(event){
-    //   this.fornecedorService.editar(event, this.formBaseService.formBase.value);
-    //   this.formBaseService.resetarCampos();
-    // }
   }
 
   openDialogEditar(fornecedor: Fornecedor): void {
@@ -121,8 +116,6 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     });
 
     dialogRef.componentInstance.edicao.subscribe((dados) => {
-      // console.log(dados);
-      // console.log(this.formBaseService.formBase.value);
       this.fornecedorService.editar(fornecedor, this.formBaseService.formBase.value);
       this.formBaseService.resetarCampos();
     })
@@ -132,9 +125,6 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     if(event){
       this.openDialogExcluir(event);
     }
-    // if(event){
-    //   this.fornecedorService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
-    // }
   }
 
   openDialogExcluir(fornecedor: Fornecedor): void {
@@ -142,7 +132,7 @@ export class FornecedorComponent implements OnInit, OnDestroy{
       // width: '20%',
       // height: '40%',
       data:{
-        fornecedor: fornecedor
+        titulo: fornecedor.razaoSocial
       }
     });
 

@@ -19,14 +19,12 @@ export class ModalCriacaoComponent {
     public formFornecedor: FormBaseService,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-      // console.log(this.formFornecedor.formBase.value)
     }
 
   criarOuEditar(){
     if(!this.data.editar){
       this.criacao.emit(true);
     }else{
-      // console.log(this.formFornecedor.formBase.value);
       this.edicao.emit(this.formFornecedor.formBase.value);
     }
     this.dialogRef.close();
