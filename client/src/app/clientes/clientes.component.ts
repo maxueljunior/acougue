@@ -20,8 +20,8 @@ export class ClientesComponent implements OnInit{
   formCliente: FormGroup;
   clientes: Cliente[] = []
   pageable: ICliente | null | undefined;
-  pageIndex!: number
-  pageSize!: number
+  pageIndex: number = 0;
+  pageSize: number = 10;
 
   clienteSubscription = new Subscription();
   pageableSubscription = new Subscription();
@@ -100,7 +100,7 @@ export class ClientesComponent implements OnInit{
         dataNascimento: dataFormatada
       })
 
-      console.log(this.formBaseService.formBase.value)
+      this.clienteService.create(this.formBaseService.formBase.value, this.pageSize);
     })
   }
 
