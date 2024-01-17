@@ -1,0 +1,40 @@
+.container-form{
+  margin: 15px;
+  text-align: center;
+  font-family: var(--font-secundaria);
+  font-weight: 400;
+  .formulario{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      .mat-mdc-form-field{
+          margin-bottom: 15px;
+      }
+      .divisao-form{
+        display: flex;
+        justify-content: space-between;
+        .mat-mdc-form-field{
+            width: 32%;
+        }
+      }
+
+      .divisao-form-2{
+        display: flex;
+        justify-content: start;
+        .mat-mdc-form-field{
+            width: 32%;
+            margin-right: 2%;
+        }
+      }
+  }
+  .mdc-button{
+      margin: 0 5px;
+  }
+  .container-actions{
+      .btn-close{
+          color: #FFFFFF;
+          background-color: red;
+      }
+  }
+}
+

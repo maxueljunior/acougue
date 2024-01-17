@@ -33,12 +33,13 @@ export class FormBaseService{
     formGroup = this.formBuilder.group({
       nome:['', Validators.required],
       sobrenome:['', Validators.required],
+      sexo: ['', Validators.required],
       telefone:['', Validators.required],
       dataNascimento:[new Date(), Validators.required],
       endereco: this.formBuilder.group({
-        rua: ['',Validators.required],
-        bairro:['',Validators.required],
-        numero:[0, Validators.required]
+        bairro:[''],
+        numero:[],
+        rua: ['']
       })
     })
     this.formBase = formGroup;

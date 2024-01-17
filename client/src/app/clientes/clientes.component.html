@@ -3,7 +3,8 @@
         <app-busca
             titulo="Clientes"
             textoLabel="Digite o nome..."
-            textoPlaceholder="Ex: Fulano da Silva Jr.">
+            textoPlaceholder="Ex: Fulano da Silva Jr."
+            (criar)="criarCliente($event)">
         </app-busca>
         <div class="container-table">
         <app-card>
@@ -15,6 +16,7 @@
             [displayedColumns]="displayedColumns"
             [displayedesColumns]="displayedesColumns"
             [colunasResponsivas]="colunasResponsivas"
+            (alteracaoPagina)="alteracaoPagina($event)"
             >
             </app-table-base>
         </app-card>

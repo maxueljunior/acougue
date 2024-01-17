@@ -83,10 +83,7 @@ export class FornecedorComponent implements OnInit, OnDestroy{
   }
 
   criarFornecendor(event: boolean): void{
-    if(event){
-      this.fornecedorService.criar(this.formBaseService.formBase.value, this.pageSize);
-      this.formBaseService.resetarCampos();
-    }
+    this.openDialogCriar();
   }
 
   editarFornecedor(event: Fornecedor){
@@ -101,10 +98,30 @@ export class FornecedorComponent implements OnInit, OnDestroy{
     }
   }
 
+  openDialogCriar(): void{
+    let tamWidth = window.innerWidth * 0.40;
+    let tamHeigth = window.innerHeight * 0.60;
+
+    let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
+      data: {
+        editar: false
+      }
+    });
+
+    diaglogRef.componentInstance.criacao.subscribe((resposta) => {
+      if(resposta === true){
+        this.fornecedorService.criar(this.formBaseService.formBase.value, this.pageSize);
+        this.formBaseService.resetarCampos();
+      }
+    })
+  }
+
   openDialogEditar(fornecedor: Fornecedor): void {
 
     let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.80;
+    let tamHeigth = window.innerHeight * 0.60;
 
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,

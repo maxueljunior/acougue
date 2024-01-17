@@ -34,22 +34,23 @@ export class BuscaComponent implements OnInit{
       });
   }
 
-  openDialog(): void {
-    let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.80;
-    
-    let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
-      data: {
-        editar: false
-      }
-    });
+  criacao(): void {
+    this.criar.emit(true);
+    // let tamWidth = window.innerWidth * 0.40;
+    // let tamHeigth = window.innerHeight * 0.80;
 
-    diaglogRef.componentInstance.criacao.subscribe((resposta) => {
-      if(resposta === true){
-        this.criar.emit(resposta);
-      }
-    })
+    // let diaglogRef = this.dialog.open(ModalCriacaoComponent, {
+    //   width: `${tamWidth}px`,
+    //   height: `${tamHeigth}px`,
+    //   data: {
+    //     editar: false
+    //   }
+    // });
+
+    // diaglogRef.componentInstance.criacao.subscribe((resposta) => {
+    //   if(resposta === true){
+    //     this.criar.emit(resposta);
+    //   }
+    // })
   }
 }

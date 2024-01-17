@@ -28,7 +28,7 @@ export class ClienteService {
       .set('page', page)
       .set('size', size)
       .set('q', nome);
-    
+
     this.http.get<ICliente>(this.urlApi, { params: options}).subscribe({
       next: (c) => {
         const clientesSimples = c.content.map((cliente) => ({
@@ -50,6 +50,17 @@ export class ClienteService {
       },
       error: (err) => {
         console.log(err.status);
+      }
+    })
+  }
+
+  create(dados: Cliente, pageSize: number): void{
+    this.http.post<Cliente>(this.urlApi, dados).subscribe({
+      next: (c) => {
+        let clientes = this.clienteSubject.getValue();
+        clientes = clientes.slice(0, pageSize -1);
+        clientes.unshift(c);
+        this.clienteSubject.next(clientes);
       }
     })
   }
