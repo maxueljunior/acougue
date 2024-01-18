@@ -64,4 +64,20 @@ export class ClienteService {
       }
     })
   }
+
+  edit(id: number, cliente: Cliente): void{
+    this.http.put<Cliente>(`${this.urlApi}/${id}`, cliente).subscribe({
+      next: (c) => {
+        let cli = this.clienteSubject.getValue();
+        let index = cli.findIndex(dados => dados.id === id);
+        console.log(index);
+        if(index !== -1){
+          // E necessário criar um novo array, pois se for o mesmo o Angular não dectecta que houve alguma alteração
+          let novoCliente = [...cli.slice(0, index), c,...cli.slice(index + 1)]
+          this.clienteSubject.next(novoCliente);
+          // this.openSnackBar('Fornecedor editado com sucesso!', 'sucesso');
+        }
+      }
+    })
+  }
 }

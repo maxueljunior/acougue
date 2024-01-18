@@ -40,7 +40,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  dataSource = new MatTableDataSource<Fornecedor>([]);
+  dataSource = new MatTableDataSource<any>([]);
   size: number = 0;
   tamanhoTela!: number;
   telaResponsiva: boolean = true;

@@ -82,10 +82,21 @@ export class ClientesComponent implements OnInit{
     this.openDialogCriar();
   }
 
+  public editarCliente(event: any): void{
+    this.openDialogEditar(event);
+  }
+
   private openDialogCriar(): void{
+    let tamWidth = window.innerWidth * 0.60;
+    let tamHeigth = window.innerHeight * 0.60;
+
+    if(tamWidth < 490){
+      tamWidth = window.innerWidth * 0.85;
+    }
+    console.log(tamWidth);
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
-      width: "50%",
-      height: "50%",
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
       data:{
         editar: false
       }
@@ -104,9 +115,56 @@ export class ClientesComponent implements OnInit{
     })
   }
 
+  private openDialogEditar(event: Cliente){
+    let tamWidth = window.innerWidth * 0.60;
+    let tamHeigth = window.innerHeight * 0.60;
+
+    if(tamWidth < 490){
+      tamWidth = window.innerWidth * 0.85;
+    }
+
+    this.passarValoresParaFormulario(event);
+    let dialogRef = this.dialog.open(ModalCriacaoComponent, {
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
+      data:{
+        editar: true
+      }
+    })
+
+    dialogRef.componentInstance.edicao.subscribe((c) => {
+      const dataNascimento = this.formBaseService.formBase.get('dataNascimento')?.value;
+
+      let dataFormatada = this.formatarData(dataNascimento);
+
+      this.formBaseService.formBase.patchValue({
+        dataNascimento: dataFormatada
+      })
+
+      console.log(this.formBaseService.formBase.value);
+      this.clienteService.edit(event.id, this.formBaseService.formBase.value);
+    })
+  }
+
   private formatarData(dataNascimento: string): string{
     let dataFormatada = this.datePipe.transform(dataNascimento, 'dd/MM/yyyy');
     return dataFormatada!;
+  }
+
+  private passarValoresParaFormulario(cliente: Cliente): void{
+
+    const dateParts = cliente.dataNascimento.split('/');
+
+    const parsedDate = new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]);
+
+    this.formBaseService.formBase.patchValue({
+      nome: cliente.nome,
+      sobrenome: cliente.sobrenome,
+      sexo: cliente.sexo,
+      telefone: cliente.telefone,
+      dataNascimento: parsedDate,
+      endereco: cliente.endereco
+    })
   }
 
   // editarCliente(event: Cliente){
