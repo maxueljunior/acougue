@@ -29,10 +29,10 @@
 
 
           <mat-form-field appearance="outline">
-            <mat-label>Selecione o Sexo</mat-label>
-            <mat-select formControlName="sexo">
-              <mat-option value="M">Masculino</mat-option>
-              <mat-option value="F">Feminino</mat-option>
+            <mat-label >Selecione o Sexo</mat-label>
+            <mat-select [disabled]="data.editar" formControlName="sexo">
+              <mat-option [disabled]="data.editar" value="M">Masculino</mat-option>
+              <mat-option [disabled]="data.editar" value="F">Feminino</mat-option>
             </mat-select>
             <mat-error
             *ngIf="formBaseService.formBase.get('sexo')?.errors?.['required'] &&

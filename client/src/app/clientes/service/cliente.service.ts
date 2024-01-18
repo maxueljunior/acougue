@@ -80,4 +80,8 @@ export class ClienteService {
       }
     })
   }
+
+  delete(id: number, pageIndex: number, pageSize: number, nome: string): void{
+
+  }
 }

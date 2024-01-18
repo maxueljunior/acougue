@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
 import { DatePipe } from '@angular/common';
 import { PageEvent } from '@angular/material/paginator';
+import { ModalExclusaoComponent } from '../shared/modal-exclusao/modal-exclusao.component';
 
 @Component({
   selector: 'app-clientes',
@@ -86,6 +87,10 @@ export class ClientesComponent implements OnInit{
     this.openDialogEditar(event);
   }
 
+  excluirCliente(event: any): void{
+    this.openDialogExcluir(event);
+  }
+
   private openDialogCriar(): void{
     let tamWidth = window.innerWidth * 0.60;
     let tamHeigth = window.innerHeight * 0.60;
@@ -143,6 +148,23 @@ export class ClientesComponent implements OnInit{
 
       console.log(this.formBaseService.formBase.value);
       this.clienteService.edit(event.id, this.formBaseService.formBase.value);
+    })
+  }
+
+  openDialogExcluir(cliente: Cliente): void {
+    let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+      // width: '20%',
+      // height: '40%',
+      data:{
+        titulo: cliente.nome
+      }
+    });
+
+    dialogRef.componentInstance.exclusao.subscribe((e) => {
+      if(e === true){
+
+        this.clienteService.delete(cliente.id, this.pageIndex, this.pageSize, '');
+      }
     })
   }
 
