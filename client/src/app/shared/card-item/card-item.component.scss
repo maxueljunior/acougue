@@ -1,0 +1,47 @@
+:host{
+  margin: 10px;
+  // border: 1px solid red;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.example-card {
+  // border: 1px solid #3E3E3E;
+  width: 200px;
+  margin-bottom: 25px;
+  margin-right: 27px;
+  // border: 1px solid blue;
+  .content {
+    margin-bottom: 15px;
+    p{
+      font-size: 16px;
+      font-family: var(--font-secundaria);
+      line-height: 1.4;
+      margin-top: 5px;
+      strong{
+        font-weight: bold;
+      }
+    }
+  }
+
+  .actions{
+    height: 20px;
+    background-color: #F8F8FF;
+    display: flex;
+    justify-content: space-evenly;
+    .mdc-icon-button{
+      background-color: #F8F8FF;
+    }
+
+    .icon-edit{
+      color: green;
+    }
+    .icon-delete{
+      color: red;
+    }
+  }
+}
+

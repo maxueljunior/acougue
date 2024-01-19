@@ -11,6 +11,7 @@ import { ModalCriacaoComponent } from '../fornecedor/modal-criacao/modal-criacao
 import { ModalExclusaoComponent } from './modal-exclusao/modal-exclusao.component';
 import { SnackMensagemComponent } from './snack-mensagem/snack-mensagem.component';
 import { BuscaComponent } from './busca/busca.component';
+import { CardItemComponent } from './card-item/card-item.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { BuscaComponent } from './busca/busca.component';
     TableBaseComponent,
     ModalExclusaoComponent,
     SnackMensagemComponent,
-    BuscaComponent
+    BuscaComponent,
+    CardItemComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { BuscaComponent } from './busca/busca.component';
     CardComponent,
     TableBaseComponent,
     SnackMensagemComponent,
-    BuscaComponent
+    BuscaComponent,
+    CardItemComponent
   ]
 })
 export class SharedModule { }
