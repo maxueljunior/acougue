@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { Cliente, ICliente } from 'src/app/core/types/Cliente';
 import { IFornecedor } from 'src/app/core/types/Fornecedor';
+import { SnackMensagemComponent } from 'src/app/shared/snack-mensagem/snack-mensagem.component';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class ClienteService {
         this.pageableSubject.next(c);
       },
       error: (err) => {
-        console.log(err.status);
+        this.verificaStatusErro(err.status);
       }
     })
   }
@@ -61,6 +62,10 @@ export class ClienteService {
         clientes = clientes.slice(0, pageSize -1);
         clientes.unshift(c);
         this.clienteSubject.next(clientes);
+        this.openSnackBar('Cliente criado com sucesso!', 'sucesso');
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     })
   }
@@ -75,13 +80,57 @@ export class ClienteService {
           // E necessário criar um novo array, pois se for o mesmo o Angular não dectecta que houve alguma alteração
           let novoCliente = [...cli.slice(0, index), c,...cli.slice(index + 1)]
           this.clienteSubject.next(novoCliente);
-          // this.openSnackBar('Fornecedor editado com sucesso!', 'sucesso');
+          this.openSnackBar('Cliente editado com sucesso!', 'sucesso');
         }
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     })
   }
 
   delete(id: number, pageIndex: number, pageSize: number, nome: string): void{
+    this.http.delete(`${this.urlApi}/${id}`).subscribe({
+      next: () => {
+        let cli = this.clienteSubject.getValue();
+        let index = cli.findIndex(dados => dados.id === id);
+        if(index !== -1){
+          cli.splice(index, 1);
+          let novoCliente = [...cli];
+          this.clienteSubject.next(novoCliente);
 
+          let totalElementos = this.pageableSubject.value!.totalElements;
+          if(totalElementos > pageSize){
+            this.findAll(pageIndex, pageSize, nome);
+            // console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
+            this.openSnackBar('Cliente deletado com sucesso!', 'sucesso');
+          }
+        }
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
+      }
+    })
+
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
   }
 }

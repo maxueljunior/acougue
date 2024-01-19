@@ -16,7 +16,7 @@ export class BuscaComponent implements OnInit{
 
   campoBusca = new FormControl();
   @Output() criar = new EventEmitter<boolean>();
-  @Output() buscaRazaoSocial = new EventEmitter<string>();
+  @Output() busca = new EventEmitter<string>();
 
   @Input() textoLabel: string = '';
   @Input() textoPlaceholder: string = '';
@@ -30,7 +30,7 @@ export class BuscaComponent implements OnInit{
     this.campoBusca.valueChanges
       .pipe(debounceTime(300))
       .subscribe((valorDigitado) => {
-        this.buscaRazaoSocial.emit(valorDigitado);
+        this.busca.emit(valorDigitado);
       });
   }
 

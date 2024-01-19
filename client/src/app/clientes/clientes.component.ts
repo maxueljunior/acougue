@@ -23,6 +23,7 @@ export class ClientesComponent implements OnInit{
   pageable: ICliente | null | undefined;
   pageIndex: number = 0;
   pageSize: number = 10;
+  nome: string = '';
 
   clienteSubscription = new Subscription();
   pageableSubscription = new Subscription();
@@ -76,7 +77,12 @@ export class ClientesComponent implements OnInit{
     console.log(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.clienteService.findAll(this.pageIndex, this.pageSize, '');
+    this.clienteService.findAll(this.pageIndex, this.pageSize, this.nome);
+  }
+
+  buscaNome(event: any){
+    this.nome = event;
+    this.clienteService.findAll(0, this.pageSize, this.nome);
   }
 
   public criarCliente(event: any): void{
@@ -162,8 +168,7 @@ export class ClientesComponent implements OnInit{
 
     dialogRef.componentInstance.exclusao.subscribe((e) => {
       if(e === true){
-
-        this.clienteService.delete(cliente.id, this.pageIndex, this.pageSize, '');
+        this.clienteService.delete(cliente.id, this.pageIndex, this.pageSize, this.nome);
       }
     })
   }

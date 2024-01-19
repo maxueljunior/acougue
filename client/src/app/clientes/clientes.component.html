@@ -4,7 +4,8 @@
             titulo="Clientes"
             textoLabel="Digite o nome..."
             textoPlaceholder="Ex: Fulano da Silva Jr."
-            (criar)="criarCliente($event)">
+            (criar)="criarCliente($event)"
+            (busca)="buscaNome($event)">
         </app-busca>
         <div class="container-table">
         <app-card>
