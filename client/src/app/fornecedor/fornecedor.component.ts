@@ -21,7 +21,7 @@ export class FornecedorComponent implements OnInit, OnDestroy{
 
   fornecedorSubscription: Subscription = new Subscription();
   pageableSubscription: Subscription = new Subscription();
-  fornecedoresEncontrados$ = new Observable<any>();
+  // fornecedoresEncontrados$ = new Observable<any>();
 
   fornecedores: Fornecedor[] = [];
   pageable: IFornecedor | null | undefined;

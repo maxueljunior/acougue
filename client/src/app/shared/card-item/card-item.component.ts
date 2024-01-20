@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Produto } from 'src/app/core/types/Produto';
 
 @Component({
   selector: 'app-card-item',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class CardItemComponent {
 
+  @Input() produto!: Produto;
+  
 }

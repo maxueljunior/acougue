@@ -1,16 +1,13 @@
-<mat-card class="example-card">
-  <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+<mat-card class="card">
   <mat-card-content class="content">
     <p>
-      <strong>Codigo:</strong> 1
+      <strong>Codigo:</strong> {{ produto.id }}
     </p>
-    <!-- <mat-divider></mat-divider> -->
     <p>
-      <strong>Descrição:</strong> Beef Angus
+      <strong>Descrição:</strong> {{ produto.descricao }}
     </p>
-    <!-- <mat-divider></mat-divider> -->
     <p>
-      <strong>Unidade:</strong> KG
+      <strong>Unidade:</strong> {{ produto.unidade }}
     </p>
   </mat-card-content>
   <mat-divider></mat-divider>

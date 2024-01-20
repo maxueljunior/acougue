@@ -1,6 +1,17 @@
-.container-table{
+.container-table {
   margin-top: 50px;
-  .table{
-    padding: 10px;
+
+  .container-item {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    // grid-gap: 10px; /* Adicione um espaçamento entre os itens */
+    // border: 1px solid blue;
+    padding: 5px; /* Adicionei padding no container */
+    // padding-right: 10px;
+
+    .item {
+      // margin: 50px;
+      box-sizing: border-box; /* Garante que a largura inclua a borda e o padding */
+    }
   }
 }

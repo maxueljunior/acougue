@@ -101,8 +101,8 @@ export class FornecedorService {
           if(totalElementos > pageSize){
             this.findAll(pageIndex, pageSize, razao);
             // console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
-            this.openSnackBar('Fornecedor deletado com sucesso!', 'sucesso');
           }
+          this.openSnackBar('Fornecedor deletado com sucesso!', 'sucesso');
         }
       },
       error: (err) => {

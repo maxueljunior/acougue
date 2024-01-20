@@ -46,6 +46,15 @@ export class FormBaseService{
     return this.formBase;
   }
 
+  adicionaCamposProduto(formGroup: FormGroup){
+    formGroup = this.formBuilder.group({
+      descricao:['', Validators.required],
+      unidade:['',Validators.required]
+    })
+    this.formBase = formGroup;
+    return this.formBase;
+  }
+
   retornaCampos(): FormGroup{
     return this.formBase;
   }

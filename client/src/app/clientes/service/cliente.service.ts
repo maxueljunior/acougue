@@ -103,8 +103,8 @@ export class ClienteService {
           if(totalElementos > pageSize){
             this.findAll(pageIndex, pageSize, nome);
             // console.log(`${totalElementos} elementos, ${pageSize} tamanho da pagina`);
-            this.openSnackBar('Cliente deletado com sucesso!', 'sucesso');
           }
+          this.openSnackBar('Cliente deletado com sucesso!', 'sucesso');
         }
       },
       error: (err) => {

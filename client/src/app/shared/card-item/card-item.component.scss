@@ -1,47 +1,55 @@
-:host{
-  margin: 10px;
-  // border: 1px solid red;
+:host {
   padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex-wrap: wrap;
+  width: 200px;
+  height: 100%;
+  // display: flex;
+  // flex-direction: column;
 }
 
-.example-card {
-  // border: 1px solid #3E3E3E;
+.card {
   width: 200px;
-  margin-bottom: 25px;
-  margin-right: 27px;
+  height: 250px;
+  // margin-bottom: 27px;
+  // margin-right: 27px;
   // border: 1px solid blue;
-  .content {
-    margin-bottom: 15px;
-    p{
-      font-size: 16px;
-      font-family: var(--font-secundaria);
-      line-height: 1.4;
-      margin-top: 5px;
-      strong{
-        font-weight: bold;
-      }
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  // margin-bottom: 15px;
+  // border: 1px solid red;
+  p {
+    font-size: 16px;
+    font-family: var(--font-secundaria);
+    line-height: 1.4;
+    margin-top: 5px;
+    strong {
+      font-weight: bold;
     }
   }
+}
 
-  .actions{
-    height: 20px;
-    background-color: #F8F8FF;
-    display: flex;
-    justify-content: space-evenly;
-    .mdc-icon-button{
-      background-color: #F8F8FF;
-    }
-
-    .icon-edit{
-      color: green;
-    }
-    .icon-delete{
-      color: red;
-    }
+.actions {
+  height: 20px;
+  background-color: #f8f8ff;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end; /* Isso alinhará as ações na parte inferior */
+  // border: 1px solid red;
+  .mdc-icon-button {
+    background-color: #f8f8ff;
+    // border: 1px solid green;
+    margin-bottom: -7px;
+  }
+  .icon-edit {
+    color: green;
+  }
+  .icon-delete {
+    color: red;
   }
 }
 

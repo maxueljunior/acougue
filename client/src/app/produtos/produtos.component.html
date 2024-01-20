@@ -1,10 +1,18 @@
 <app-aside-bar>
   <app-container>
-    <app-busca></app-busca>
+    <app-busca
+    titulo="Produtos"
+    textoPlaceholder="Ex: Costela de Porco"
+    textoLabel="Descrição Produto"
+    >
+    </app-busca>
     <div class="container-table">
       <app-card>
-        <app-card-item></app-card-item>
-        <!-- <app-table-base></app-table-base> -->
+        <div class="container-item">
+          <div *ngFor="let produto of produtos">
+          <app-card-item class="item" [produto]="produto"></app-card-item>
+          </div>
+        </div>
       </app-card>
     </div>
   </app-container>
