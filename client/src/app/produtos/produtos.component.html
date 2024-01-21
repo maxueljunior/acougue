@@ -4,15 +4,24 @@
     titulo="Produtos"
     textoPlaceholder="Ex: Costela de Porco"
     textoLabel="Descrição Produto"
+    (criar)="criarProdutos($event)"
     >
     </app-busca>
     <div class="container-table">
       <app-card>
         <div class="container-item">
           <div *ngFor="let produto of produtos">
-          <app-card-item class="item" [produto]="produto"></app-card-item>
+          <app-card-item class="item"
+           [produto]="produto"
+           (edicao)="editarProduto($event)"
+           (exclusao)="excluirProduto($event)"></app-card-item>
           </div>
         </div>
+        <mat-paginator [length]="pageable?.totalElements"
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 20]"
+              (page)="getCardsForPage($event)">
+          </mat-paginator>
       </app-card>
     </div>
   </app-container>

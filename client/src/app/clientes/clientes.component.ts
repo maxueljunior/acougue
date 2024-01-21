@@ -123,6 +123,7 @@ export class ClientesComponent implements OnInit{
       })
 
       this.clienteService.create(this.formBaseService.formBase.value, this.pageSize);
+      this.formBaseService.resetarCampos();
     })
   }
 
@@ -154,6 +155,7 @@ export class ClientesComponent implements OnInit{
 
       console.log(this.formBaseService.formBase.value);
       this.clienteService.edit(event.id, this.formBaseService.formBase.value);
+      this.formBaseService.resetarCampos();
     })
   }
 

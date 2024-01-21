@@ -12,10 +12,10 @@
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions class="actions">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="editar(produto)">
       <mat-icon class="icon-edit">edit</mat-icon>
     </button>
-    <button mat-icon-button>
+    <button mat-icon-button (click)="excluir(produto)">
       <mat-icon class="icon-delete">delete</mat-icon>
     </button>
   </mat-card-actions>

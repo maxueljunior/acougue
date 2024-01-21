@@ -4,9 +4,10 @@
   .container-item {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    // grid-gap: 10px; /* Adicione um espaçamento entre os itens */
+    grid-gap: 10px; /* Adicione um espaçamento entre os itens */
     // border: 1px solid blue;
     padding: 5px; /* Adicionei padding no container */
+    padding-left: 35px;
     // padding-right: 10px;
 
     .item {

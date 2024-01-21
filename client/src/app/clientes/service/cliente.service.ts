@@ -41,9 +41,9 @@ export class ClienteService {
           dataNascimento: cliente.dataNascimento,
           // endereco: cliente.endereco
           endereco: {
-            rua: cliente.endereco.rua,
-            bairro: cliente.endereco.bairro,
-            numero: cliente.endereco.numero
+            rua: cliente.endereco?.rua,
+            bairro: cliente.endereco?.bairro,
+            numero: cliente.endereco?.numero
           }
         }));
         this.clienteSubject.next(clientesSimples);
