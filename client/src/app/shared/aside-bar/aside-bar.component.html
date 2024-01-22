@@ -16,7 +16,7 @@
           <mat-icon class="icon-home">shopping_cart</mat-icon>
           <span>Vendas</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="navegarParaCompras($event)">
           <mat-icon class="icon-home">point_of_sale</mat-icon>
           <span>Compras</span>
         </button>
@@ -72,7 +72,7 @@
     </mat-toolbar-row>
     <mat-toolbar-row class="row-itens">
       <mat-icon class="icon-home">point_of_sale</mat-icon>
-      <span>Compras</span>
+      <span (click)="navegarParaCompras($event)">Compras</span>
     </mat-toolbar-row>
     <mat-toolbar-row class="row-itens">
       <mat-icon class="icon-home">group</mat-icon>

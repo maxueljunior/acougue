@@ -1,7 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { IProduto, Produto } from 'src/app/core/types/Produto';
+import { SnackMensagemComponent } from 'src/app/shared/snack-mensagem/snack-mensagem.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class ProdutoService {
   pageable$ = this.pageableSubject.asObservable();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar
   ) { }
 
   findAll(page: number, size: number, descricao: string): void{
@@ -36,6 +39,9 @@ export class ProdutoService {
         }))
         this.produtoSubject.next(produtosSimples);
         this.pageableSubject.next(p);
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     })
   }
@@ -48,6 +54,10 @@ export class ProdutoService {
         p.totalQuantidade = 0;
         produtos.unshift(p);
         this.produtoSubject.next(produtos);
+        this.openSnackBar('Produto criado com sucesso!', 'sucesso');
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     });
   }
@@ -62,6 +72,10 @@ export class ProdutoService {
           let novoProduto = [...produtos.slice(0, index), p, ...produtos.slice(index + 1)]
           this.produtoSubject.next(novoProduto);
         }
+        this.openSnackBar('Produto editado com sucesso!', 'sucesso');
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     })
   }
@@ -81,7 +95,31 @@ export class ProdutoService {
           if(totalElementos > pageSize){
             this.findAll(pageIndex, pageSize, descricao);
           }
+          this.openSnackBar('Produto excluido com sucesso!', 'sucesso');
         }
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
+      }
+    })
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
       }
     })
   }

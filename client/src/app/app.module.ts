@@ -7,6 +7,7 @@ import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { ComprasComponent } from './compras/compras.component';
 
 @NgModule({
   declarations: [

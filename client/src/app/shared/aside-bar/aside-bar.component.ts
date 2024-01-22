@@ -15,23 +15,27 @@ export class AsideBarComponent {
   }
 
   navegadorParaProdutos(event: any){
-    this.router.navigate(['produtos'])
+    this.router.navigate(['produtos']);
   }
 
   navegadorParaClientes(event: any){
-    this.router.navigate(['clientes'])
+    this.router.navigate(['clientes']);
   }
 
   navegarParaFornecedores(event: any){
-    this.router.navigate(['fornecedores'])
+    this.router.navigate(['fornecedores']);
+  }
+
+  navegarParaCompras(event: any){
+    this.router.navigate(['compras']);
   }
 
   navegarParaHome(event: any){
-    this.router.navigate(['home'])
+    this.router.navigate(['home']);
   }
 
   logout(event: any){
     this.tokenService.excluirToken();
-    this.router.navigate(['login'])
+    this.router.navigate(['login']);
   }
 }
