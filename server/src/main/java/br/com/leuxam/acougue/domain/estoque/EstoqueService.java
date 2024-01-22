@@ -61,6 +61,13 @@ public class EstoqueService {
 		
 		return estoque.map(DadosDetalhamentoEstoque::new);
 	}
+	
+	@Transactional
+	public Page<DadosDetalhamentoEstoqueComQuantidade> findAllProductsWithByAtivoAndLikeDescription(String descricao, Pageable pageable) {
+		var estoque = estoqueRepository.findAllProductsWithByAtivoAndLikeDescription(descricao, pageable);
+		
+		return estoque;
+	}
 
 	@Transactional
 	public DadosDetalhamentoEstoque findById(Long id) {

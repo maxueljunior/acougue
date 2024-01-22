@@ -27,4 +27,13 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long>{
 	Page<Estoque> searchEstoqueByAtivoTrueAndLikeDescricao(String descricao, Pageable pageable);
 	
 	Optional<Estoque> findByIdAndAtivoTrue(Long id);
+	
+	@Query("""
+			SELECT new br.com.leuxam.acougue.domain.estoque.DadosDetalhamentoEstoqueComQuantidade(e.id, e.descricao, e.unidade, COALESCE(SUM(ed.quantidade), 0))
+			FROM Estoque e
+			LEFT JOIN EstoqueData ed ON e.id = ed.estoque.id
+			WHERE e.ativo = true
+			GROUP BY e.id
+			""")
+	Page<DadosDetalhamentoEstoqueComQuantidade> findAllProductsWithByAtivoAndLikeDescription(String descricao, Pageable pageable);
 }

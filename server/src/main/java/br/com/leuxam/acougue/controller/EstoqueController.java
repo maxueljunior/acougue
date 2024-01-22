@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.leuxam.acougue.domain.estoque.DadosAtualizarEstoque;
 import br.com.leuxam.acougue.domain.estoque.DadosCriarEstoque;
 import br.com.leuxam.acougue.domain.estoque.DadosDetalhamentoEstoque;
+import br.com.leuxam.acougue.domain.estoque.DadosDetalhamentoEstoqueComQuantidade;
 import br.com.leuxam.acougue.domain.estoque.EstoqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,7 +55,7 @@ public class EstoqueController {
 		return ResponseEntity.created(uri).body(estoque);
 	}
 	
-	@Operation(summary = "Recuperar todos com busca por descrição")
+	@Operation(summary = "Recuperar todos com busca por descrição e quantidade")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
 					schema = @Schema(implementation = DadosDetalhamentoEstoque.class))}),
@@ -62,11 +63,14 @@ public class EstoqueController {
 			@ApiResponse(responseCode = "500", content = @Content)
 	})
 	@GetMapping
-	public ResponseEntity<Page<DadosDetalhamentoEstoque>> findAll(
+	public ResponseEntity<Page<DadosDetalhamentoEstoqueComQuantidade>> findAll(
 			@PageableDefault(size = 5, sort = {"descricao"}) Pageable pageable,
 			@RequestParam(name = "q", defaultValue = "") String descricao){
-		var estoques = service.searchEstoqueByAtivoTrueAndLikeDescricao(descricao,pageable);
+		
+		var estoques = service.findAllProductsWithByAtivoAndLikeDescription(descricao, pageable);
 		return ResponseEntity.ok().body(estoques);
+//		var estoques = service.searchEstoqueByAtivoTrueAndLikeDescricao(descricao,pageable);
+//		return ResponseEntity.ok().body(estoques);
 	}
 	
 	@Operation(summary = "Recuperar por id")
