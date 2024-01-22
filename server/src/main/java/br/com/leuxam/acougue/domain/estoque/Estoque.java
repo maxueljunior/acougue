@@ -33,6 +33,8 @@ public class Estoque {
 	private Long id;
 	
 	private String descricao;
+	
+	private Boolean ativo;
 //	private Double quantidade;
 	
 //	@JoinColumn(name = "data_compra")
@@ -59,6 +61,7 @@ public class Estoque {
 	public Estoque(DadosCriarEstoque dados) {
 		this.descricao = dados.descricao();
 		this.unidade = dados.unidade();
+		this.ativo = true;
 //		this.quantidade = 0.0;
 //		if (dados.quantidade() != null) this.quantidade = dados.quantidade();
 //		this.dataCompra = LocalDate.of(1900, 1, 1);
@@ -67,6 +70,10 @@ public class Estoque {
 
 	public void atualizar(DadosAtualizarEstoque dados) {
 		if(dados.descricao() != null) this.descricao = dados.descricao();
+	}
+	
+	public void desativar() {
+		this.ativo = false;
 	}
 
 //	public void atualizarQuantidadeEstoque(Double quantidade) {

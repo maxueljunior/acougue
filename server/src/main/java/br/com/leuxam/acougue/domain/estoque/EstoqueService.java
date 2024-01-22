@@ -54,6 +54,13 @@ public class EstoqueService {
 		var estoque = estoqueRepository.findAll(pageable);
 		return estoque.map(DadosDetalhamentoEstoque::new);
 	}
+	
+	@Transactional
+	public Page<DadosDetalhamentoEstoque> searchEstoqueByAtivoTrueAndLikeDescricao(String descricao, Pageable pageable) {
+		var estoque = estoqueRepository.searchEstoqueByAtivoTrueAndLikeDescricao(descricao, pageable);
+		
+		return estoque.map(DadosDetalhamentoEstoque::new);
+	}
 
 	@Transactional
 	public DadosDetalhamentoEstoque findById(Long id) {
@@ -72,5 +79,12 @@ public class EstoqueService {
 		
 		estoque.get().atualizar(dados);
 		return new DadosDetalhamentoEstoque(estoque.get());
+	}
+	
+	@Transactional
+	public void delete(Long id) {
+		var estoque = estoqueRepository.findByIdAndAtivoTrue(id);
+		if(!estoque.isPresent()) throw new ValidacaoException("O produto nº " + id + " não existe");
+		estoque.get().desativar();
 	}
 }

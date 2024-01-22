@@ -5,12 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -52,7 +54,7 @@ public class EstoqueController {
 		return ResponseEntity.created(uri).body(estoque);
 	}
 	
-	@Operation(summary = "Recuperar todos")
+	@Operation(summary = "Recuperar todos com busca por descrição")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
 					schema = @Schema(implementation = DadosDetalhamentoEstoque.class))}),
@@ -61,8 +63,9 @@ public class EstoqueController {
 	})
 	@GetMapping
 	public ResponseEntity<Page<DadosDetalhamentoEstoque>> findAll(
-			@PageableDefault(size = 5, sort = {"descricao"}) Pageable pageable){
-		var estoques = service.findAll(pageable);
+			@PageableDefault(size = 5, sort = {"descricao"}) Pageable pageable,
+			@RequestParam(name = "q", defaultValue = "") String descricao){
+		var estoques = service.searchEstoqueByAtivoTrueAndLikeDescricao(descricao,pageable);
 		return ResponseEntity.ok().body(estoques);
 	}
 	
@@ -96,5 +99,19 @@ public class EstoqueController {
 			@RequestBody @Valid DadosAtualizarEstoque dados){
 		var estoque = service.update(id, dados);
 		return ResponseEntity.ok().body(estoque);
+	}
+	
+	@Operation(summary = "Desativar um produto")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", content = @Content),
+		@ApiResponse(responseCode = "404", content = @Content),
+		@ApiResponse(responseCode = "403", content = @Content),
+		@ApiResponse(responseCode = "500", content = @Content)
+	})
+	@DeleteMapping("/{id}")
+	public ResponseEntity delete(
+			@PathVariable(name = "id") Long id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }
