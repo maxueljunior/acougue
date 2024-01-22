@@ -20,17 +20,19 @@ export class ProdutoService {
     private http: HttpClient
   ) { }
 
-  findAll(page: number, size: number): void{
+  findAll(page: number, size: number, descricao: string): void{
     const options = new HttpParams()
       .set('page', page)
-      .set('size', size);
+      .set('size', size)
+      .set('q', descricao);
 
     this.http.get<IProduto>(this.urlApi, {params: options}).subscribe({
       next: (p) => {
         const produtosSimples = p.content.map((produtos) => ({
           id: produtos.id,
           descricao: produtos.descricao,
-          unidade: produtos.unidade
+          unidade: produtos.unidade,
+          totalQuantidade: produtos.totalQuantidade
         }))
         this.produtoSubject.next(produtosSimples);
         this.pageableSubject.next(p);
@@ -43,6 +45,7 @@ export class ProdutoService {
       next: (p) => {
         let produtos = this.produtoSubject.getValue();
         produtos = produtos.slice(0, pageSize - 1);
+        p.totalQuantidade = 0;
         produtos.unshift(p);
         this.produtoSubject.next(produtos);
       }
@@ -54,7 +57,7 @@ export class ProdutoService {
       next: (p) => {
         let produtos = this.produtoSubject.getValue();
         let index = produtos.findIndex(prod => prod.id === id);
-
+        p.totalQuantidade = produtos[index].totalQuantidade;
         if(index !== -1){
           let novoProduto = [...produtos.slice(0, index), p, ...produtos.slice(index + 1)]
           this.produtoSubject.next(novoProduto);
@@ -63,7 +66,7 @@ export class ProdutoService {
     })
   }
 
-  delete(id: number, pageIndex: number, pageSize: number): void{
+  delete(id: number, pageIndex: number, pageSize: number, descricao: string): void{
     this.http.delete(`${this.urlApi}/${id}`).subscribe({
       next: () => {
         let produtos = this.produtoSubject.getValue();
@@ -76,7 +79,7 @@ export class ProdutoService {
 
           let totalElementos = this.pageableSubject.value!.totalElements;
           if(totalElementos > pageSize){
-            this.findAll(pageIndex, pageSize);
+            this.findAll(pageIndex, pageSize, descricao);
           }
         }
       }

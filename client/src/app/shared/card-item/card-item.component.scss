@@ -8,12 +8,20 @@
 
 .card {
   width: 200px;
-  height: 250px;
+  height: 270px;
   // margin-bottom: 27px;
   // margin-right: 27px;
   // border: 1px solid blue;
   display: flex;
   flex-direction: column;
+}
+
+.quantidade-boa{
+  background-color: #C4FFC2
+}
+
+.quantidade-ruim{
+  background-color: #FFB9B6;
 }
 
 .content {

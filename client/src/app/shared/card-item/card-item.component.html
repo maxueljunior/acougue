@@ -1,4 +1,4 @@
-<mat-card class="card">
+<mat-card class="card" [ngClass]="produto.totalQuantidade > 5 ? 'quantidade-boa' : 'quantidade-ruim' ">
   <mat-card-content class="content">
     <p>
       <strong>Codigo:</strong> {{ produto.id }}
@@ -8,6 +8,9 @@
     </p>
     <p>
       <strong>Unidade:</strong> {{ produto.unidade }}
+    </p>
+    <p>
+      <strong>Quantidade:</strong> {{ produto.totalQuantidade }}
     </p>
   </mat-card-content>
   <mat-divider></mat-divider>

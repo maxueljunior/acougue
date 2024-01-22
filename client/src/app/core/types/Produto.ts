@@ -16,12 +16,14 @@ export interface Produto{
     id: number;
     descricao: string;
     unidade: string;
+    totalQuantidade: number;
 }
 
 export interface Content {
     id:        number;
     descricao: string;
     unidade:   string;
+    totalQuantidade: number;
 }
 
 export interface Pageable {

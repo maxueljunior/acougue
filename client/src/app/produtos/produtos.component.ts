@@ -33,6 +33,7 @@ export class ProdutosComponent implements OnInit{
   pageSize: number = 10;
 
   formProdutos: FormGroup;
+  descricao: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -45,7 +46,7 @@ export class ProdutosComponent implements OnInit{
     this.formProdutos = this.formBaseService.criarFormulario();
     this.formProdutos = this.formBaseService.adicionaCamposProduto(this.formProdutos);
   }
-  
+
   ngOnInit(): void {
     this.produtosSubscription = this.produtoService.produtos$.subscribe((p) => {
       this.produtos = p;
@@ -55,17 +56,23 @@ export class ProdutosComponent implements OnInit{
       this.pageable = p;
     })
 
-    this.produtoService.findAll(0, 10);
+    this.produtoService.findAll(0, 10, this.descricao);
   }
-  
+
   getCardsForPage(event: any) {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
-    this.produtoService.findAll(this.pageIndex, this.pageSize);
+    this.produtoService.findAll(this.pageIndex, this.pageSize, this.descricao);
   }
 
   criarProdutos(event: any){
     this.openDialogCriar();
+  }
+
+  buscarProdutos(event: any){
+    this.descricao = event;
+    console.log(this.descricao);
+    this.produtoService.findAll(0, this.pageSize, this.descricao);
   }
 
   editarProduto(event: any){
@@ -77,7 +84,7 @@ export class ProdutosComponent implements OnInit{
 
     this.openDialogEditar(event);
   }
-  
+
   openDialogCriar(): void{
     let tamWidth = window.innerWidth * 0.40;
     let tamHeigth = window.innerHeight * 0.60;
@@ -124,7 +131,7 @@ export class ProdutosComponent implements OnInit{
     })
 
     dialogRef.componentInstance.exclusao.subscribe((p) => {
-
+      this.produtoService.delete(produto.id, this.pageIndex, this.pageSize, this.descricao);
     })
   }
 

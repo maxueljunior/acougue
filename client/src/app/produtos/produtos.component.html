@@ -5,11 +5,12 @@
     textoPlaceholder="Ex: Costela de Porco"
     textoLabel="Descrição Produto"
     (criar)="criarProdutos($event)"
+    (busca)="buscarProdutos($event)"
     >
     </app-busca>
     <div class="container-table">
       <app-card>
-        <div class="container-item">
+        <div class="container-item"  *ngIf="produtos.length > 0 else semConteudo">
           <div *ngFor="let produto of produtos">
           <app-card-item class="item"
            [produto]="produto"
@@ -26,3 +27,9 @@
     </div>
   </app-container>
 </app-aside-bar>
+
+<ng-template #semConteudo>
+  <div class="sem-conteudo">
+    <p>Nenhum conteudo encontrado...</p>
+  </div>
+</ng-template>

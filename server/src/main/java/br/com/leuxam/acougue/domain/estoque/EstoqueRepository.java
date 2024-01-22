@@ -33,6 +33,7 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long>{
 			FROM Estoque e
 			LEFT JOIN EstoqueData ed ON e.id = ed.estoque.id
 			WHERE e.ativo = true
+			AND e.descricao LIKE %:descricao%
 			GROUP BY e.id
 			""")
 	Page<DadosDetalhamentoEstoqueComQuantidade> findAllProductsWithByAtivoAndLikeDescription(String descricao, Pageable pageable);
