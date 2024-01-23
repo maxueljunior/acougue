@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-compras',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./compras.component.scss']
 })
 export class ComprasComponent {
-
+  
 }

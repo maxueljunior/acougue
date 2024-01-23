@@ -3,4 +3,95 @@
   .table{
     padding: 10px;
   }
+  .container-compra{
+    // border: 1px solid red;
+    .container-form{
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .mat-mdc-form-field{
+        width: 60%;
+        font-size: 14px;
+      }
+      .botao{
+        height: 56px;
+      }
+    }
+
+    .btn-criar, .btn-pesquisar{
+      width: 200px;
+      height: 50px;
+      margin-bottom: 12px;
+      margin-left: 12px;
+    }
+
+    .btn-pesquisar{
+      background-color: green;
+      color: #FFFFFF;
+    }
+    
+    .container-alocar-produto{
+      border: 1px solid red;
+      margin-top: 15px;
+      // padding-left: 20px;
+      display: flex;
+      justify-content: start;
+      .lado-1{
+        width: 100%;
+        border: 1px solid green;
+        padding-left: 20px;
+        margin-right: 20px;
+        .info-produto{
+          display: flex;
+          justify-content: start;
+          
+          .btn-pesquisar{
+            width: 200px;
+            height: 50px;
+            margin-bottom: 12px;
+            margin-left: 12px;
+            background-color: green;
+            color: #FFFFFF;
+          }
+
+          mat-form-field{
+            margin-right: 15px;
+          }
+        }
+
+        .info-produto-two{
+          display: flex;
+          justify-content: start;
+
+          .descricao-produto{
+            width: 450px;
+            margin-right: 15px;
+          }
+
+          .unidade-produto{
+            width: 100px;
+          }
+        }
+
+        .info-compras{
+          // border: 1px solid red;
+          display: flex;
+          justify-content: start;
+          .preco-produto{
+            width: 150px;
+            margin-right: 15px;
+          }
+          .quantidade-produto{
+            width: 120px;
+          }
+        }
+      }
+
+      .lado-2{
+        border: 1px solid blue;
+        width: 100%;
+      }
+    }
+  }
 }

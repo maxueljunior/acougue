@@ -5,6 +5,7 @@ import { ComprasRoutingModule } from './compras-routing.module';
 import { ComprasComponent } from './compras.component';
 import { MaterialModule } from '../core/material/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     ComprasRoutingModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   exports: [
     ComprasComponent

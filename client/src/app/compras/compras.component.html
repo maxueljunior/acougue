@@ -1,7 +1,87 @@
 <app-aside-bar>
   <app-container>
     <div class="container-table">
-      aasdasdas
+      <app-card>
+
+        <mat-tab-group animationDuration="0ms">
+
+          <mat-tab label="Compras">
+
+            <div class="container-compra">
+              <div class="container-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>Fornecedor</mat-label>
+                  <input matInput placeholder="Ex: MaxSoft LTDA."> 
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <button class="btn-pesquisar" mat-flat-button extended>
+                  <mat-icon>person_search</mat-icon>
+                  PROCURAR
+                </button>
+                <button class="btn-criar" mat-flat-button color="primary" extended>
+                  <mat-icon>save</mat-icon>
+                  CADASTRAR
+                </button>
+              </div>
+              
+              <mat-divider></mat-divider>
+
+              <div class="container-alocar-produto">
+                <div class="lado-1">
+                  <div class="codigo-compra">
+                    Codigo da compra:<span>143</span>
+                  </div>
+                  <form>
+                    <div class="info-produto">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Codigo Produto</mat-label>
+                        <input matInput type="number"> 
+                      </mat-form-field>
+                      <button class="btn-pesquisar" mat-flat-button extended>
+                        <mat-icon>person_search</mat-icon>
+                        PROCURAR
+                      </button>
+                    </div>
+                    <div class="info-produto-two">
+                      <mat-form-field class="descricao-produto" appearance="outline">
+                        <mat-label>Descrição</mat-label>
+                        <input matInput> 
+                      </mat-form-field>
+                      <mat-form-field class="unidade-produto" appearance="outline">
+                        <mat-label>Unidade</mat-label>
+                        <input matInput> 
+                      </mat-form-field>
+                    </div>
+                    <div class="info-compras">
+                      <mat-form-field class="preco-produto" appearance="outline">
+                        <mat-label>Preço</mat-label>
+                        <input matInput type="number">
+                        <span matTextPrefix>$&nbsp;</span>
+                      </mat-form-field>
+                      <mat-form-field class="quantidade-produto" appearance="outline">
+                        <mat-label>Quantidade</mat-label>
+                        <input matInput type="number"> 
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="lado-2">
+
+                  dadsadsa
+                  
+                </div>
+              </div>
+              
+            </div>
+            
+          </mat-tab>
+
+          <mat-tab label="Registros">Content 2</mat-tab>
+
+        </mat-tab-group>
+
+      </app-card>
     </div>
   </app-container>
 </app-aside-bar>
