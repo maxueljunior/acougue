@@ -38,7 +38,7 @@
                         <input matInput type="number">
                       </mat-form-field>
                       <button type="button" class="btn-pesquisar" mat-flat-button extended>
-                        <mat-icon>inventory_2</mat-icon>
+                        <mat-icon>search</mat-icon>
                         PROCURAR
                       </button>
                     </div>
@@ -56,25 +56,37 @@
                       <mat-form-field class="preco-produto" appearance="outline">
                         <mat-label>Preço</mat-label>
                         <input matInput type="number">
-                        <span matTextPrefix>$&nbsp;</span>
+                        <span matTextSuffix>$&nbsp;</span>
                       </mat-form-field>
                       <mat-form-field class="quantidade-produto" appearance="outline">
                         <mat-label>Quantidade</mat-label>
                         <input matInput type="number">
                       </mat-form-field>
                     </div>
+
+                    <div class="custom-file-container">
+                      <button mat-flat-button type="button" class="btn-arquivo" (click)="selectFile()">SELECIONAR ARQUIVO</button>
+                      <mat-form-field appearance="outline" class="field-arquivo">
+                        <mat-label>{{ selectedFileName }}</mat-label>
+                        <input matInput disabled="true">
+                      </mat-form-field>
+                      <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;">
+                    </div>
+
                     <div class="info-actions">
                       <button type="button" class="btn-inserir" mat-flat-button color="primary" extended>
                         <mat-icon>add_shopping_cart</mat-icon>
                         INSERIR
                       </button>
-                      <button type="button" class="btn-modificar" mat-flat-button color="accent" extended>
+                      <button type="button" class="btn-modificar" mat-fab color="accent">
                         <mat-icon>edit</mat-icon>
-                        MODIFICAR
                       </button>
-                      <button type="button" class="btn-excluir" mat-flat-button color="primary" extended>
+                      <button type="button" class="btn-excluir" mat-fab color="primary">
                         <mat-icon>delete</mat-icon>
-                        DELETAR
+                      </button>
+                      <button type="button" class="btn-finalizar" mat-flat-button color="primary" extended>
+                        <mat-icon>check_small</mat-icon>
+                        FINALIZAR
                       </button>
                     </div>
                   </form>

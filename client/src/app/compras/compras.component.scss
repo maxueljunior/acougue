@@ -100,28 +100,44 @@
           }
         }
 
+        .custom-file-container{
+          margin-bottom: 15px;
+          .btn-arquivo{
+            background-color: yellow;
+            height: 50px;
+          }
+          .field-arquivo{
+            margin-left: 15px;
+          }
+        }
+
         .info-actions{
           // border: 1px solid red;
           display: flex;
           justify-content: start;
-          .btn-inserir{
+          .btn-inserir, .btn-finalizar{
             width: 200px;
             height: 50px;
             margin-bottom: 15px;
             margin-right: 5px;
           }
           .btn-modificar{
-            width: 200px;
+            width: 50px;
             height: 50px;
             margin-bottom: 15px;
             margin-right: 5px;
+            border-radius: 4px;
           }
           .btn-excluir{
-            width: 200px;
+            width: 50px;
             height: 50px;
             margin-bottom: 15px;
             background-color: red;
             margin-right: 5px;
+            border-radius: 4px;
+          }
+          .btn-finalizar{
+            background-color: green;
           }
         }
       }
