@@ -11,45 +11,45 @@
               <div class="container-form">
                 <mat-form-field appearance="outline">
                   <mat-label>Fornecedor</mat-label>
-                  <input matInput placeholder="Ex: MaxSoft LTDA."> 
+                  <input matInput placeholder="Ex: MaxSoft LTDA.">
                   <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
                 <button class="btn-pesquisar" mat-flat-button extended>
                   <mat-icon>person_search</mat-icon>
                   PROCURAR
                 </button>
-                <button class="btn-criar" mat-flat-button color="primary" extended>
+                <button class="btn-criar" mat-flat-button color="primary" extended (click)="criarCompras()">
                   <mat-icon>save</mat-icon>
-                  CADASTRAR
+                  CRIAR COMPRA
                 </button>
               </div>
-              
-              <mat-divider></mat-divider>
 
-              <div class="container-alocar-produto">
+              <div class="container-alocar-produto" *ngIf="criarCompra">
                 <div class="lado-1">
+                  <mat-divider></mat-divider>
                   <div class="codigo-compra">
-                    Codigo da compra:<span>143</span>
+                    <span>Compra Nº: <strong>143</strong></span>
+                    <span>VALOR TOTAL: <strong>R$ 100.00</strong></span>
                   </div>
                   <form>
                     <div class="info-produto">
                       <mat-form-field appearance="outline">
                         <mat-label>Codigo Produto</mat-label>
-                        <input matInput type="number"> 
+                        <input matInput type="number">
                       </mat-form-field>
-                      <button class="btn-pesquisar" mat-flat-button extended>
-                        <mat-icon>person_search</mat-icon>
+                      <button type="button" class="btn-pesquisar" mat-flat-button extended>
+                        <mat-icon>inventory_2</mat-icon>
                         PROCURAR
                       </button>
                     </div>
                     <div class="info-produto-two">
                       <mat-form-field class="descricao-produto" appearance="outline">
                         <mat-label>Descrição</mat-label>
-                        <input matInput> 
+                        <input matInput disabled="true">
                       </mat-form-field>
                       <mat-form-field class="unidade-produto" appearance="outline">
                         <mat-label>Unidade</mat-label>
-                        <input matInput> 
+                        <input matInput disabled="true">
                       </mat-form-field>
                     </div>
                     <div class="info-compras">
@@ -60,21 +60,41 @@
                       </mat-form-field>
                       <mat-form-field class="quantidade-produto" appearance="outline">
                         <mat-label>Quantidade</mat-label>
-                        <input matInput type="number"> 
+                        <input matInput type="number">
                       </mat-form-field>
+                    </div>
+                    <div class="info-actions">
+                      <button type="button" class="btn-inserir" mat-flat-button color="primary" extended>
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        INSERIR
+                      </button>
+                      <button type="button" class="btn-modificar" mat-flat-button color="accent" extended>
+                        <mat-icon>edit</mat-icon>
+                        MODIFICAR
+                      </button>
+                      <button type="button" class="btn-excluir" mat-flat-button color="primary" extended>
+                        <mat-icon>delete</mat-icon>
+                        DELETAR
+                      </button>
                     </div>
                   </form>
                 </div>
 
                 <div class="lado-2">
+                  <app-table-base
+                    [displayedColumns]="displayedColumns"
+                    [displayedesColumns]="displayedesColumns"
+                    [dados]="compras"
+                    [colunas]="colunas"
+                    [colunasResponsivas]="colunasResponsiva"
+                    [visualizacaoDeAdicao]="true"
+                  ></app-table-base>
 
-                  dadsadsa
-                  
                 </div>
               </div>
-              
+
             </div>
-            
+
           </mat-tab>
 
           <mat-tab label="Registros">Content 2</mat-tab>

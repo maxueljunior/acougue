@@ -50,7 +50,7 @@
   </table>
 
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+  <mat-paginator *ngIf="!visualizacaoDeAdicao" [pageSizeOptions]="[5, 10, 20]"
                 [length]="size"
                 [pageSize]="10"
                 showFirstLastButtons

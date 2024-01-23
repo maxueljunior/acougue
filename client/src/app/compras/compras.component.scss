@@ -30,22 +30,35 @@
       background-color: green;
       color: #FFFFFF;
     }
-    
+
     .container-alocar-produto{
-      border: 1px solid red;
+      // border: 1px solid red;
       margin-top: 15px;
       // padding-left: 20px;
       display: flex;
       justify-content: start;
+
+      .codigo-compra{
+        margin: 25px 0;
+        font-family: var(--font-secundaria);
+        font-size: 24px;
+        display: flex;
+        justify-content: space-between;
+        margin-right: 15px;
+        strong{
+          font-weight: bold;
+        }
+      }
+
       .lado-1{
         width: 100%;
-        border: 1px solid green;
+        // border: 1px solid green;
         padding-left: 20px;
         margin-right: 20px;
         .info-produto{
           display: flex;
           justify-content: start;
-          
+
           .btn-pesquisar{
             width: 200px;
             height: 50px;
@@ -86,10 +99,35 @@
             width: 120px;
           }
         }
+
+        .info-actions{
+          // border: 1px solid red;
+          display: flex;
+          justify-content: start;
+          .btn-inserir{
+            width: 200px;
+            height: 50px;
+            margin-bottom: 15px;
+            margin-right: 5px;
+          }
+          .btn-modificar{
+            width: 200px;
+            height: 50px;
+            margin-bottom: 15px;
+            margin-right: 5px;
+          }
+          .btn-excluir{
+            width: 200px;
+            height: 50px;
+            margin-bottom: 15px;
+            background-color: red;
+            margin-right: 5px;
+          }
+        }
       }
 
       .lado-2{
-        border: 1px solid blue;
+        // border: 1px solid blue;
         width: 100%;
       }
     }

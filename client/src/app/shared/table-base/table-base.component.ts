@@ -29,6 +29,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
 
   @Input() dados!: any[];
   @Input() pageable: any | null | undefined;
+  @Input() visualizacaoDeAdicao: boolean = false;
+
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
   @Output() edicao = new EventEmitter<any>();
   @Output() exclusao = new EventEmitter<any>();
@@ -105,51 +107,5 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
     this.exclusao.emit(data);
   }
 
-  // editar(dataSource: Fornecedor){
-  //   this.formularioService.formBase.patchValue({
-  //     razaoSocial: dataSource.razaoSocial,
-  //     cnpj: dataSource.cnpj,
-  //     nomeContato: dataSource.nomeContato,
-  //     telefone: dataSource.telefone
-  //   });
-  //   this.openDialogEditar(dataSource);
-  // }
-
-  // excluir(dataSource: Fornecedor){
-  //   this.openDialogExcluir(dataSource);
-  // }
-
-  // openDialogEditar(fornecedor: Fornecedor): void {
-
-  //   let tamWidth = window.innerWidth * 0.40;
-  //   let tamHeigth = window.innerHeight * 0.80;
-
-  //   let dialogRef = this.dialog.open(ModalCriacaoComponent, {
-  //     width: `${tamWidth}px`,
-  //     height: `${tamHeigth}px`,
-  //     data:{
-  //       editar: true,
-  //       fornecedor: fornecedor
-  //     }
-  //   });
-
-  //   dialogRef.componentInstance.edicao.subscribe((dados) => {
-  //     this.edicao.emit(dados);
-  //   })
-  // }
-
-  // openDialogExcluir(fornecedor: Fornecedor): void {
-  //   let dialogRef = this.dialog.open(ModalExclusaoComponent, {
-  //     // width: '20%',
-  //     // height: '40%',
-  //     data:{
-  //       fornecedor: fornecedor
-  //     }
-  //   });
-
-  //   dialogRef.componentInstance.exclusao.subscribe((e) => {
-  //     this.exclusao.emit(fornecedor);
-  //   })
-  // }
 }
 
