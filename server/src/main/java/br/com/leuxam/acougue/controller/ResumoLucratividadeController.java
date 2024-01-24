@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/resumo/lucratividade")
+@RequestMapping("/api/resumo/lucratividade")
 @Tag(description = "Gerar Resumo Lucratividade por Carnes", name = "Gerar Resumo Lucratividade por Carnes")
 public class ResumoLucratividadeController {
 	

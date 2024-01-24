@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/arquivos")
+@RequestMapping("/api/arquivos")
 @Tag(description = "Arquivos de Compras", name = "Arquivos de Compras")
 public class ArquivosComprasController {
 

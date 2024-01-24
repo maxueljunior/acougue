@@ -102,12 +102,27 @@
 
         .custom-file-container{
           margin-bottom: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: start;
           .btn-arquivo{
             background-color: yellow;
             height: 50px;
           }
           .field-arquivo{
+            padding-top: 25px;
             margin-left: 15px;
+            width: 270px;
+          }
+          .mat-mdc-progress-spinner{
+            margin-left: 10px;
+            --mdc-circular-progress-active-indicator-color: #C5F1F5;
+          }
+
+          .icon-checked{
+            color: green;
+            padding-right: 5px;
+            font-size: 30px;
           }
         }
 

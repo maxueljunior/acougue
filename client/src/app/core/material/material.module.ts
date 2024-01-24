@@ -17,6 +17,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   exports: [
@@ -36,7 +38,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatNativeDateModule,
     MatDividerModule,
     MatTabsModule,
-    MatStepperModule
+    MatStepperModule,
+    MatProgressSpinnerModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

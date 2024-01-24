@@ -9,26 +9,29 @@
 
             <div class="container-compra">
               <div class="container-form">
-                <mat-form-field appearance="outline">
+
+                <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Fornecedor</mat-label>
-                  <input matInput placeholder="Ex: MaxSoft LTDA.">
-                  <mat-icon matSuffix>search</mat-icon>
+                  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option.razaoSocial}}
+                    </mat-option>
+                  </mat-autocomplete>
                 </mat-form-field>
-                <button class="btn-pesquisar" mat-flat-button extended>
-                  <mat-icon>person_search</mat-icon>
-                  PROCURAR
-                </button>
+
                 <button class="btn-criar" mat-flat-button color="primary" extended (click)="criarCompras()">
                   <mat-icon>save</mat-icon>
                   CRIAR COMPRA
                 </button>
+
               </div>
 
               <div class="container-alocar-produto" *ngIf="criarCompra">
                 <div class="lado-1">
                   <mat-divider></mat-divider>
                   <div class="codigo-compra">
-                    <span>Compra Nº: <strong>143</strong></span>
+                    <span>Compra Nº: <strong>{{ compra?.id }}</strong></span>
                     <span>VALOR TOTAL: <strong>R$ 100.00</strong></span>
                   </div>
                   <form>
@@ -70,6 +73,13 @@
                         <mat-label>{{ selectedFileName }}</mat-label>
                         <input matInput disabled="true">
                       </mat-form-field>
+                      <mat-progress-spinner *ngIf="arquivoAnexado"
+                        class="spinner"
+                        mode="determinate"
+                        diameter="50"
+                        [value]="value">
+                      </mat-progress-spinner>
+                      <mat-icon class="icon-checked" *ngIf="arquivoFinalizado">checked</mat-icon>
                       <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;">
                     </div>
 

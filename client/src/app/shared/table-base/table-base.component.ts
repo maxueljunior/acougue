@@ -80,10 +80,12 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   }
 
   ngAfterViewInit() {
-    this.paginator._intl.itemsPerPageLabel = 'Registros por pagina';
-    this.paginator?.['page'].subscribe((event: PageEvent) => {
-      this.alteracaoPagina.emit(event);
-    });
+    if(!this.visualizacaoDeAdicao){
+      this.paginator._intl.itemsPerPageLabel = 'Registros por pagina';
+      this.paginator?.['page'].subscribe((event: PageEvent) => {
+        this.alteracaoPagina.emit(event);
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

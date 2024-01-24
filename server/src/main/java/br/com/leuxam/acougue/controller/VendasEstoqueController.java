@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/itens/vendas")
+@RequestMapping("/api/itens/vendas")
 @Tag(name = "Inserção de Produtos na Venda", description = "Inserção de Produtos na Venda")
 public class VendasEstoqueController {
 	
