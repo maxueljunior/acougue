@@ -1,4 +1,9 @@
 .container-table{
+  .error-login{
+    font-size: 12px;
+    margin-bottom: 5px;
+    margin-left: -15px;
+  }
   margin-top: 50px;
   .table{
     padding: 10px;
@@ -10,6 +15,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+
+
       .mat-mdc-form-field{
         width: 60%;
         font-size: 14px;
@@ -96,7 +104,7 @@
             margin-right: 15px;
           }
           .quantidade-produto{
-            width: 120px;
+            width: 150px;
           }
         }
 
@@ -134,13 +142,13 @@
             width: 200px;
             height: 50px;
             margin-bottom: 15px;
-            margin-right: 5px;
+            margin-right: 15px;
           }
           .btn-modificar{
             width: 50px;
             height: 50px;
             margin-bottom: 15px;
-            margin-right: 5px;
+            margin-right: 15px;
             border-radius: 4px;
           }
           .btn-excluir{
@@ -148,7 +156,7 @@
             height: 50px;
             margin-bottom: 15px;
             background-color: red;
-            margin-right: 5px;
+            margin-right: 15px;
             border-radius: 4px;
           }
           .btn-finalizar{

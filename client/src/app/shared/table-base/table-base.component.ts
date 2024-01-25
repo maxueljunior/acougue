@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Fornecedor, IFornecedor } from 'src/app/core/types/Fornecedor';
 import { FormBaseService } from '../service/form-base.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +39,6 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @Input() colunas!: Responsivo[];
   @Input() colunasResponsivas!: Responsivo[];
   // Fim responsividade
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource = new MatTableDataSource<any>([]);
@@ -109,5 +108,8 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
     this.exclusao.emit(data);
   }
 
+  refreshDataSource(): void {
+    this.dataSource._updateChangeSubscription(); // Garante que as alterações são detectadas
+  }
 }
 
