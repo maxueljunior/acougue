@@ -4,6 +4,11 @@
     margin-bottom: 5px;
     margin-left: -15px;
   }
+  .error-produto{
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
   margin-top: 50px;
   .table{
     padding: 10px;
@@ -15,9 +20,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-
-
       .mat-mdc-form-field{
         width: 60%;
         font-size: 14px;

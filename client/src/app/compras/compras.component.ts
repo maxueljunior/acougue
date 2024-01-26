@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer2, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { CompraEstoque } from '../core/types/ComprasEstoque';
+import { CompraEstoque, CompraEstoqueTable } from '../core/types/ComprasEstoque';
 import { Responsivo } from '../core/types/Types';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalProcuraComponent } from '../shared/modal-procura/modal-procura.component';
@@ -20,21 +20,20 @@ import { TableBaseComponent } from '../shared/table-base/table-base.component';
   styleUrls: ['./compras.component.scss']
 })
 export class ComprasComponent implements OnInit{
-  compras: CompraEstoque[] = [
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
-    {id: 0, idEstoque:0, idCompras:0, quantidade:0, precoUnitario:0},
+
+  // produtoteste: Produto = {
+  //   id: 1,
+  //   descricao: 'MAMINHA',
+  //   unidade: 'KG',
+  //   totalQuantidade: 50
+  // }
+
+  compras: CompraEstoqueTable[] = [
+    // {id:0, produto: this.produtoteste, quantidade:2, precoUnitario: 5.35}
   ];
-  displayedColumns: string[] = ['id', 'idEstoque', 'quantidade', 'precoUnitario'];
-  displayedesColumns: string[] = ['id', 'idEstoque', 'quantidade', 'precoUnitario'];
+
+  displayedColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'precoUnitario'];
+  displayedesColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'precoUnitario'];
 
   selectedFileName: string = 'Nenhum arquivo selecionado';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
@@ -63,21 +62,25 @@ export class ComprasComponent implements OnInit{
   produto!: Produto | null;
   unidade: string = "Unidade";
   codigo: string = "Codigo";
+  valorTotal: number = 0;
+  produtoExistente: boolean = false;
 
   formCompraEstoque: FormGroup;
 
   colunas: Responsivo[] = [
     {nome: "Nº", atributo: "id"},
-    {nome: "Produto", atributo: "idEstoque"},
+    // {nome: "Produto", atributo: "idEstoque"},
+    {nome: "Descrição", atributo: "produto.descricao"},
     {nome: "Qnt.", atributo: "quantidade"},
-    {nome: "Valor Unit.", atributo: "precoUnitario"},
+    {nome: "Valor Unit. (R$)", atributo: "precoUnitario"},
   ]
 
   colunasResponsiva: Responsivo[] = [
     {nome: "Nº", atributo: "id"},
-    {nome: "Produto", atributo: "idEstoque"},
+    // {nome: "Produto", atributo: "idEstoque"},
+    {nome: "Descrição", atributo: "produto.descricao"},
     {nome: "Qnt.", atributo: "quantidade"},
-    {nome: "Valor Unit.", atributo: "precoUnitario"},
+    {nome: "Valor Unit. (R$)", atributo: "precoUnitario"},
   ]
 
   constructor(
@@ -110,7 +113,6 @@ export class ComprasComponent implements OnInit{
 
     this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
       this.produtos = p;
-      console.log(this.produtos);
     })
 
     this.produtoService.findAll(0, 9999, '');
@@ -148,6 +150,10 @@ export class ComprasComponent implements OnInit{
     this.produto = this.produtoControl.value;
     this.codigo = this.produto!.id.toString();
     this.unidade = this.produto!.unidade;
+    this.formBaseService.formBase.patchValue({
+      idEstoque: this.codigo
+    })
+    this.produtoExistente = false;
   }
 
   criarCompras(): void{
@@ -197,23 +203,73 @@ export class ComprasComponent implements OnInit{
   }
 
   addProdutos(): void {
-    this.adicionaProdutosNoForm();
+    this.formBaseService.formBase.patchValue({
+      idCompras: this.compra.id
+    })
 
     // pegar os dados para fazer a inserção no banco de dados
     console.log(this.formBaseService.formBase.value);
+    console.log(this.produtoControl.value);
 
-    let itemCompra = this.formBaseService.formBase.value as CompraEstoque;
-    itemCompra.id = this.compras.length + 1;
-    this.compras.push(itemCompra);
+    let id = this.compras.length + 1;
+    let compraEstoqueTable: CompraEstoqueTable = {
+      id: id,
+      produto: this.produtoControl.value as Produto,
+      quantidade: this.formBaseService.formBase.get('quantidade')?.value,
+      precoUnitario: this.formBaseService.formBase.get('precoUnitario')?.value
+    }
 
-    this.tableBaseComponent!.refreshDataSource();
+    if(!this.verificaExistente(compraEstoqueTable)){
+      this.compras.push(compraEstoqueTable);
+      this.tableBaseComponent!.refreshDataSource(this.compras);
+      this.limparCamposForm();
+      this.atualizarValores();
+    }else{
+      this.produtoExistente = true;
+      console.log(this.produtoExistente);
+    }
+
   }
 
-  adicionaProdutosNoForm(): void{
+  verificaExistente(compraEstoqueTabela: CompraEstoqueTable): boolean{
+    let index = this.compras.findIndex((c) => c.produto.id === compraEstoqueTabela.produto.id);
+    console.log(index);
+    if(index === -1){
+      return false;
+    }
+
+    return true;
+  }
+
+  atualizarValores(): void{
+    this.valorTotal = this.compras.reduce((acumulador, compraAtual) => {
+      return acumulador + (compraAtual.precoUnitario * compraAtual.quantidade);
+    }, 0);
+  }
+
+  limparCamposForm(): void{
+    this.formBaseService.resetarCampos();
+    this.produtoControl.reset();
+    this.codigo = "Codigo";
+    this.unidade = "Unidade";
+    this.produto = null;
+  }
+
+  recuperarDadosDoClique(compraEstoque: CompraEstoqueTable){
+    console.log(`Antes ->`);
+    console.log(this.formBaseService.formBase.value);
     this.formBaseService.formBase.patchValue({
-      idCompras: this.compra.id,
-      idEstoque: this.produto?.id
+      precoUnitario: compraEstoque.precoUnitario,
+      quantidade: compraEstoque.quantidade,
+      idEstoque: compraEstoque.produto.id
     })
+
+    this.codigo = compraEstoque.produto.id.toString();
+    this.unidade = compraEstoque.produto.unidade;
+    this.produtoControl.setValue(compraEstoque.produto);
+
+    console.log(`Depois ->`);
+    console.log(this.formBaseService.formBase.value);
   }
 }
 

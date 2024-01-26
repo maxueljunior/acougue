@@ -12,9 +12,9 @@
 
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Fornecedor</mat-label>
-                  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [disabled]="criarCompra">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" [disableRipple]="criarCompra">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option" [disabled]="criarCompra">
                       {{option.razaoSocial}}
                     </mat-option>
                   </mat-autocomplete>
@@ -36,7 +36,7 @@
                   <mat-divider></mat-divider>
                   <div class="codigo-compra">
                     <span>Compra Nº: <strong>{{ compra?.id }}</strong></span>
-                    <span>VALOR TOTAL: <strong>R$ 100.00</strong></span>
+                    <span>VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
                   </div>
                   <form [formGroup]="this.formBaseService.formBase">
                     <div class="info-produto">
@@ -103,8 +103,12 @@
                       <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;">
                     </div>
 
+                    <mat-error class="error-produto" *ngIf="produtoExistente">
+                      Produto já existente nas compras! Insira outro item ou finalize a Compra.
+                    </mat-error>
+
                     <div class="info-actions">
-                      <button type="button" class="btn-inserir" mat-flat-button color="primary" extended (click)="addProdutos()">
+                      <button [disabled]="!this.formBaseService.formBase.valid" type="button" class="btn-inserir" mat-flat-button color="primary" extended (click)="addProdutos()">
                         <mat-icon>add_shopping_cart</mat-icon>
                         INSERIR
                       </button>
@@ -131,6 +135,7 @@
                     [colunas]="colunas"
                     [colunasResponsivas]="colunasResponsiva"
                     [visualizacaoDeAdicao]="true"
+                    (clickNaTabela)="recuperarDadosDoClique($event)"
                   ></app-table-base>
 
                 </div>

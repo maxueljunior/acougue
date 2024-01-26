@@ -1,3 +1,5 @@
+import { Produto } from "./Produto";
+
 export interface ICompraEstoque {
   content:          Content[];
   pageable:         Pageable;
@@ -18,6 +20,13 @@ export interface CompraEstoque{
   quantidade: number;
   idCompras: number;
   idEstoque: number;
+}
+
+export interface CompraEstoqueTable{
+  id: number;
+  produto: Produto;
+  quantidade: number;
+  precoUnitario: number;
 }
 
 export interface Content {

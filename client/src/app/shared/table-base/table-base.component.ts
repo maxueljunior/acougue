@@ -31,6 +31,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @Input() pageable: any | null | undefined;
   @Input() visualizacaoDeAdicao: boolean = false;
 
+  @Output() clickNaTabela = new EventEmitter<any>();
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
   @Output() edicao = new EventEmitter<any>();
   @Output() exclusao = new EventEmitter<any>();
@@ -42,6 +43,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource = new MatTableDataSource<any>([]);
+  clickedRows = new Set<any>();
   size: number = 0;
   tamanhoTela!: number;
   telaResponsiva: boolean = true;
@@ -108,8 +110,13 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
     this.exclusao.emit(data);
   }
 
-  refreshDataSource(): void {
+  refreshDataSource(dados: any): void {
+    this.dataSource.data = dados;
     this.dataSource._updateChangeSubscription(); // Garante que as alterações são detectadas
+  }
+
+  clicouNaTabela(event: any): void{
+    this.clickNaTabela.emit(event);
   }
 }
 
