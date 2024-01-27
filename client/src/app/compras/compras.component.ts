@@ -13,6 +13,7 @@ import { Produto } from '../core/types/Produto';
 import { ProdutoService } from '../produtos/service/produto.service';
 import { FormBaseService } from '../shared/service/form-base.service';
 import { TableBaseComponent } from '../shared/table-base/table-base.component';
+import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
 
 @Component({
   selector: 'app-compras',
@@ -21,16 +22,7 @@ import { TableBaseComponent } from '../shared/table-base/table-base.component';
 })
 export class ComprasComponent implements OnInit{
 
-  // produtoteste: Produto = {
-  //   id: 1,
-  //   descricao: 'MAMINHA',
-  //   unidade: 'KG',
-  //   totalQuantidade: 50
-  // }
-
-  compras: CompraEstoqueTable[] = [
-    // {id:0, produto: this.produtoteste, quantidade:2, precoUnitario: 5.35}
-  ];
+  compras: CompraEstoqueTable[] = [];
 
   displayedColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'precoUnitario'];
   displayedesColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'precoUnitario'];
@@ -45,7 +37,6 @@ export class ComprasComponent implements OnInit{
   arquivoFinalizado: boolean = false;
   value: number = 0;
 
-  // myControl = new FormControl<string | Fornecedor>('');
   myControl = new FormControl<null | Fornecedor>(null, Validators.required);
   filteredOptions!: Observable<Fornecedor[]>;
 
@@ -58,12 +49,14 @@ export class ComprasComponent implements OnInit{
   produtos: Produto[] = [];
   produtoSubscription: Subscription = new Subscription();
 
-  compra!: Compras;
+  compra!: Compras | null;
   produto!: Produto | null;
   unidade: string = "Unidade";
   codigo: string = "Codigo";
   valorTotal: number = 0;
   produtoExistente: boolean = false;
+  podeEditar: boolean = false;
+  podeExcluir: boolean = false;
 
   formCompraEstoque: FormGroup;
 
@@ -194,22 +187,31 @@ export class ComprasComponent implements OnInit{
   }
 
   openDialog(): void{
+    console.log('chegou até aqui');
     let tamWidth = window.innerWidth * 0.40;
     let tamHeigth = window.innerHeight * 0.60;
-    const dialogRef = this.dialog.open(ModalProcuraComponent, {
+
+    console.log(this.arquivoAnexado);
+    this.dialog.open(ModalFinalizarComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`
+      height: `${tamHeigth}px`,
+      data:{
+        texto: 'Compra',
+        numero: this.compra?.id,
+        total: this.valorTotal,
+        arquivo: this.arquivoFinalizado
+      }
     })
   }
 
   addProdutos(): void {
     this.formBaseService.formBase.patchValue({
-      idCompras: this.compra.id
+      idCompras: this.compra!.id
     })
 
-    // pegar os dados para fazer a inserção no banco de dados
-    console.log(this.formBaseService.formBase.value);
-    console.log(this.produtoControl.value);
+    // // pegar os dados para fazer a inserção no banco de dados
+    // console.log(this.formBaseService.formBase.value);
+    // console.log(this.produtoControl.value);
 
     let id = this.compras.length + 1;
     let compraEstoqueTable: CompraEstoqueTable = {
@@ -226,9 +228,44 @@ export class ComprasComponent implements OnInit{
       this.atualizarValores();
     }else{
       this.produtoExistente = true;
-      console.log(this.produtoExistente);
+      // console.log(this.produtoExistente);
     }
+  }
 
+  updateProduto(): void{
+    let id = this.formBaseService.formBase.get('idEstoque')?.value;
+
+    let index = this.compras.findIndex((c) => c.produto.id === id);
+    let compraEstoqueAtt = this.compras[index];
+    
+    compraEstoqueAtt.precoUnitario = this.formBaseService.formBase.get('precoUnitario')?.value;
+    compraEstoqueAtt.quantidade = this.formBaseService.formBase.get('quantidade')?.value
+
+    this.compras[index] = compraEstoqueAtt;
+    this.limparCamposForm();
+    this.desabilitaBotoes();
+    this.atualizarValores();
+  }
+
+  deleteProduto(): void{
+    let id = this.formBaseService.formBase.get('idEstoque')?.value;
+
+    let index = this.compras.findIndex((c) => c.produto.id === id);
+    console.log(`index do item é ${index}`);
+    this.compras.splice(index, 1);
+
+    console.log(this.compras);
+
+    this.tableBaseComponent!.refreshDataSource(this.compras);
+    this.limparCamposForm();
+    this.desabilitaBotoes();
+    this.atualizarValores();
+    this.atualizarIndice();
+  }
+
+  finalizarCompra(): void{
+    console.log('chegou até aqui');
+    this.openDialog();
   }
 
   verificaExistente(compraEstoqueTabela: CompraEstoqueTable): boolean{
@@ -255,21 +292,45 @@ export class ComprasComponent implements OnInit{
     this.produto = null;
   }
 
+  // limparTela(): void{
+  //   this.valorTotal = 0;
+  //   this.compra = null;
+  //   this.compras = [];
+  //   this.myControl.reset();
+  //   this.criarCompra = false;
+  //   this.limparCamposForm();
+  // }
+
   recuperarDadosDoClique(compraEstoque: CompraEstoqueTable){
-    console.log(`Antes ->`);
-    console.log(this.formBaseService.formBase.value);
     this.formBaseService.formBase.patchValue({
       precoUnitario: compraEstoque.precoUnitario,
       quantidade: compraEstoque.quantidade,
-      idEstoque: compraEstoque.produto.id
+      idEstoque: compraEstoque.produto.id,
+      idCompras: this.compra!.id
     })
 
     this.codigo = compraEstoque.produto.id.toString();
     this.unidade = compraEstoque.produto.unidade;
     this.produtoControl.setValue(compraEstoque.produto);
 
-    console.log(`Depois ->`);
-    console.log(this.formBaseService.formBase.value);
+    this.habilitaBotoes();
+  }
+
+  habilitaBotoes(): void{
+    this.podeEditar = true;
+    this.podeExcluir = true;
+  }
+
+  desabilitaBotoes(): void{
+    this.podeEditar = false;
+    this.podeExcluir = false;
+  }
+
+  atualizarIndice(): void{
+    for (let index = 0; index < this.compras.length; index++) {
+      this.compras[index].id = index + 1;
+    }
   }
 }
+
 

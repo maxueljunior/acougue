@@ -1,5 +1,10 @@
 table{
   // border: 1px solid red;
+  .mat-mdc-row:hover .mat-mdc-cell {
+    background-color: #f8f8f8;
+  }
+  
+  cursor: pointer;
   button{
     margin: 5px;
 

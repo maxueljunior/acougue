@@ -24,7 +24,7 @@
                 </mat-form-field>
 
 
-                <button [disabled]="!myControl.valid" class="btn-criar" mat-flat-button color="primary" extended (click)="criarCompras()">
+                <button [disabled]="!myControl.valid || criarCompra" class="btn-criar" mat-flat-button color="primary" extended (click)="criarCompras()">
                   <mat-icon>save</mat-icon>
                   CRIAR COMPRA
                 </button>
@@ -112,13 +112,13 @@
                         <mat-icon>add_shopping_cart</mat-icon>
                         INSERIR
                       </button>
-                      <button type="button" class="btn-modificar" mat-fab color="accent">
+                      <button [disabled]="!podeEditar"  type="button" class="btn-modificar" mat-fab color="accent" (click)="updateProduto()">
                         <mat-icon>edit</mat-icon>
                       </button>
-                      <button type="button" class="btn-excluir" mat-fab color="primary">
+                      <button [disabled]="!podeExcluir" type="button" class="btn-excluir" mat-fab color="primary" (click)="deleteProduto()">
                         <mat-icon>delete</mat-icon>
                       </button>
-                      <button type="button" class="btn-finalizar" mat-flat-button color="primary" extended>
+                      <button [disabled]="compras.length < 1" type="button" class="btn-finalizar" mat-flat-button color="primary" extended (click)="finalizarCompra()">
                         <mat-icon>check_small</mat-icon>
                         FINALIZAR
                       </button>

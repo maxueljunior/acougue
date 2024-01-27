@@ -13,6 +13,7 @@ import { SnackMensagemComponent } from './snack-mensagem/snack-mensagem.componen
 import { BuscaComponent } from './busca/busca.component';
 import { CardItemComponent } from './card-item/card-item.component';
 import { ModalProcuraComponent } from './modal-procura/modal-procura.component';
+import { ModalFinalizarComponent } from './modal-finalizar/modal-finalizar.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ModalProcuraComponent } from './modal-procura/modal-procura.component';
     SnackMensagemComponent,
     BuscaComponent,
     CardItemComponent,
-    ModalProcuraComponent
+    ModalProcuraComponent,
+    ModalFinalizarComponent
   ],
   imports: [
     CommonModule,
