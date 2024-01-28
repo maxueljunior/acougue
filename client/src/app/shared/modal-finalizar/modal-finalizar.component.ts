@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -8,9 +8,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ModalFinalizarComponent {
   
+  @Output() finalizar = new EventEmitter<boolean>();
+
   constructor(
     public dialogRef: MatDialogRef<ModalFinalizarComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){
+  }
+
+  finalizarModal(): void{
+    this.finalizar.emit(true);
   }
 }

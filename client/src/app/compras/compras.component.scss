@@ -1,4 +1,9 @@
 .container-table{
+  box-sizing: border-box;
+
+  mat-tab-group{
+  }
+
   .error-login{
     font-size: 12px;
     margin-bottom: 5px;
@@ -14,6 +19,7 @@
     padding: 10px;
   }
   .container-compra{
+    box-sizing: border-box;
     // border: 1px solid red;
     .container-form{
       padding: 20px;
@@ -88,7 +94,7 @@
           justify-content: start;
 
           .descricao-produto{
-            width: 450px;
+            width: 80%;
             margin-right: 15px;
           }
 
@@ -171,6 +177,41 @@
         // border: 1px solid blue;
         width: 100%;
       }
+    }
+  }
+}
+
+@media screen and (max-width:769px){
+  .container-alocar-produto{
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    .info-produto-two{
+      flex-direction: column;
+      // border: 1px solid blue;
+      width: 95%;
+      .descricao-produto{
+        width: 80%;
+        // border: 1px solid red;
+      }
+    }
+
+    .custom-file-container{
+      flex-direction: column;
+    }
+
+    .codigo-compra{
+      margin-right: 5px;
+      .valor-total{
+        text-align: left;
+        padding-right: 10px;
+        // border: 1px solid red;
+      }
+    }
+
+    .info-actions{
+      flex-direction: column;
     }
   }
 }

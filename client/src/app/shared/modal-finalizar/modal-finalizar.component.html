@@ -9,7 +9,7 @@
         <h3 *ngIf="!data.arquivo">Obs.: Nota fiscal não inserida na compra!</h3>
     </div>
     <div mat-dialog-actions align="center">
-        <button color="primary" mat-flat-button mat-dialog-close>SIM</button>
+        <button (click)="finalizarModal()" color="primary" mat-flat-button mat-dialog-close>SIM</button>
         <button color="warn" mat-flat-button mat-dialog-close cdkFocusInitial>NÃO</button>
     </div>
 </div>

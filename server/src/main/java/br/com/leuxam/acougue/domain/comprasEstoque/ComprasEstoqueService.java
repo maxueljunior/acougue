@@ -1,6 +1,8 @@
 package br.com.leuxam.acougue.domain.comprasEstoque;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,6 +60,17 @@ public class ComprasEstoqueService {
 		compraEstoque = comprasEstoqueRepository.save(compraEstoque);
 		
 		return new DadosDetalhamentoComprasEstoque(compraEstoque);
+	}
+	
+	public List<DadosDetalhamentoComprasEstoque> createList(List<DadosCriarComprasEstoque> dados){
+		List<DadosDetalhamentoComprasEstoque> list = new ArrayList<>();
+		
+		dados.forEach((d) -> {
+			var created = create(d);
+			list.add(created);
+		});
+		
+		return list;
 	}
 	
 	@Transactional

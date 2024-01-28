@@ -14,6 +14,9 @@ import { ProdutoService } from '../produtos/service/produto.service';
 import { FormBaseService } from '../shared/service/form-base.service';
 import { TableBaseComponent } from '../shared/table-base/table-base.component';
 import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
+import { CompraEstoqueService } from './service/compra-estoque.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 
 @Component({
   selector: 'app-compras',
@@ -81,8 +84,10 @@ export class ComprasComponent implements OnInit{
     public dialog: MatDialog,
     private fornecedorService: FornecedorService,
     private compraService: CompraService,
+    private compraEstoqueService: CompraEstoqueService,
     private produtoService: ProdutoService,
-    public formBaseService: FormBaseService
+    public formBaseService: FormBaseService,
+    private snackBar: MatSnackBar
   ){
     this.formCompraEstoque = this.formBaseService.criarFormulario();
     this.formCompraEstoque = this.formBaseService.adicionaCamposComprasEstoque(this.formCompraEstoque);
@@ -187,12 +192,10 @@ export class ComprasComponent implements OnInit{
   }
 
   openDialog(): void{
-    console.log('chegou até aqui');
     let tamWidth = window.innerWidth * 0.40;
     let tamHeigth = window.innerHeight * 0.60;
 
-    console.log(this.arquivoAnexado);
-    this.dialog.open(ModalFinalizarComponent, {
+    let dialogRef = this.dialog.open(ModalFinalizarComponent, {
       width: `${tamWidth}px`,
       height: `${tamHeigth}px`,
       data:{
@@ -200,6 +203,29 @@ export class ComprasComponent implements OnInit{
         numero: this.compra?.id,
         total: this.valorTotal,
         arquivo: this.arquivoFinalizado
+      }
+    })
+
+    dialogRef.componentInstance.finalizar.subscribe((p) => {
+      if(p === true){
+
+        let comprasConvertidas = this.compras.map((c) => ({
+          precoUnitario: c.precoUnitario,
+          quantidade: c.quantidade,
+          idCompras: this.compra?.id,
+          idEstoque: c.produto.id
+        }) as CompraEstoque)
+
+        this.compraEstoqueService.create(comprasConvertidas).subscribe({
+          next: (c) => {
+            console.log(c);
+            this.openSnackBar('Compra finalizada com sucesso!', 'sucesso');
+            this.limparTela();
+          },
+          error: (err) => {
+            this.verificaStatusErro(err.status);
+          }
+        });
       }
     })
   }
@@ -264,13 +290,11 @@ export class ComprasComponent implements OnInit{
   }
 
   finalizarCompra(): void{
-    console.log('chegou até aqui');
     this.openDialog();
   }
 
   verificaExistente(compraEstoqueTabela: CompraEstoqueTable): boolean{
     let index = this.compras.findIndex((c) => c.produto.id === compraEstoqueTabela.produto.id);
-    console.log(index);
     if(index === -1){
       return false;
     }
@@ -292,14 +316,14 @@ export class ComprasComponent implements OnInit{
     this.produto = null;
   }
 
-  // limparTela(): void{
-  //   this.valorTotal = 0;
-  //   this.compra = null;
-  //   this.compras = [];
-  //   this.myControl.reset();
-  //   this.criarCompra = false;
-  //   this.limparCamposForm();
-  // }
+  limparTela(): void{
+    this.valorTotal = 0;
+    this.compra = null;
+    this.compras = [];
+    this.myControl.reset();
+    this.criarCompra = false;
+    this.limparCamposForm();
+  }
 
   recuperarDadosDoClique(compraEstoque: CompraEstoqueTable){
     this.formBaseService.formBase.patchValue({
@@ -329,6 +353,26 @@ export class ComprasComponent implements OnInit{
   atualizarIndice(): void{
     for (let index = 0; index < this.compras.length; index++) {
       this.compras[index].id = index + 1;
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
     }
   }
 }

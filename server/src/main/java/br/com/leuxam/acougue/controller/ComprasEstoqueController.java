@@ -1,5 +1,7 @@
 package br.com.leuxam.acougue.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +45,14 @@ public class ComprasEstoqueController {
 			@ApiResponse(responseCode = "500", content = @Content)
 	})
 	@PostMapping
-	public ResponseEntity<DadosDetalhamentoComprasEstoque> save(
-			@RequestBody @Valid DadosCriarComprasEstoque dados,
+	public ResponseEntity<List<DadosDetalhamentoComprasEstoque>> save(
+			@RequestBody @Valid List<DadosCriarComprasEstoque> dados,
 			UriComponentsBuilder uriBuilder){
-		var compraEstoque = service.create(dados);
-		var uri = uriBuilder.path("/itens/compras/{idCompras}/{idEstoque}").buildAndExpand(compraEstoque.idCompras(), compraEstoque.idEstoque()).toUri();
+//		var compraEstoque = service.create(dados);
+//		var uri = uriBuilder.path("/itens/compras/{idCompras}/{idEstoque}").buildAndExpand(compraEstoque.idCompras(), compraEstoque.idEstoque()).toUri();
+//		return ResponseEntity.created(uri).body(compraEstoque);
+		var compraEstoque = service.createList(dados);
+		var uri = uriBuilder.path("/api/compras/{idCompras}").buildAndExpand(compraEstoque.get(0).idCompras()).toUri();
 		return ResponseEntity.created(uri).body(compraEstoque);
 	}
 	

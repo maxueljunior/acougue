@@ -1,5 +1,6 @@
 table{
   // border: 1px solid red;
+  box-sizing: border-box;
   .mat-mdc-row:hover .mat-mdc-cell {
     background-color: #f8f8f8;
   }

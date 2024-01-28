@@ -14,7 +14,11 @@ export class CompraEstoqueService {
     private http: HttpClient
   ) { }
 
-  create(compraEstoque: CompraEstoque): Observable<CompraEstoque>{
-    return this.http.post<CompraEstoque>(this.urlApi, compraEstoque);
+  // create(compraEstoque: CompraEstoque): Observable<CompraEstoque>{
+  //   return this.http.post<CompraEstoque>(this.urlApi, compraEstoque);
+  // }
+
+  create(compraEstoque: CompraEstoque[]): Observable<CompraEstoque[]>{
+    return this.http.post<CompraEstoque[]>(this.urlApi, compraEstoque);
   }
 }

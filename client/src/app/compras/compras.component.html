@@ -36,7 +36,7 @@
                   <mat-divider></mat-divider>
                   <div class="codigo-compra">
                     <span>Compra Nº: <strong>{{ compra?.id }}</strong></span>
-                    <span>VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
+                    <span class="valor-total">VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
                   </div>
                   <form [formGroup]="this.formBaseService.formBase">
                     <div class="info-produto">
