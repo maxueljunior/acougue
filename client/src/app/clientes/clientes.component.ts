@@ -74,7 +74,7 @@ export class ClientesComponent implements OnInit{
   }
 
   alteracaoPagina(event: PageEvent): void{
-    console.log(event);
+    // console.log(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.clienteService.findAll(this.pageIndex, this.pageSize, this.nome);

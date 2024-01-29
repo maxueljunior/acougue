@@ -8,7 +8,7 @@ import { Observable, map, startWith, Subscription } from 'rxjs';
 import { FornecedorService } from '../fornecedor/service/fornecedor.service';
 import { Fornecedor } from '../core/types/Fornecedor';
 import { CompraService } from './service/compra.service';
-import { Compras } from '../core/types/Compras';
+import { Compras, ICompras } from '../core/types/Compras';
 import { Produto } from '../core/types/Produto';
 import { ProdutoService } from '../produtos/service/produto.service';
 import { FormBaseService } from '../shared/service/form-base.service';
@@ -17,6 +17,7 @@ import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finaliz
 import { CompraEstoqueService } from './service/compra-estoque.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-compras',
@@ -52,6 +53,12 @@ export class ComprasComponent implements OnInit{
   produtos: Produto[] = [];
   produtoSubscription: Subscription = new Subscription();
 
+  comprasRecuperadas: Compras[] = [];
+  compraSubscription: Subscription = new Subscription();
+
+  pageable?: ICompras | null;
+  pageableSubscription: Subscription = new Subscription();
+
   compra!: Compras | null;
   produto!: Produto | null;
   unidade: string = "Unidade";
@@ -60,12 +67,13 @@ export class ComprasComponent implements OnInit{
   produtoExistente: boolean = false;
   podeEditar: boolean = false;
   podeExcluir: boolean = false;
+  pageIndex: number = 0;
+  pageSize: number = 10;
 
   formCompraEstoque: FormGroup;
 
   colunas: Responsivo[] = [
     {nome: "Nº", atributo: "id"},
-    // {nome: "Produto", atributo: "idEstoque"},
     {nome: "Descrição", atributo: "produto.descricao"},
     {nome: "Qnt.", atributo: "quantidade"},
     {nome: "Valor Unit. (R$)", atributo: "precoUnitario"},
@@ -73,10 +81,26 @@ export class ComprasComponent implements OnInit{
 
   colunasResponsiva: Responsivo[] = [
     {nome: "Nº", atributo: "id"},
-    // {nome: "Produto", atributo: "idEstoque"},
     {nome: "Descrição", atributo: "produto.descricao"},
     {nome: "Qnt.", atributo: "quantidade"},
     {nome: "Valor Unit. (R$)", atributo: "precoUnitario"},
+  ]
+
+  displayedColumnsComp: string[] = ['id', 'fornecedor.razaoSocial', 'fornecedor.cnpj', 'data' ,'valorTotal','download', 'acoes'];
+  displayedesColumnsComp: string[] = ['id', 'fornecedor.razaoSocial', 'valorTotal','download', 'acoes'];
+
+  colunasComp: Responsivo[] = [
+    {nome: "Cod.", atributo: "id"},
+    {nome: "Razão Fornecedor", atributo: "fornecedor.razaoSocial"},
+    {nome: "Valor Total (R$)", atributo: "valorTotal"},
+  ];
+
+  colunasResponsivaComp: Responsivo[] = [
+    {nome: "Cod.", atributo: "id"},
+    {nome: "Razão Fornecedor", atributo: "fornecedor.razaoSocial"},
+    {nome: "CNPJ", atributo: "fornecedor.cnpj"},
+    {nome: "Data", atributo: "data"},
+    {nome: "Valor Total (R$)", atributo: "valorTotal"},
   ]
 
   constructor(
@@ -122,6 +146,18 @@ export class ComprasComponent implements OnInit{
         return name ? this._filterPn(name as string) : this.produtos.slice();
       }),
     );
+
+    this.compraSubscription = this.compraService.compras$.subscribe((c) => {
+      this.comprasRecuperadas = c;
+      // console.log(this.comprasRecuperadas);
+    })
+
+    this.pageableSubscription=this.compraService.pageable$.subscribe((p) => {
+      this.pageable = p;
+      // console.log(this.pageable);
+    })
+
+    this.compraService.findAll(this.pageIndex, this.pageSize);
   }
 
   displayFn(fornecedor: Fornecedor): string {
@@ -163,6 +199,16 @@ export class ComprasComponent implements OnInit{
     });
   }
 
+  alteracaoNaPagina(event: PageEvent){
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.compraService.findAll(this.pageIndex, this.pageSize);
+  }
+
+  downloadArquivo(event: any){
+    this.compraService.downloadArchive(event);
+  }
+
   selectFile(): void {
     if (this.fileInput) {
       this.renderer.selectRootElement(this.fileInput.nativeElement).click();
@@ -181,7 +227,6 @@ export class ComprasComponent implements OnInit{
 
       this.compraService.uploadArchive(file, this.compra!.id).subscribe({
         next: (u) => {
-          console.log(u);
           let interval = setInterval(() => {
             this.value += 1;
             if(this.value === 100){

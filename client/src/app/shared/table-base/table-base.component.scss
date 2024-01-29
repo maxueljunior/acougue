@@ -1,13 +1,18 @@
 table{
   // border: 1px solid red;
   box-sizing: border-box;
+
   .mat-mdc-row:hover .mat-mdc-cell {
     background-color: #f8f8f8;
   }
-  
+
   cursor: pointer;
   button{
     margin: 5px;
+
+    .icon-download{
+      color: blue;
+    }
 
     .icon-edit{
       color: green;
@@ -17,6 +22,7 @@ table{
       color: red;
     }
   }
+
 }
 .sem-conteudo{
   p{

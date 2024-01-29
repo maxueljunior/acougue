@@ -1,26 +1,5 @@
 import { Fornecedor } from "./Fornecedor";
 
-export interface ICompras {
-  content:          Content[];
-  pageable:         Pageable;
-  last:             boolean;
-  totalElements:    number;
-  totalPages:       number;
-  first:            boolean;
-  size:             number;
-  number:           number;
-  sort:             Sort;
-  numberOfElements: number;
-  empty:            boolean;
-}
-
-export interface Compras{
-  id: number;
-  valorTotal: number;
-  fornecedor: Fornecedor;
-  data: Date
-}
-
 export interface Upload{
   fileName:    string;
   fileType:    string;
@@ -28,24 +7,50 @@ export interface Upload{
   downloadUrl: string;
 }
 
-export interface Content {
-  id: number;
+export interface ICompras {
+  _embedded: Embedded;
+  _links:    ComprasLinks;
+  page:      Page;
+}
+
+export interface Embedded {
+  comprasDTOList: Compras[];
+}
+
+export interface Compras {
+  id:         number;
   valorTotal: number;
   fornecedor: Fornecedor;
-  data: Date
+  data:       string;
+  _links?:    LinkDownload;
 }
 
-export interface Pageable {
-  pageNumber: number;
-  pageSize:   number;
-  sort:       Sort;
-  offset:     number;
-  unpaged:    boolean;
-  paged:      boolean;
+export interface Compra{
+  id:         number;
+  valorTotal: number;
+  fornecedor: Fornecedor;
+  data:       string;
+  links?:     string;
 }
 
-export interface Sort {
-  empty:    boolean;
-  sorted:   boolean;
-  unsorted: boolean;
+export interface LinkDownload {
+  download?: First;
+}
+
+export interface First {
+  href: string;
+}
+
+export interface ComprasLinks {
+  first: First;
+  self:  First;
+  next:  First;
+  last:  First;
+}
+
+export interface Page {
+  size:          number;
+  totalElements: number;
+  totalPages:    number;
+  number:        number;
 }

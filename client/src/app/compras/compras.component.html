@@ -44,10 +44,6 @@
                         <mat-label>{{ codigo }}</mat-label>
                         <input matInput type="number" disabled="true">
                       </mat-form-field>
-                      <!-- <button type="button" class="btn-pesquisar" mat-flat-button extended>
-                        <mat-icon>search</mat-icon>
-                        PROCURAR
-                      </button> -->
                     </div>
                     <div class="info-produto-two">
 
@@ -145,7 +141,20 @@
 
           </mat-tab>
 
-          <mat-tab label="Registros">Content 2</mat-tab>
+          <mat-tab label="Registros">
+            <app-table-base
+              #tableBase
+              [displayedColumns]="displayedColumnsComp"
+              [displayedesColumns]="displayedesColumnsComp"
+              [pageable]="pageable"
+              [dados]="comprasRecuperadas"
+              [colunas]="colunasComp"
+              [colunasResponsivas]="colunasResponsivaComp"
+              [visualizacaoDeAdicao]="false"
+              (alteracaoPagina)="alteracaoNaPagina($event)"
+              (download)="downloadArquivo($event)"
+            ></app-table-base>
+          </mat-tab>
 
         </mat-tab-group>
 

@@ -35,6 +35,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();
   @Output() edicao = new EventEmitter<any>();
   @Output() exclusao = new EventEmitter<any>();
+  @Output() download = new EventEmitter<any>();
 
   // Os atributos abaixo tem como objetivo de tentar transformar a tabela em responsiva....
   @Input() colunas!: Responsivo[];
@@ -98,6 +99,9 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
       if(changes?.['pageable'] && changes?.['pageable'].currentValue){
         const pageable = changes?.['pageable'].currentValue;
         this.size = pageable?.['totalElements'];
+        if(this.size === undefined || this.size === null || this.size === 0){
+          this.size = pageable?.['page']?.['totalElements'];
+        }
       }
     }
   }
@@ -108,6 +112,10 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
 
   excluir(data: any){
     this.exclusao.emit(data);
+  }
+
+  baixarArquivo(data: any){
+    this.download.emit(data._links.download.href);
   }
 
   refreshDataSource(dados: any): void {
