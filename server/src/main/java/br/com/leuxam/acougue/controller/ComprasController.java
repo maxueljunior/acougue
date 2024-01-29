@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -63,8 +64,10 @@ public class ComprasController {
 	})
 	@GetMapping
 	public ResponseEntity<PagedModel<EntityModel<ComprasDTO>>> findAll(
-			@PageableDefault(size = 5, sort = {"fornecedor"}) Pageable pageable){
-		var compras = service.findAll(pageable);
+			@PageableDefault(size = 5, sort = {"fornecedor"}) Pageable pageable,
+			@RequestParam(name = "q", defaultValue = "") String razaoSocial){
+		var compras = service.findAllByRazaoFornecedor(pageable, razaoSocial);
+		
 		return ResponseEntity.ok().body(compras);
 	}
 	

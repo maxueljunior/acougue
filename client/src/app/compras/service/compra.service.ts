@@ -34,10 +34,11 @@ export class CompraService {
     return this.http.post<Upload>(`${this.urlApiUpload}/${idCompras}/one`, formData);
   }
 
-  findAll(page: number, size:number): void{
+  findAll(page: number, size: number, razaoSocial: string): void{
     const options = new HttpParams()
       .set('page', page)
-      .set('size', size);
+      .set('size', size)
+      .set('q', razaoSocial);
 
     this.http.get<ICompras>(this.urlApi, {params:options}).subscribe({
       next: (c) => {

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -54,9 +55,32 @@ public class ComprasService {
 		return new DadosDetalhamentoCompras(compras);
 	}
 
+//	@Transactional
+//	public PagedModel<EntityModel<ComprasDTO>> findAll(Pageable pageable) {
+//		var compras = comprasRepository.findAll(pageable);
+//		
+//		var comprasDTO = compras.map(c -> modelMapper.map(c, ComprasDTO.class));
+//		comprasDTO.forEach(c -> {
+//			if(c.getArquivosCompras().size() > 0) {
+//				c.add(linkTo(methodOn(ArquivosComprasController.class).downloadFile(c.getId())).withRel("download"));
+//			}
+//		});
+//		
+//		Link link = linkTo(methodOn(ComprasController.class).findAll(pageable)).withSelfRel();
+//		
+//		return assembler.toModel(comprasDTO, link);
+//	}
+//	
 	@Transactional
-	public PagedModel<EntityModel<ComprasDTO>> findAll(Pageable pageable) {
-		var compras = comprasRepository.findAll(pageable);
+	public PagedModel<EntityModel<ComprasDTO>> findAllByRazaoFornecedor(Pageable pageable, String razaoSocial) {
+		
+		Page<Compras> compras;
+	
+		if(razaoSocial.equalsIgnoreCase("")) {
+			compras = comprasRepository.findAll(pageable);
+		}else {
+			compras = comprasRepository.findAllByRazaoFornecedor(pageable, razaoSocial);
+		}
 		
 		var comprasDTO = compras.map(c -> modelMapper.map(c, ComprasDTO.class));
 		comprasDTO.forEach(c -> {
@@ -65,7 +89,7 @@ public class ComprasService {
 			}
 		});
 		
-		Link link = linkTo(methodOn(ComprasController.class).findAll(pageable)).withSelfRel();
+		Link link = linkTo(methodOn(ComprasController.class).findAll(pageable, razaoSocial)).withSelfRel();
 		
 		return assembler.toModel(comprasDTO, link);
 	}

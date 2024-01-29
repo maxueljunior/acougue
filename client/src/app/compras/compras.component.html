@@ -18,6 +18,9 @@
                       {{option.razaoSocial}}
                     </mat-option>
                   </mat-autocomplete>
+                  <button matSuffix mat-icon-button aria-label="Clear" (click)="limpar(myControl)">
+                    <mat-icon>close</mat-icon>
+                  </button>
                   <mat-error class="error-login" *ngIf="!myControl.valid && (myControl.touched || myControl.dirty)">
                     Fornecedor é obrigatorio!
                   </mat-error>
@@ -142,18 +145,27 @@
           </mat-tab>
 
           <mat-tab label="Registros">
-            <app-table-base
-              #tableBase
-              [displayedColumns]="displayedColumnsComp"
-              [displayedesColumns]="displayedesColumnsComp"
-              [pageable]="pageable"
-              [dados]="comprasRecuperadas"
-              [colunas]="colunasComp"
-              [colunasResponsivas]="colunasResponsivaComp"
-              [visualizacaoDeAdicao]="false"
-              (alteracaoPagina)="alteracaoNaPagina($event)"
-              (download)="downloadArquivo($event)"
-            ></app-table-base>
+            <div class="container-registros">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Razão Social Fornecedor</mat-label>
+                <input matInput placeholder="Ex: Max Soft LTDA." [formControl]="fornecedorControlBusca">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+
+              <app-table-base
+                #tableBase
+                [displayedColumns]="displayedColumnsComp"
+                [displayedesColumns]="displayedesColumnsComp"
+                [pageable]="pageable"
+                [dados]="comprasRecuperadas"
+                [colunas]="colunasComp"
+                [colunasResponsivas]="colunasResponsivaComp"
+                [visualizacaoDeAdicao]="false"
+                (alteracaoPagina)="alteracaoNaPagina($event)"
+                (download)="downloadArquivo($event)"
+              ></app-table-base>
+            </div>
           </mat-tab>
 
         </mat-tab-group>

@@ -3,6 +3,8 @@ package br.com.leuxam.acougue.domain.compras;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,13 @@ public interface ComprasRepository extends JpaRepository<Compras, Long>{
 			""")
 	BigDecimal searchPrecoRecente(Estoque estoque, LocalDateTime dataRecente);
 	
-	
+	@Query("""
+			SELECT c
+			FROM Compras c
+			LEFT JOIN c.fornecedor f
+			ON c.fornecedor.id = f.id
+			WHERE f.razaoSocial LIKE %:razaoSocial%
+			""")
+	Page<Compras> findAllByRazaoFornecedor(Pageable pageable, String razaoSocial);
 	
 }

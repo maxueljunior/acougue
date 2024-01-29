@@ -4,7 +4,7 @@ import { CompraEstoque, CompraEstoqueTable } from '../core/types/ComprasEstoque'
 import { Responsivo } from '../core/types/Types';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalProcuraComponent } from '../shared/modal-procura/modal-procura.component';
-import { Observable, map, startWith, Subscription } from 'rxjs';
+import { Observable, map, startWith, Subscription, debounceTime } from 'rxjs';
 import { FornecedorService } from '../fornecedor/service/fornecedor.service';
 import { Fornecedor } from '../core/types/Fornecedor';
 import { CompraService } from './service/compra.service';
@@ -18,6 +18,7 @@ import { CompraEstoqueService } from './service/compra-estoque.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 import { PageEvent } from '@angular/material/paginator';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-compras',
@@ -42,7 +43,10 @@ export class ComprasComponent implements OnInit{
   value: number = 0;
 
   myControl = new FormControl<null | Fornecedor>(null, Validators.required);
+  fornecedorControlBusca = new FormControl();
+
   filteredOptions!: Observable<Fornecedor[]>;
+  filteredOptionsSearch!: Observable<Fornecedor[]>;
 
   produtoControl = new FormControl<null | Produto>(null, Validators.required);
   filteredOptionsProduto!: Observable<Produto[]>;
@@ -69,6 +73,7 @@ export class ComprasComponent implements OnInit{
   podeExcluir: boolean = false;
   pageIndex: number = 0;
   pageSize: number = 10;
+  razaoSocial: string = '';
 
   formCompraEstoque: FormGroup;
 
@@ -117,6 +122,7 @@ export class ComprasComponent implements OnInit{
     this.formCompraEstoque = this.formBaseService.adicionaCamposComprasEstoque(this.formCompraEstoque);
   }
 
+  
   ngOnInit() {
 
     this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
@@ -157,7 +163,14 @@ export class ComprasComponent implements OnInit{
       // console.log(this.pageable);
     })
 
-    this.compraService.findAll(this.pageIndex, this.pageSize);
+    this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
+
+    this.fornecedorControlBusca.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((valorDigitado) => {
+        this.razaoSocial = valorDigitado;
+        this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
+      });
   }
 
   displayFn(fornecedor: Fornecedor): string {
@@ -202,7 +215,7 @@ export class ComprasComponent implements OnInit{
   alteracaoNaPagina(event: PageEvent){
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.compraService.findAll(this.pageIndex, this.pageSize);
+    this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
   }
 
   downloadArquivo(event: any){
@@ -427,6 +440,10 @@ export class ComprasComponent implements OnInit{
     }else{
       this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
     }
+  }
+
+  limpar(event: FormControl){
+    event.reset();
   }
 }
 

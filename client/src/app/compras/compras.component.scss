@@ -1,9 +1,6 @@
 .container-table{
   box-sizing: border-box;
 
-  mat-tab-group{
-  }
-
   .error-login{
     font-size: 12px;
     margin-bottom: 5px;
@@ -178,6 +175,18 @@
         width: 100%;
       }
     }
+  }
+}
+
+.container-registros{
+  // border: 1px solid red;
+  padding: 20px;
+  box-sizing: border-box;
+  .mat-mdc-form-field{
+    margin-bottom: 10px;
+    width: 60%;
+    font-size: 14px;
+    // border: 1px solid red;
   }
 }
 
