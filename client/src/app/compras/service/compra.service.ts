@@ -42,17 +42,21 @@ export class CompraService {
 
     this.http.get<ICompras>(this.urlApi, {params:options}).subscribe({
       next: (c) => {
-        const comprasSimples = c._embedded.comprasDTOList.map((compra) => ({
-          id: compra.id,
-          valorTotal: compra.valorTotal,
-          fornecedor: compra.fornecedor,
-          data: compra.data,
-          _links: compra?._links
-        }));
 
-        this.comprasSubject.next(comprasSimples);
+        if(c.page.totalElements > 0){
+          const comprasSimples = c._embedded.comprasDTOList.map((compra) => ({
+            id: compra.id,
+            valorTotal: compra.valorTotal,
+            fornecedor: compra.fornecedor,
+            data: compra.data,
+            _links: compra?._links
+          }));
+
+          this.comprasSubject.next(comprasSimples);
+        }else{
+          this.comprasSubject.next([]);
+        }
         this.pageableSubject.next(c);
-        console.log(this.comprasSubject.value);
       },
       error: (err) => {
         console.log(err);
