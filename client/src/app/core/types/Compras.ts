@@ -21,6 +21,13 @@ export interface Compras{
   data: Date
 }
 
+export interface Upload{
+  fileName:    string;
+  fileType:    string;
+  size:        number;
+  downloadUrl: string;
+}
+
 export interface Content {
   id: number;
   valorTotal: number;

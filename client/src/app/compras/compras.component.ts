@@ -179,15 +179,23 @@ export class ComprasComponent implements OnInit{
 
       this.arquivoAnexado = true;
 
-      let interval = setInterval(() => {
-        this.value += 1;
-        if(this.value === 100){
-          this.arquivoAnexado = false;
-          this.arquivoFinalizado = true;
-          this.selectedFileName = file.name;
-          clearInterval(interval);
+      this.compraService.uploadArchive(file, this.compra!.id).subscribe({
+        next: (u) => {
+          console.log(u);
+          let interval = setInterval(() => {
+            this.value += 1;
+            if(this.value === 100){
+              this.arquivoAnexado = false;
+              this.arquivoFinalizado = true;
+              this.selectedFileName = file.name;
+              clearInterval(interval);
+            }
+          }, 5);
+        },
+        error: (err) => {
+          console.log(err);
         }
-      }, 5);
+      });
     }
   }
 
@@ -263,7 +271,7 @@ export class ComprasComponent implements OnInit{
 
     let index = this.compras.findIndex((c) => c.produto.id === id);
     let compraEstoqueAtt = this.compras[index];
-    
+
     compraEstoqueAtt.precoUnitario = this.formBaseService.formBase.get('precoUnitario')?.value;
     compraEstoqueAtt.quantidade = this.formBaseService.formBase.get('quantidade')?.value
 
