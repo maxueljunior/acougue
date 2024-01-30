@@ -1,5 +1,6 @@
 package br.com.leuxam.acougue.domain.comprasEstoque;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,13 @@ public interface ComprasEstoqueRepository extends JpaRepository<ComprasEstoque, 
 			WHERE ce.compras.id = :id
 			""")
 	Page<ComprasEstoque> findByCompras(Long id, Pageable pageable);
+	
+	@Query("""
+			SELECT ce
+			FROM ComprasEstoque ce
+			WHERE ce.compras.id = :id
+			""")
+	List<ComprasEstoque> findByCompras(Long id);
 	
 	Optional<ComprasEstoque> findByComprasAndEstoque(Compras compras, Estoque estoque);
 	

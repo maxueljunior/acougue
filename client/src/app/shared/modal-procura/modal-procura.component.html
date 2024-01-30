@@ -20,13 +20,19 @@
 
 <div class="table">
   <app-table-base
-   [dados]="dataSource"
-   [displayedColumns]="displayedColumns"
-   [displayedesColumns]="displayedColumns"
-   [colunas]="colunasResponsivas"
-   [colunasResponsivas]="colunasResponsivas"
+   [dados]="data.dados"
+   [displayedColumns]="data.displayedColumns"
+   [displayedesColumns]="data.displayedesColumns"
+   [colunas]="data.colunas"
+   [colunasResponsivas]="data.colunasResponsivas"
    [visualizacaoDeAdicao]="true">
   </app-table-base>
+</div>
+
+<div class="actions">
+  <button mat-flat-button color="warn" (click)="fechar()">
+    FECHAR
+  </button>
 </div>
 
 

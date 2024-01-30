@@ -20,6 +20,9 @@ import br.com.leuxam.acougue.controller.ArquivosComprasController;
 import br.com.leuxam.acougue.controller.ComprasController;
 import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.ValidacaoException;
+import br.com.leuxam.acougue.domain.arquivosCompras.ArquivosComprasRepository;
+import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoqueRepository;
+import br.com.leuxam.acougue.domain.comprasEstoque.ComprasEstoqueService;
 import br.com.leuxam.acougue.domain.fornecedor.FornecedorRepository;
 import jakarta.transaction.Transactional;
 
@@ -30,6 +33,12 @@ public class ComprasService {
 
 	private FornecedorRepository fornecedorRepository;
 	
+	private ArquivosComprasRepository arquivosComprasRepository;
+	
+	private ComprasEstoqueRepository comprasEstoqueRepository;
+	
+	private ComprasEstoqueService comprasEstoqueService;
+	
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -37,9 +46,17 @@ public class ComprasService {
 	private PagedResourcesAssembler<ComprasDTO> assembler;
 
 	@Autowired
-	public ComprasService(ComprasRepository comprasRepository, FornecedorRepository fornecedorRepository) {
+	public ComprasService(
+			ComprasRepository comprasRepository,
+			FornecedorRepository fornecedorRepository,
+			ArquivosComprasRepository arquivosComprasRepository,
+			ComprasEstoqueRepository comprasEstoqueRepository,
+			ComprasEstoqueService comprasEstoqueService) {
 		this.comprasRepository = comprasRepository;
 		this.fornecedorRepository = fornecedorRepository;
+		this.arquivosComprasRepository = arquivosComprasRepository;
+		this.comprasEstoqueRepository = comprasEstoqueRepository;
+		this.comprasEstoqueService = comprasEstoqueService;
 	}
 	
 	@Transactional
@@ -125,6 +142,26 @@ public class ComprasService {
 		compra.get().atualizar(fornecedor);
 
 		return new DadosDetalhamentoCompras(compra.get());
+	}
+
+	@Transactional
+	public void delete(Long id) {
+		var compra = comprasRepository.findById(id);
+		
+		if (!compra.isPresent())
+			throw new ValidacaoException("Compra nº " + id + " não existe!");
+		
+		var arquivosCompras = arquivosComprasRepository.findByCompras(compra.get());
+		
+		if(arquivosCompras.isPresent()) arquivosComprasRepository.delete(arquivosCompras.get());
+		
+		var comprasEstoque = comprasEstoqueRepository.findByCompras(compra.get().getId());
+		
+		if(comprasEstoque.size() > 0) {
+			comprasEstoque.forEach((ce) -> comprasEstoqueService.delete(compra.get().getId(), ce.getEstoque().getId()));
+		}
+		
+		comprasRepository.delete(compra.get());
 	}
 
 	/*

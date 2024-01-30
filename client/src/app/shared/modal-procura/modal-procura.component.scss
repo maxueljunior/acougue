@@ -43,8 +43,18 @@
 }
 
 .table {
-  width: 90%;
+  width: 96%;
   align-items: center;
   margin: 0 auto;
+  margin-bottom: 15px;
+}
+
+.actions{
+  width: 96%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  top:0;
   margin-bottom: 15px;
 }

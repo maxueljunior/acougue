@@ -267,7 +267,7 @@ export class ComprasComponent implements OnInit{
       data:{
         texto: 'Compra',
         numero: this.compra?.id,
-        total: this.valorTotal,
+        total: this.valorTotal.toFixed(2),
         arquivo: this.arquivoFinalizado
       }
     })
@@ -389,6 +389,9 @@ export class ComprasComponent implements OnInit{
     this.myControl.reset();
     this.criarCompra = false;
     this.limparCamposForm();
+    this.selectedFileName = 'Nenhum arquivo selecionado';
+    this.arquivoAnexado = false;
+    this.arquivoFinalizado = false;
   }
 
   recuperarDadosDoClique(compraEstoque: CompraEstoqueTable){
@@ -447,12 +450,32 @@ export class ComprasComponent implements OnInit{
   }
 
   abrirCompras(event: Compras){
+    this.compraEstoqueService.findAllByIdCompras(event.id).subscribe({
+      next: (ce) => {
 
+        let compraTable = ce.content.map((c) => (
+        {
+          id: c.id,
+          produto: this.produtos.find((p) => p.id === c.idEstoque),
+          quantidade: c.quantidade,
+          precoUnitario: c.precoUnitario
+        }) as CompraEstoqueTable)
+
+        this.openDialogRelacaoProdutos(event, compraTable);
+
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  openDialogRelacaoProdutos(compras: Compras, compraEstoque: CompraEstoqueTable[]): void{
     let tamWidth = window.innerWidth * 0.60;
     let tamHeigth = window.innerHeight * 0.80;
 
     let contemNotaFiscal = "Sim";
-    if(event._links?.download?.href === undefined){
+    if(compras._links?.download?.href === undefined){
       contemNotaFiscal = "Não";
     }
 
@@ -461,18 +484,22 @@ export class ComprasComponent implements OnInit{
       height: `${tamHeigth}px`,
       data:{
         dadosLado1: [
-          {nome: "Codigo Compra", attributo: event.id},
-          {nome: "Razão Fornecedor", attributo: event.fornecedor.razaoSocial},
-          {nome: "CNPJ", attributo: event.fornecedor.cnpj},
+          {nome: "Codigo Compra", attributo: compras.id},
+          {nome: "Razão Fornecedor", attributo: compras.fornecedor.razaoSocial},
+          {nome: "CNPJ", attributo: compras.fornecedor.cnpj},
         ],
         dadosLado2: [
-          {nome: "Data", attributo: event.data},
-          {nome: "Valor Total (R$)", attributo: event.valorTotal},
-          {nome: "Nota Fiscal", attributo: event._links?.download?.href},
-        ]
+          {nome: "Data", attributo: compras.data},
+          {nome: "Valor Total (R$)", attributo: compras.valorTotal},
+          {nome: "Nota Fiscal", attributo: compras._links?.download?.href},
+        ],
+        dados: compraEstoque,
+        colunas: this.colunas,
+        colunasResponsivas: this.colunasResponsiva,
+        displayedColumns: this.displayedColumns,
+        displayedesColumns: this.displayedesColumns
       }
     })
-    console.log(event);
   }
 }
 

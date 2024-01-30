@@ -42,6 +42,9 @@ export class ModalProcuraComponent {
     public dialogRef: MatDialogRef<ModalProcuraComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){
+  }
 
+  fechar(): void{
+    this.dialogRef.close();
   }
 }

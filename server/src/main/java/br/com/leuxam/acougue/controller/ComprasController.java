@@ -6,6 +6,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,6 +101,21 @@ public class ComprasController {
 			@RequestBody DadosAtualizarCompras dados){
 		var compra = service.update(id, dados);
 		return ResponseEntity.ok().body(compra);
+	}
+	
+	@Operation(summary = "Deletar compra com todas as informações")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoCompras.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
+	@DeleteMapping("/{id}")
+	public ResponseEntity delete(
+			@PathVariable(name = "id") Long id){
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }
 
