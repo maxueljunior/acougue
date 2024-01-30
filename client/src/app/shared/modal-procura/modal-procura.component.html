@@ -1,1 +1,32 @@
+<div class="info">
+  <div class="lado-1">
+    <ng-container  *ngFor="let lado of data.dadosLado1">
+      <div class="info-content">
+        <p>{{ lado.nome }}</p>
+        <input [value]="lado.attributo" disabled>
+      </div>
+    </ng-container>
+  </div>
+  <div class="lado-2">
+    <ng-container *ngFor="let lado of data.dadosLado2">
+      <div class="info-content">
+        <p>{{ lado.nome }}</p>
+        <input *ngIf="lado.nome !== 'Nota Fiscal'" [value]="lado.attributo" disabled>
+        <input class="input-check" type="checkbox" *ngIf="lado.nome === 'Nota Fiscal'" [checked]="lado.attributo !== undefined" disabled>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div class="table">
+  <app-table-base
+   [dados]="dataSource"
+   [displayedColumns]="displayedColumns"
+   [displayedesColumns]="displayedColumns"
+   [colunas]="colunasResponsivas"
+   [colunasResponsivas]="colunasResponsivas"
+   [visualizacaoDeAdicao]="true">
+  </app-table-base>
+</div>
+
 

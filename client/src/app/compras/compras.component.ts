@@ -1,7 +1,7 @@
+import { Responsivo } from 'src/app/core/types/Types';
 import { Component, ElementRef, Renderer2, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompraEstoque, CompraEstoqueTable } from '../core/types/ComprasEstoque';
-import { Responsivo } from '../core/types/Types';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalProcuraComponent } from '../shared/modal-procura/modal-procura.component';
 import { Observable, map, startWith, Subscription, debounceTime } from 'rxjs';
@@ -122,7 +122,7 @@ export class ComprasComponent implements OnInit{
     this.formCompraEstoque = this.formBaseService.adicionaCamposComprasEstoque(this.formCompraEstoque);
   }
 
-  
+
   ngOnInit() {
 
     this.fornecedorSubscription = this.fornecedorService.fornecedores$.subscribe((f) => {
@@ -444,6 +444,35 @@ export class ComprasComponent implements OnInit{
 
   limpar(event: FormControl){
     event.reset();
+  }
+
+  abrirCompras(event: Compras){
+
+    let tamWidth = window.innerWidth * 0.60;
+    let tamHeigth = window.innerHeight * 0.80;
+
+    let contemNotaFiscal = "Sim";
+    if(event._links?.download?.href === undefined){
+      contemNotaFiscal = "Não";
+    }
+
+    this.dialog.open(ModalProcuraComponent, {
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
+      data:{
+        dadosLado1: [
+          {nome: "Codigo Compra", attributo: event.id},
+          {nome: "Razão Fornecedor", attributo: event.fornecedor.razaoSocial},
+          {nome: "CNPJ", attributo: event.fornecedor.cnpj},
+        ],
+        dadosLado2: [
+          {nome: "Data", attributo: event.data},
+          {nome: "Valor Total (R$)", attributo: event.valorTotal},
+          {nome: "Nota Fiscal", attributo: event._links?.download?.href},
+        ]
+      }
+    })
+    console.log(event);
   }
 }
 

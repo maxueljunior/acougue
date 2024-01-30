@@ -30,6 +30,7 @@ export class TableBaseComponent implements AfterViewInit, OnChanges, OnInit{
   @Input() dados!: any[];
   @Input() pageable: any | null | undefined;
   @Input() visualizacaoDeAdicao: boolean = false;
+  @Input() contemEdicao: boolean = true;
 
   @Output() clickNaTabela = new EventEmitter<any>();
   @Output() alteracaoPagina = new EventEmitter<PageEvent>();

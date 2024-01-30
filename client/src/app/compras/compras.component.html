@@ -162,8 +162,10 @@
                 [colunas]="colunasComp"
                 [colunasResponsivas]="colunasResponsivaComp"
                 [visualizacaoDeAdicao]="false"
+                [contemEdicao]="false"
                 (alteracaoPagina)="alteracaoNaPagina($event)"
                 (download)="downloadArquivo($event)"
+                (clickNaTabela)="abrirCompras($event)"
               ></app-table-base>
             </div>
           </mat-tab>
