@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Compras, ICompras, Upload } from 'src/app/core/types/Compras';
 import { Fornecedor } from 'src/app/core/types/Fornecedor';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackMensagemComponent } from 'src/app/shared/snack-mensagem/snack-mensagem.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class CompraService {
   pageable$ = this.pageableSubject.asObservable();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar
   ) { }
 
   create(fornecedor: Fornecedor | null): Observable<Compras>{
@@ -64,6 +67,31 @@ export class CompraService {
     })
   }
 
+  delete(id: number, pageIndex: number, pageSize: number, razaoSocial: string): void{
+    this.http.delete(`${this.urlApi}/${id}`).subscribe({
+      next: () => {
+        let c = this.comprasSubject.getValue();
+        let index = c.findIndex(compra => compra.id === id);
+        if(index !== -1){
+          c.splice(index, 1);
+          let novasCompras = [...c];
+          this.comprasSubject.next(novasCompras);
+
+          let totalElementos = this.pageableSubject.value!.page.totalElements;
+
+          if(totalElementos > pageSize){
+            this.findAll(pageIndex, pageSize, razaoSocial);
+          }
+
+          this.openSnackBar('Compra deletada com sucesso!', 'sucesso');
+        }
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
+      }
+    })
+  }
+
   downloadArchive(urlDownload: string): void{
 
     let headers = new HttpHeaders({
@@ -94,13 +122,33 @@ export class CompraService {
           link.click();
 
           window.URL.revokeObjectURL(url);
-        } else {
-          console.error('O corpo da resposta é nulo.');
         }
+
+        this.openSnackBar('Aguarde a inicialização do Download!', 'sucesso');
       },
       error: (err) => {
-        console.log(err);
+        this.verificaStatusErro(err.status);
       }
     });
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
   }
 }

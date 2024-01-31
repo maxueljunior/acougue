@@ -1,6 +1,6 @@
 import { Responsivo } from 'src/app/core/types/Types';
 import { Component, ElementRef, Renderer2, ViewChild, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompraEstoque, CompraEstoqueTable } from '../core/types/ComprasEstoque';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalProcuraComponent } from '../shared/modal-procura/modal-procura.component';
@@ -18,7 +18,8 @@ import { CompraEstoqueService } from './service/compra-estoque.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 import { PageEvent } from '@angular/material/paginator';
-import { MatAutocomplete } from '@angular/material/autocomplete';
+import { ModalExclusaoComponent } from '../shared/modal-exclusao/modal-exclusao.component';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-compras',
@@ -163,7 +164,7 @@ export class ComprasComponent implements OnInit{
       // console.log(this.pageable);
     })
 
-    this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
+    // this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
 
     this.fornecedorControlBusca.valueChanges
       .pipe(debounceTime(300))
@@ -301,10 +302,6 @@ export class ComprasComponent implements OnInit{
       idCompras: this.compra!.id
     })
 
-    // // pegar os dados para fazer a inserção no banco de dados
-    // console.log(this.formBaseService.formBase.value);
-    // console.log(this.produtoControl.value);
-
     let id = this.compras.length + 1;
     let compraEstoqueTable: CompraEstoqueTable = {
       id: id,
@@ -320,7 +317,6 @@ export class ComprasComponent implements OnInit{
       this.atualizarValores();
     }else{
       this.produtoExistente = true;
-      // console.log(this.produtoExistente);
     }
   }
 
@@ -481,7 +477,7 @@ export class ComprasComponent implements OnInit{
 
     this.dialog.open(ModalProcuraComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data:{
         dadosLado1: [
           {nome: "Codigo Compra", attributo: compras.id},
@@ -500,6 +496,27 @@ export class ComprasComponent implements OnInit{
         displayedesColumns: this.displayedesColumns
       }
     })
+  }
+
+  excluirCompras(event: any): void{
+      let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+        data:{
+          titulo: `Compra nº ${event.id}`
+        }
+      });
+
+      dialogRef.componentInstance.exclusao.subscribe((e) => {
+        if(e === true){
+          this.compraService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
+        }
+      })
+  }
+
+  trocaDeTab(event: MatTabChangeEvent): void{
+    if(event.index === 1){
+      console.log(`Index -> ${this.pageIndex}, Size -> ${this.pageSize}, Razão Social -> ${this.razaoSocial}`);
+      this.compraService.findAll(this.pageIndex, this.pageSize, this.razaoSocial);
+    }
   }
 }
 

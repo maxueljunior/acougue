@@ -22,6 +22,9 @@
           <button *ngIf="contemEdicao" mat-flat-button (click)="editar(element)">
             <mat-icon class="icon-edit">edit</mat-icon>
           </button>
+          <button *ngIf="!contemEdicao" mat-flat-button (click)="clicouNaTabela(element)">
+            <mat-icon class="icon-edit">expand_more</mat-icon>
+          </button>
           <button mat-flat-button (click)="excluir(element)">
             <mat-icon class="icon-delete">delete</mat-icon>
           </button>
@@ -31,11 +34,20 @@
 
 
 
-    <tr mat-header-row *matHeaderRowDef="telaResponsiva ? displayedColumns : displayedesColumns"></tr>
-    <tr mat-row (click)="clicouNaTabela(row)"
-      [class.demo-row-is-clicked]="clickedRows.has(row)"
-    *matRowDef="let row;
-     columns: telaResponsiva ? displayedColumns : displayedesColumns;"></tr>
+    <div *ngIf="habilitarClickTabela">
+      <tr mat-header-row *matHeaderRowDef="telaResponsiva ? displayedColumns : displayedesColumns"></tr>
+      <tr mat-row (click)="clicouNaTabela(row)"
+        [class.demo-row-is-clicked]="clickedRows.has(row)"
+      *matRowDef="let row;
+      columns: telaResponsiva ? displayedColumns : displayedesColumns;"></tr>
+     </div>
+
+     <div *ngIf="!habilitarClickTabela">
+      <tr mat-header-row *matHeaderRowDef="telaResponsiva ? displayedColumns : displayedesColumns"></tr>
+      <tr mat-row
+      *matRowDef="let row;
+      columns: telaResponsiva ? displayedColumns : displayedesColumns;"></tr>
+     </div>
 
   </table>
 
