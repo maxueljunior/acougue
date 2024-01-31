@@ -34,6 +34,10 @@ export class AsideBarComponent {
     this.router.navigate(['home']);
   }
 
+  navegarParaVendas(event: any){
+    this.router.navigate(['vendas']);
+  }
+
   logout(event: any){
     this.tokenService.excluirToken();
     this.router.navigate(['login']);
