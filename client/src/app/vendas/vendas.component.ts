@@ -1,8 +1,13 @@
+import { DatasProdutos, Produto } from './../core/types/Produto';
 import { Component, OnInit } from "@angular/core";
 import { ClienteService } from "../clientes/service/cliente.service";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Cliente } from "../core/types/Cliente";
 import { Observable, Subscription, map, startWith } from "rxjs";
+import { FormBaseService } from "../shared/service/form-base.service";
+import { VendasEstoqueTable } from "../core/types/Produto";
+import { ProdutoService } from '../produtos/service/produto.service';
+import { VendaEstoqueService } from './service/venda-estoque.service';
 
 @Component({
   selector: 'app-vendas',
@@ -17,12 +22,39 @@ export class VendasComponent implements OnInit{
   clientes: Cliente[] = [];
   clienteSubscription: Subscription = new Subscription();
 
+  produtos: Produto[] = [];
+  produtoSubscription: Subscription = new Subscription();
+  produto!: Produto | null;
+
+  produtoControl = new FormControl<null | Produto>(null, Validators.required);
+  filteredOptionsProduto!: Observable<Produto[]>;
+
+  datasEstoque: DatasProdutos[] = [];
+  dataControl = new FormControl<null | DatasProdutos>(null, Validators.required);
+  filteredOptionsData!: Observable<DatasProdutos[]>;
+
+
+  podeEditar: boolean = false;
+  podeExcluir: boolean = false;
+  produtoExistente: boolean = false;
+  unidade: string = "Unidade";
+  codigo: string = "Codigo";
+
+  vendasEstoque: VendasEstoqueTable[] = [];
+
+
   filteredOptions!: Observable<Cliente[]>;
 
-  constructor(
-    private clienteService: ClienteService
-  ){
+  formVendasEstoque!: FormGroup;
 
+  constructor(
+    private clienteService: ClienteService,
+    public formBaseService: FormBaseService,
+    private produtoService: ProdutoService,
+    private vendaEstoqueService: VendaEstoqueService
+  ){
+    this.formVendasEstoque = this.formBaseService.criarFormulario();
+    this.formVendasEstoque = this.formBaseService.adicionaCamposVendasEstoque(this.formVendasEstoque);
   }
   ngOnInit(): void {
     this.clienteSubscription = this.clienteService.clientes$.subscribe((c) =>{
@@ -39,6 +71,21 @@ export class VendasComponent implements OnInit{
         return name ? this._filter(name as string) : this.clientes.slice();
       }),
     );
+
+    this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
+      this.produtos = p;
+      console.log(p);
+    })
+
+    this.produtoService.findAll(0, 9999, '');
+
+    this.filteredOptionsProduto = this.produtoControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.descricao;
+        return name ? this._filterPn(name as string) : this.produtos.slice();
+      }),
+    );
   }
 
   limpar(control: FormControl): void{
@@ -53,5 +100,45 @@ export class VendasComponent implements OnInit{
     const filterValue = nome.toLowerCase();
 
     return this.clientes.filter(option => option.nome.toLowerCase().includes(filterValue));
+  }
+
+  displayPd(produto: Produto): string {
+    return produto && produto.descricao ? produto.descricao : '';
+  }
+
+  private _filterPn(descricao: string): Produto[] {
+    const filterValue = descricao.toLowerCase();
+
+    return this.produtos.filter(option => option.descricao.toLowerCase().includes(filterValue));
+  }
+
+  capturarDados(event: any): void{
+
+    this.produto = this.produtoControl.value;
+
+    this.vendaEstoqueService.getDatesWithProduct(this.produto!.id).subscribe((datas) => {
+      console.log(datas);
+      this.datasEstoque = datas;
+    })
+
+    this.codigo = this.produto!.id.toString();
+    this.unidade = this.produto!.unidade;
+    this.formBaseService.formBase.patchValue({
+      idEstoque: this.codigo
+    })
+    this.produtoExistente = false;
+  }
+
+  capturarDadosData(event: any){
+    console.log(this.dataControl.value);
+  }
+
+  verificaExistente(vendasEstoqueTabela: VendasEstoqueTable): boolean{
+    let index = this.vendasEstoque.findIndex((c) => c.produto.id === vendasEstoqueTabela.produto.id);
+    if(index === -1){
+      return false;
+    }
+
+    return true;
   }
 }

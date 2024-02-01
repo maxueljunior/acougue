@@ -2,6 +2,8 @@ package br.com.leuxam.acougue.domain.vendasEstoque;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoqueRepository;
 import br.com.leuxam.acougue.domain.compras.ComprasRepository;
 import br.com.leuxam.acougue.domain.estoque.EstoqueRepository;
+import br.com.leuxam.acougue.domain.estoqueData.DadosDetalhamentoEstoqueData;
 import br.com.leuxam.acougue.domain.estoqueData.EstoqueDataRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import jakarta.transaction.Transactional;
@@ -152,6 +155,18 @@ public class VendasEstoqueService {
 		clienteLucratividade.atualizar(lucratividade);
 		
 		return new DadosDetalhamentoVendaEstoque(vendaEstoque.get());
+	}
+	
+	public List<DadosDetalhamentoEstoqueData> findAllDateWithProduct(Long id){
+		
+		var product = estoqueRepository.findById(id);
+		
+		if(!product.isPresent()) throw new ExisteException("O item " + id + " não existe");
+		
+		var estoqueData = estoqueDataRepository.findByEstoque(product.get());
+		
+//		var estoqueData = estoqueDataRepository.findBy
+		return estoqueData.stream().map(DadosDetalhamentoEstoqueData::new).collect(Collectors.toList());
 	}
 }
 

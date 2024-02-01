@@ -52,8 +52,8 @@
 
                       <mat-form-field class="descricao-produto" appearance="outline">
                         <mat-label>Descrição</mat-label>
-                        <input type="text" matInput [formControl]="produtoControl" [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd" (closed)="capturarDados($event)">
+                        <input type="text" matInput [formControl]="produtoControl" [matAutocomplete]="autoProd">
+                        <mat-autocomplete #autoProd="matAutocomplete" [displayWith]="displayPd" (closed)="capturarDados($event)">
                           <mat-option *ngFor="let option of filteredOptionsProduto | async" [value]="option">
                             {{ option.descricao }}
                           </mat-option>

@@ -1,5 +1,7 @@
 package br.com.leuxam.acougue.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.leuxam.acougue.domain.estoqueData.DadosDetalhamentoEstoqueData;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosDetalhamentoVendaEstoque;
@@ -114,6 +117,20 @@ public class VendasEstoqueController {
 			@RequestBody @Valid DadosAtualizarVendaEstoque dados){
 		var vendaEstoque = service.update(idVendas, idEstoque, dados);
 		return ResponseEntity.ok().body(vendaEstoque);
+	}
+	
+	@Operation(summary = "Recuperar todas as datas para venda de um determinado Produto")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = DadosDetalhamentoEstoqueData.class))}),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
+	@GetMapping("/datas/{id}")
+	public ResponseEntity<List<DadosDetalhamentoEstoqueData>> findAllDates(
+			@PathVariable(name = "id") Long id){
+		var vendasEstoque = service.findAllDateWithProduct(id);
+		return ResponseEntity.ok().body(vendasEstoque);
 	}
 }
 

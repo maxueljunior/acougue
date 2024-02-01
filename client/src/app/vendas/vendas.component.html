@@ -33,7 +33,95 @@
                 </button>
 
                 </div>
+
+                <div class="container-alocar-produto">
+                  <div class="lado-1">
+                    <mat-divider></mat-divider>
+                    <div class="codigo-compra">
+                      <span>Venda Nº: <strong>{{ 123 }}</strong></span>
+                      <span class="valor-total">VALOR TOTAL: <strong>R$ {{ 123 }}</strong></span>
+                    </div>
+                    <form [formGroup]="this.formBaseService.formBase">
+                      <div class="info-produto">
+                        <mat-form-field appearance="outline">
+                          <mat-label>{{ codigo }}</mat-label>
+                          <input matInput type="number" disabled="true">
+                        </mat-form-field>
+                      </div>
+                      <div class="info-produto-two">
+
+                        <mat-form-field class="descricao-produto" appearance="outline">
+                          <mat-label>Descrição</mat-label>
+                          <input type="text" matInput [formControl]="produtoControl" [matAutocomplete]="autoProd">
+                          <mat-autocomplete #autoProd="matAutocomplete" [displayWith]="displayPd" (closed)="capturarDados($event)">
+                            <mat-option *ngFor="let option of filteredOptionsProduto | async" [value]="option">
+                              {{ option.descricao }}
+                            </mat-option>
+                          </mat-autocomplete>
+                          <mat-error class="error-login" *ngIf="!produtoControl.valid && (produtoControl.touched || produtoControl.dirty)">
+                            Produto é obrigatorio!
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="unidade-produto" appearance="outline">
+                          <mat-label>{{ unidade }}</mat-label>
+                          <input matInput disabled="true">
+                        </mat-form-field>
+                      </div>
+                      <div class="info-compras">
+                        <mat-form-field class="preco-produto" appearance="outline">
+                          <mat-label>Preço</mat-label>
+                          <input matInput type="number" formControlName="valorUnitario">
+                          <span matTextSuffix>$&nbsp;</span>
+                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('valorUnitario')?.errors?.['required'] && (formBaseService.formBase.get('valorUnitario')?.touched || formBaseService.formBase.get('valorUnitario')?.dirty)">
+                            Preço é obrigatorio!
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="quantidade-produto" appearance="outline">
+                          <mat-label>Quantidade</mat-label>
+                          <input matInput type="number" formControlName="quantidade">
+                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('quantidade')?.errors?.['required'] && (formBaseService.formBase.get('quantidade')?.touched || formBaseService.formBase.get('quantidade')?.dirty)">
+                            Qnt. é obrigatoria!
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="data-produto" appearance="outline">
+                          <mat-label>Data Produto</mat-label>
+                          <input type="text" matInput [formControl]="dataControl" [matAutocomplete]="autoData">
+                          <mat-autocomplete #autoData="matAutocomplete" (closed)="capturarDadosData($event)">
+                            <mat-option *ngFor="let option of datasEstoque" [value]="option.dataCompra">
+                              {{ option.dataCompra }}
+                            </mat-option>
+                          </mat-autocomplete>
+                          <mat-error class="error-login" *ngIf="!dataControl.valid && (dataControl.touched || dataControl.dirty)">
+                            Data de compra é obrigatoria!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <mat-error class="error-produto" *ngIf="produtoExistente">
+                        Produto já existente nas compras! Insira outro item ou finalize a Compra.
+                      </mat-error>
+
+                      <div class="info-actions">
+                        <button [disabled]="!this.formBaseService.formBase.valid" type="button" class="btn-inserir" mat-flat-button color="primary" extended>
+                          <mat-icon>add_shopping_cart</mat-icon>
+                          INSERIR
+                        </button>
+                        <button [disabled]="!podeEditar" type="button" class="btn-modificar" mat-fab color="accent">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button [disabled]="!podeExcluir" type="button" class="btn-excluir" mat-fab color="primary">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                        <button [disabled]="vendasEstoque.length < 1" type="button" class="btn-finalizar" mat-flat-button color="primary" extended>
+                          <mat-icon>check_small</mat-icon>
+                          FINALIZAR
+                        </button>
+                      </div>
+                    </form>
+                  </div>
               </div>
+            </div>
 
           </mat-tab>
 

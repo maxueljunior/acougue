@@ -67,6 +67,19 @@ export class FormBaseService{
     return this.formBase;
   }
 
+  adicionaCamposVendasEstoque(formGroup: FormGroup){
+    formGroup = this.formBuilder.group({
+      idEstoque: ['', Validators.required],
+      idVendas: [''],
+      quantidade: ['', Validators.required],
+      valorUnitario: ['', Validators.required],
+      dataEstoque: ['', Validators.required]
+    });
+
+    this.formBase = formGroup;
+    return this.formBase;
+  }
+
   retornaCampos(): FormGroup{
     return this.formBase;
   }
