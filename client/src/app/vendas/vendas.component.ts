@@ -36,9 +36,11 @@ export class VendasComponent implements OnInit{
 
   podeEditar: boolean = false;
   podeExcluir: boolean = false;
+  escolherData: boolean = false;
   produtoExistente: boolean = false;
   unidade: string = "Unidade";
   codigo: string = "Codigo";
+  quantidadeDisponivel: string = "Qnt. Disponivel";
 
   vendasEstoque: VendasEstoqueTable[] = [];
 
@@ -112,6 +114,10 @@ export class VendasComponent implements OnInit{
     return this.produtos.filter(option => option.descricao.toLowerCase().includes(filterValue));
   }
 
+  displayDt(datasProdutos: DatasProdutos): string {
+    return datasProdutos && datasProdutos.dataCompra ? datasProdutos.dataCompra : '';
+  }
+
   capturarDados(event: any): void{
 
     this.produto = this.produtoControl.value;
@@ -119,6 +125,8 @@ export class VendasComponent implements OnInit{
     this.vendaEstoqueService.getDatesWithProduct(this.produto!.id).subscribe((datas) => {
       console.log(datas);
       this.datasEstoque = datas;
+      this.quantidadeDisponivel = "Qnt. Disponivel";
+      this.dataControl.reset();
     })
 
     this.codigo = this.produto!.id.toString();
@@ -130,7 +138,15 @@ export class VendasComponent implements OnInit{
   }
 
   capturarDadosData(event: any){
-    console.log(this.dataControl.value);
+    let dados = this.dataControl.value as DatasProdutos;
+    this.quantidadeDisponivel = dados.quantidade.toString();
+
+    this.formBaseService.formBase.patchValue({
+      dataEstoque: dados.dataCompra
+    });
+
+    console.log(this.formBaseService.formBase.value);
+    this.verificaQuantidade();
   }
 
   verificaExistente(vendasEstoqueTabela: VendasEstoqueTable): boolean{
@@ -140,5 +156,17 @@ export class VendasComponent implements OnInit{
     }
 
     return true;
+  }
+
+  verificaQuantidade(): boolean{
+    let qntInserida = parseFloat(this.formBaseService.formBase.get('quantidade')?.value);
+    let qntDisponivel = parseFloat(this.quantidadeDisponivel);
+
+    if(qntInserida > qntDisponivel){
+      this.formBaseService.formBase.setErrors({'invalid': true});
+      return true;
+    }
+
+    return false;
   }
 }

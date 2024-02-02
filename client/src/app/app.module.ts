@@ -9,10 +9,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ComprasComponent } from './compras/compras.component';
 import { VendasComponent } from './vendas/vendas.component';
+import { ValidaQuantidadeDirective } from './directives/valida-quantidade.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ValidaQuantidadeDirective
   ],
   imports: [
     BrowserModule,

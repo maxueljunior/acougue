@@ -87,8 +87,8 @@
                         <mat-form-field class="data-produto" appearance="outline">
                           <mat-label>Data Produto</mat-label>
                           <input type="text" matInput [formControl]="dataControl" [matAutocomplete]="autoData">
-                          <mat-autocomplete #autoData="matAutocomplete" (closed)="capturarDadosData($event)">
-                            <mat-option *ngFor="let option of datasEstoque" [value]="option.dataCompra">
+                          <mat-autocomplete #autoData="matAutocomplete" [displayWith]="displayDt" (closed)="capturarDadosData($event)">
+                            <mat-option *ngFor="let option of datasEstoque" [value]="option">
                               {{ option.dataCompra }}
                             </mat-option>
                           </mat-autocomplete>
@@ -96,10 +96,18 @@
                             Data de compra é obrigatoria!
                           </mat-error>
                         </mat-form-field>
+                        <mat-form-field class="quantidade-estoque" appearance="outline">
+                          <mat-label>{{ quantidadeDisponivel }}</mat-label>
+                          <input matInput type="text" [disabled]="true">
+                        </mat-form-field>
                       </div>
 
                       <mat-error class="error-produto" *ngIf="produtoExistente">
                         Produto já existente nas compras! Insira outro item ou finalize a Compra.
+                      </mat-error>
+
+                      <mat-error class="error-produto" *ngIf="verificaQuantidade()">
+                        Quantidade desejada e maior do que a disponivel!.
                       </mat-error>
 
                       <div class="info-actions">

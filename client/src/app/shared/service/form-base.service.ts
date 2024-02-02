@@ -1,5 +1,6 @@
 import { Injectable, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidaQuantidadeDirective } from 'src/app/directives/valida-quantidade.directive';
 
 @Injectable({
   providedIn: 'root'
