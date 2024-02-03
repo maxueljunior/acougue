@@ -41,13 +41,6 @@ export interface Sort {
     sorted:   boolean;
 }
 
-export interface VendasEstoqueTable{
-  id: number;
-  produto: Produto;
-  quantidade: number;
-  precoUnitario: number;
-}
-
 export interface DatasProdutos {
   id:           number;
   idEstoque:    number;

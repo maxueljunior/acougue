@@ -23,8 +23,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .mat-mdc-form-field{
-        width: 60%;
+      .label-cond-pag{
+        width: 200px;
+      }
+      .example-full-width{
+        width: 50%;
         font-size: 14px;
       }
       .botao{
@@ -100,6 +103,18 @@
           }
         }
 
+        .info-produto-three{
+          display: flex;
+          justify-content: start;
+          .data-produto{
+            width: 200px;
+          }
+          .quantidade-estoque{
+            width: 150px;
+            margin-left: 15px;
+          }
+        }
+
         .info-compras{
           // border: 1px solid red;
           display: flex;
@@ -110,14 +125,6 @@
           }
           .quantidade-produto{
             width: 150px;
-          }
-          .data-produto{
-            margin-left: 15px;
-            width: 200px;
-          }
-          .quantidade-estoque{
-            width: 150px;
-            margin-left: 15px;
           }
         }
 

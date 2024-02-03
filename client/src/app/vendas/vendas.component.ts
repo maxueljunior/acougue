@@ -1,13 +1,18 @@
 import { DatasProdutos, Produto } from './../core/types/Produto';
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ClienteService } from "../clientes/service/cliente.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Cliente } from "../core/types/Cliente";
 import { Observable, Subscription, map, startWith } from "rxjs";
 import { FormBaseService } from "../shared/service/form-base.service";
-import { VendasEstoqueTable } from "../core/types/Produto";
 import { ProdutoService } from '../produtos/service/produto.service';
 import { VendaEstoqueService } from './service/venda-estoque.service';
+import { TableBaseComponent } from '../shared/table-base/table-base.component';
+import { Responsivo } from '../core/types/Types';
+import { Venda, Vendas } from '../core/types/Vendas';
+import { VendaEstoqueTable } from '../core/types/VendasEstoque';
+import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-vendas',
@@ -15,6 +20,20 @@ import { VendaEstoqueService } from './service/venda-estoque.service';
   styleUrls: ['./vendas.component.scss']
 })
 export class VendasComponent implements OnInit{
+
+  vendas: VendaEstoqueTable[] = [];
+  venda: Venda = {
+    id: 1,
+    condicaoPagamento: "DEBITO",
+    dataVenda: "20/03/2023",
+    idCliente: 2,
+    valorTotal: 0.00
+  };
+
+  @ViewChild('tableBaseComponent') tableBaseComponent: TableBaseComponent | undefined;
+
+  displayedColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'valorUnitario'];
+  displayedesColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'valorUnitario'];
 
   myControl = new FormControl<null | Cliente>(null, Validators.required);
   criarVendas: boolean = false;
@@ -33,7 +52,7 @@ export class VendasComponent implements OnInit{
   dataControl = new FormControl<null | DatasProdutos>(null, Validators.required);
   filteredOptionsData!: Observable<DatasProdutos[]>;
 
-
+  valorTotal: number = 0;
   podeEditar: boolean = false;
   podeExcluir: boolean = false;
   escolherData: boolean = false;
@@ -41,19 +60,32 @@ export class VendasComponent implements OnInit{
   unidade: string = "Unidade";
   codigo: string = "Codigo";
   quantidadeDisponivel: string = "Qnt. Disponivel";
-
-  vendasEstoque: VendasEstoqueTable[] = [];
-
+  dataProduto!: DatasProdutos;
 
   filteredOptions!: Observable<Cliente[]>;
 
   formVendasEstoque!: FormGroup;
 
+  colunas: Responsivo[] = [
+    {nome: "Nº", atributo: "id"},
+    {nome: "Descrição", atributo: "produto.descricao"},
+    {nome: "Qnt.", atributo: "quantidade"},
+    {nome: "Valor Unit. (R$)", atributo: "valorUnitario"},
+  ]
+
+  colunasResponsiva: Responsivo[] = [
+    {nome: "Nº", atributo: "id"},
+    {nome: "Descrição", atributo: "produto.descricao"},
+    {nome: "Qnt.", atributo: "quantidade"},
+    {nome: "Valor Unit. (R$)", atributo: "valorUnitario"},
+  ]
+
   constructor(
     private clienteService: ClienteService,
     public formBaseService: FormBaseService,
     private produtoService: ProdutoService,
-    private vendaEstoqueService: VendaEstoqueService
+    private vendaEstoqueService: VendaEstoqueService,
+    private dialog: MatDialog
   ){
     this.formVendasEstoque = this.formBaseService.criarFormulario();
     this.formVendasEstoque = this.formBaseService.adicionaCamposVendasEstoque(this.formVendasEstoque);
@@ -123,7 +155,6 @@ export class VendasComponent implements OnInit{
     this.produto = this.produtoControl.value;
 
     this.vendaEstoqueService.getDatesWithProduct(this.produto!.id).subscribe((datas) => {
-      console.log(datas);
       this.datasEstoque = datas;
       this.quantidadeDisponivel = "Qnt. Disponivel";
       this.dataControl.reset();
@@ -139,18 +170,20 @@ export class VendasComponent implements OnInit{
 
   capturarDadosData(event: any){
     let dados = this.dataControl.value as DatasProdutos;
+
+    this.dataProduto = dados;
+
     this.quantidadeDisponivel = dados.quantidade.toString();
 
     this.formBaseService.formBase.patchValue({
       dataEstoque: dados.dataCompra
     });
 
-    console.log(this.formBaseService.formBase.value);
     this.verificaQuantidade();
   }
 
-  verificaExistente(vendasEstoqueTabela: VendasEstoqueTable): boolean{
-    let index = this.vendasEstoque.findIndex((c) => c.produto.id === vendasEstoqueTabela.produto.id);
+  verificaExistente(vendasEstoqueTabela: VendaEstoqueTable): boolean{
+    let index = this.vendas.findIndex((c) => c.produto.id === vendasEstoqueTabela.produto.id);
     if(index === -1){
       return false;
     }
@@ -168,5 +201,138 @@ export class VendasComponent implements OnInit{
     }
 
     return false;
+  }
+
+  addProdutos(): void {
+    this.formBaseService.formBase.patchValue({
+      idVendas: this.venda.id
+    })
+
+    let id = this.vendas.length + 1;
+    let vendaEstoqueTable: VendaEstoqueTable = {
+      id: id,
+      produto: this.produtoControl.value as Produto,
+      quantidade: this.formBaseService.formBase.get('quantidade')?.value,
+      valorUnitario: this.formBaseService.formBase.get('valorUnitario')?.value,
+      dataEstoque: this.dataProduto
+    }
+
+    if(!this.verificaExistente(vendaEstoqueTable)){
+      this.vendas.push(vendaEstoqueTable);
+      this.tableBaseComponent!.refreshDataSource(this.vendas);
+      this.limparCamposForm();
+      this.atualizarValores();
+    }else{
+      this.produtoExistente = true;
+    }
+  }
+
+  updateProduto(): void{
+    let id = this.formBaseService.formBase.get('idEstoque')?.value;
+
+    let index = this.vendas.findIndex((v) => v.produto.id === id);
+    let vendaEstoqueAtt = this.vendas[index];
+
+    vendaEstoqueAtt.valorUnitario = this.formBaseService.formBase.get('valorUnitario')?.value;
+    vendaEstoqueAtt.quantidade = this.formBaseService.formBase.get('quantidade')?.value
+
+    this.vendas[index] = vendaEstoqueAtt;
+    this.limparCamposForm();
+    this.desabilitaBotoes();
+    this.atualizarValores();
+  }
+
+  deleteProduto(): void{
+    let id = this.formBaseService.formBase.get('idEstoque')?.value;
+
+    let index = this.vendas.findIndex((v) => v.produto.id === id);
+    console.log(`index do item é ${index}`);
+    this.vendas.splice(index, 1);
+
+    this.tableBaseComponent!.refreshDataSource(this.vendas);
+    this.limparCamposForm();
+    this.desabilitaBotoes();
+    this.atualizarValores();
+    this.atualizarIndice();
+  }
+
+  atualizarIndice(): void{
+    for (let index = 0; index < this.vendas.length; index++) {
+      this.vendas[index].id = index + 1;
+    }
+  }
+
+  limparCamposForm(): void{
+    this.formBaseService.resetarCampos();
+    this.produtoControl.reset();
+    this.codigo = "Codigo";
+    this.unidade = "Unidade";
+    this.produto = null;
+    this.quantidadeDisponivel = "Qnt. Disponivel";
+    this.dataControl.reset();
+  }
+
+  atualizarValores(): void{
+    this.valorTotal = this.vendas.reduce((acumulador, vendaAtual) => {
+      return acumulador + (vendaAtual.valorUnitario * vendaAtual.quantidade);
+    }, 0);
+  }
+
+  recuperarDadosDoClique(vendaEstoque: VendaEstoqueTable){
+    this.formBaseService.formBase.patchValue({
+      valorUnitario: vendaEstoque.valorUnitario,
+      quantidade: vendaEstoque.quantidade,
+      idEstoque: vendaEstoque.produto.id,
+      idCompras: this.venda!.id,
+      dataEstoque: vendaEstoque.dataEstoque
+    })
+
+    this.codigo = vendaEstoque.produto.id.toString();
+    this.unidade = vendaEstoque.produto.unidade;
+    this.produtoControl.setValue(vendaEstoque.produto);
+    this.produto = vendaEstoque.produto;
+
+    this.quantidadeDisponivel = vendaEstoque.dataEstoque.quantidade.toString();
+    this.dataControl.setValue(vendaEstoque.dataEstoque);
+    
+    this.vendaEstoqueService.getDatesWithProduct(this.produto!.id).subscribe((datas) => {
+      this.datasEstoque = datas;
+    })
+
+    this.habilitaBotoes();
+  }
+
+  habilitaBotoes(): void{
+    this.podeEditar = true;
+    this.podeExcluir = true;
+  }
+  
+  desabilitaBotoes(): void{
+    this.podeEditar = false;
+    this.podeExcluir = false;
+  }
+
+  finalizarCompra(): void{
+    this.openDialog();
+  }
+
+  openDialog(): void{
+    let tamWidth = window.innerWidth * 0.40;
+    let tamHeigth = window.innerHeight * 0.60;
+
+    let dialogRef = this.dialog.open(ModalFinalizarComponent, {
+      width: `${tamWidth}px`,
+      height: `${tamHeigth}px`,
+      data:{
+        texto: 'Venda',
+        numero: this.venda!.id,
+        total: this.valorTotal.toFixed(2),
+        arquivo: true
+      }
+    })
+  }
+
+  criarVenda(): void{
+    
   }
 }

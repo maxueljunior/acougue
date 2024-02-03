@@ -9,7 +9,7 @@
 
             <div class="container-vendas">
               <div class="container-form">
-
+                
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Cliente</mat-label>
                   <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [disabled]="criarVendas">
@@ -26,20 +26,29 @@
                   </mat-error>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline" class="label-cond-pag">
+                  <mat-label>Condição Pag.</mat-label>
+                  <mat-select>
+                    <mat-option value="PIX">PIX</mat-option>
+                    <mat-option value="CREDITO">CREDITO</mat-option>
+                    <mat-option value="DEBITO">DEBITO</mat-option>
+                    <mat-option value="DINHEIRO">DINHEIRO</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-                <button [disabled]="!myControl.valid || criarVendas" class="btn-criar" mat-flat-button color="primary" extended>
+                <button [disabled]="!myControl.valid || criarVendas" class="btn-criar" mat-flat-button color="primary" extended (click)="criarVenda()">
                   <mat-icon>save</mat-icon>
                   CRIAR VENDAS
                 </button>
 
                 </div>
 
-                <div class="container-alocar-produto">
+                <div class="container-alocar-produto" *ngIf="criarVendas">
                   <div class="lado-1">
                     <mat-divider></mat-divider>
                     <div class="codigo-compra">
-                      <span>Venda Nº: <strong>{{ 123 }}</strong></span>
-                      <span class="valor-total">VALOR TOTAL: <strong>R$ {{ 123 }}</strong></span>
+                      <span>Venda Nº: <strong>{{ venda?.id }}</strong></span>
+                      <span class="valor-total">VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
                     </div>
                     <form [formGroup]="this.formBaseService.formBase">
                       <div class="info-produto">
@@ -68,22 +77,8 @@
                           <input matInput disabled="true">
                         </mat-form-field>
                       </div>
-                      <div class="info-compras">
-                        <mat-form-field class="preco-produto" appearance="outline">
-                          <mat-label>Preço</mat-label>
-                          <input matInput type="number" formControlName="valorUnitario">
-                          <span matTextSuffix>$&nbsp;</span>
-                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('valorUnitario')?.errors?.['required'] && (formBaseService.formBase.get('valorUnitario')?.touched || formBaseService.formBase.get('valorUnitario')?.dirty)">
-                            Preço é obrigatorio!
-                          </mat-error>
-                        </mat-form-field>
-                        <mat-form-field class="quantidade-produto" appearance="outline">
-                          <mat-label>Quantidade</mat-label>
-                          <input matInput type="number" formControlName="quantidade">
-                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('quantidade')?.errors?.['required'] && (formBaseService.formBase.get('quantidade')?.touched || formBaseService.formBase.get('quantidade')?.dirty)">
-                            Qnt. é obrigatoria!
-                          </mat-error>
-                        </mat-form-field>
+                      <div class="info-produto-three">
+
                         <mat-form-field class="data-produto" appearance="outline">
                           <mat-label>Data Produto</mat-label>
                           <input type="text" matInput [formControl]="dataControl" [matAutocomplete]="autoData">
@@ -100,6 +95,24 @@
                           <mat-label>{{ quantidadeDisponivel }}</mat-label>
                           <input matInput type="text" [disabled]="true">
                         </mat-form-field>
+
+                      </div>
+                      <div class="info-compras">
+                        <mat-form-field class="preco-produto" appearance="outline">
+                          <mat-label>Preço</mat-label>
+                          <input matInput type="number" formControlName="valorUnitario">
+                          <span matTextSuffix>$&nbsp;</span>
+                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('valorUnitario')?.errors?.['required'] && (formBaseService.formBase.get('valorUnitario')?.touched || formBaseService.formBase.get('valorUnitario')?.dirty)">
+                            Preço é obrigatorio!
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="quantidade-produto" appearance="outline">
+                          <mat-label>Quantidade</mat-label>
+                          <input matInput type="number" formControlName="quantidade">
+                          <mat-error class="error-login" *ngIf="formBaseService.formBase.get('quantidade')?.errors?.['required'] && (formBaseService.formBase.get('quantidade')?.touched || formBaseService.formBase.get('quantidade')?.dirty)">
+                            Qnt. é obrigatoria!
+                          </mat-error>
+                        </mat-form-field>
                       </div>
 
                       <mat-error class="error-produto" *ngIf="produtoExistente">
@@ -111,22 +124,35 @@
                       </mat-error>
 
                       <div class="info-actions">
-                        <button [disabled]="!this.formBaseService.formBase.valid" type="button" class="btn-inserir" mat-flat-button color="primary" extended>
+                        <button [disabled]="!this.formBaseService.formBase.valid" type="button" class="btn-inserir" mat-flat-button color="primary" extended (click)="addProdutos()">
                           <mat-icon>add_shopping_cart</mat-icon>
                           INSERIR
                         </button>
-                        <button [disabled]="!podeEditar" type="button" class="btn-modificar" mat-fab color="accent">
+                        <button [disabled]="!podeEditar" type="button" class="btn-modificar" mat-fab color="accent" (click)="updateProduto()">
                           <mat-icon>edit</mat-icon>
                         </button>
-                        <button [disabled]="!podeExcluir" type="button" class="btn-excluir" mat-fab color="primary">
+                        <button [disabled]="!podeExcluir" type="button" class="btn-excluir" mat-fab color="primary" (click)="deleteProduto()">
                           <mat-icon>delete</mat-icon>
                         </button>
-                        <button [disabled]="vendasEstoque.length < 1" type="button" class="btn-finalizar" mat-flat-button color="primary" extended>
+                        <button [disabled]="vendas.length < 1" type="button" class="btn-finalizar" mat-flat-button color="primary" extended (click)="finalizarCompra()">
                           <mat-icon>check_small</mat-icon>
                           FINALIZAR
                         </button>
                       </div>
                     </form>
+                  </div>
+                  <div class="lado-2">
+                    <app-table-base
+                    #tableBaseComponent
+                    [displayedColumns]="displayedColumns"
+                    [displayedesColumns]="displayedesColumns"
+                    [dados]="vendas"
+                    [colunas]="colunas"
+                    [colunasResponsivas]="colunasResponsiva"
+                    [visualizacaoDeAdicao]="true"
+                    [habilitarClickTabela]="true"
+                    (clickNaTabela)="recuperarDadosDoClique($event)"
+                  ></app-table-base>
                   </div>
               </div>
             </div>

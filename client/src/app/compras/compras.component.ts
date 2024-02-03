@@ -401,7 +401,7 @@ export class ComprasComponent implements OnInit{
     this.codigo = compraEstoque.produto.id.toString();
     this.unidade = compraEstoque.produto.unidade;
     this.produtoControl.setValue(compraEstoque.produto);
-
+    
     this.habilitaBotoes();
   }
 
