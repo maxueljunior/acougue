@@ -3,7 +3,7 @@
     <div class="container-table">
       <app-card>
 
-        <mat-tab-group animationDuration="0ms">
+        <mat-tab-group animationDuration="0ms" disableRipple disablePagination>
 
           <mat-tab label="Vendas">
 
@@ -47,7 +47,7 @@
                   <div class="lado-1">
                     <mat-divider></mat-divider>
                     <div class="codigo-compra">
-                      <span>Venda Nº: <strong>{{ venda?.id }}</strong></span>
+                      <span>Venda Nº: <strong>{{ venda.id }}</strong></span>
                       <span class="valor-total">VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
                     </div>
                     <form [formGroup]="this.formBaseService.formBase">

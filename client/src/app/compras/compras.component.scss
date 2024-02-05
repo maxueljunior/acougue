@@ -1,6 +1,10 @@
 .container-table{
   box-sizing: border-box;
 
+  .mat-ripple{
+    display: none;
+  }
+
   .error-login{
     font-size: 12px;
     margin-bottom: 5px;
