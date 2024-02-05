@@ -206,6 +206,12 @@
 }
 
 @media screen and (max-width:769px){
+
+  .container-form{
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
   .container-alocar-produto{
     flex-direction: column;
     box-sizing: border-box;

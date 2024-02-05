@@ -99,6 +99,7 @@ export class ProdutosComponent implements OnInit{
     dialogRef.componentInstance.criacao.subscribe((p) => {
       console.log(this.formBaseService.formBase.value);
       this.produtoService.create(this.formBaseService.formBase.value, this.pageSize);
+      this.formBaseService.resetarCampos();
     })
   }
 
@@ -116,6 +117,7 @@ export class ProdutosComponent implements OnInit{
     dialogRef.componentInstance.edicao.subscribe((p) => {
       console.log(this.formBaseService.formBase.value);
       this.produtoService.edit(produto.id, this.formBaseService.formBase.value);
+      this.formBaseService.resetarCampos();
     })
   }
 

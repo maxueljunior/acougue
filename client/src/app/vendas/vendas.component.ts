@@ -13,6 +13,7 @@ import { Venda, Vendas } from '../core/types/Vendas';
 import { VendaEstoqueTable } from '../core/types/VendasEstoque';
 import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
 import { MatDialog } from '@angular/material/dialog';
+import { VendaService } from './service/venda.service';
 
 @Component({
   selector: 'app-vendas',
@@ -22,13 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class VendasComponent implements OnInit{
 
   vendas: VendaEstoqueTable[] = [];
-  venda: Venda = {
-    id: 1,
-    condicaoPagamento: "DEBITO",
-    dataVenda: "20/03/2023",
-    idCliente: 2,
-    valorTotal: 0.00
-  };
+  venda!: Venda;
 
   @ViewChild('tableBaseComponent') tableBaseComponent: TableBaseComponent | undefined;
 
@@ -36,6 +31,8 @@ export class VendasComponent implements OnInit{
   displayedesColumns: string[] = ['id', 'produto.descricao', 'quantidade', 'valorUnitario'];
 
   myControl = new FormControl<null | Cliente>(null, Validators.required);
+  condPagamentoControl = new FormControl<null | string>(null, Validators.required);
+  
   criarVendas: boolean = false;
 
   clientes: Cliente[] = [];
@@ -85,7 +82,8 @@ export class VendasComponent implements OnInit{
     public formBaseService: FormBaseService,
     private produtoService: ProdutoService,
     private vendaEstoqueService: VendaEstoqueService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private vendaService: VendaService
   ){
     this.formVendasEstoque = this.formBaseService.criarFormulario();
     this.formVendasEstoque = this.formBaseService.adicionaCamposVendasEstoque(this.formVendasEstoque);
@@ -333,6 +331,11 @@ export class VendasComponent implements OnInit{
   }
 
   criarVenda(): void{
-    
+    let cliente: Cliente = this.myControl.value as Cliente;
+    let condicaoPagamento = this.condPagamentoControl.value!;
+    this.vendaService.create(cliente.id, condicaoPagamento).subscribe((v) => {
+      this.venda = v;
+      this.criarVendas = true;
+    });
   }
 }

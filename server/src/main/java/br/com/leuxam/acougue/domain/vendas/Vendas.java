@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.leuxam.acougue.domain.cliente.Cliente;
+import br.com.leuxam.acougue.domain.compras.DadosCriarVendas;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosAtualizarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.DadosCriarVendaEstoque;
 import br.com.leuxam.acougue.domain.vendasEstoque.VendasEstoque;
@@ -60,10 +61,10 @@ public class Vendas {
 	@OneToMany(mappedBy = "vendas")
 	private List<VendasEstoque> vendasEstoque;
 	
-	public Vendas(Cliente c) {
+	public Vendas(Cliente c, CondicaoPagamento condicaoPagamento) {
 		this.cliente = c;
 		this.dataVenda = LocalDateTime.now(ZoneOffset.ofHours(-3));
-		this.condicaoPagamento = CondicaoPagamento.PIX;
+		this.condicaoPagamento = condicaoPagamento;
 		this.valorTotal = BigDecimal.ZERO;
 	}
 

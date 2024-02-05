@@ -28,7 +28,7 @@
 
                 <mat-form-field appearance="outline" class="label-cond-pag">
                   <mat-label>Condição Pag.</mat-label>
-                  <mat-select>
+                  <mat-select [formControl]="condPagamentoControl" [disabled]="criarVendas">
                     <mat-option value="PIX">PIX</mat-option>
                     <mat-option value="CREDITO">CREDITO</mat-option>
                     <mat-option value="DEBITO">DEBITO</mat-option>
@@ -36,7 +36,7 @@
                   </mat-select>
                 </mat-form-field>
 
-                <button [disabled]="!myControl.valid || criarVendas" class="btn-criar" mat-flat-button color="primary" extended (click)="criarVenda()">
+                <button [disabled]="!myControl.valid || !condPagamentoControl.valid || criarVendas" class="btn-criar" mat-flat-button color="primary" extended (click)="criarVenda()">
                   <mat-icon>save</mat-icon>
                   CRIAR VENDAS
                 </button>

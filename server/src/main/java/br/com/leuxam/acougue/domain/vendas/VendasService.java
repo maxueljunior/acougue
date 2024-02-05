@@ -57,7 +57,7 @@ public class VendasService {
 		
 		var cliente = clienteRepository.getReferenceById(dados.idCliente());
 		
-		var vendas = new Vendas(cliente);
+		var vendas = new Vendas(cliente, dados.condicaoPagamento());
 		vendas = vendasRepository.save(vendas);
 		
 		return new DadosDetalhamentoVendas(vendas);
