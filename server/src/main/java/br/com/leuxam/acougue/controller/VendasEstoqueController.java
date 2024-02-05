@@ -48,12 +48,17 @@ public class VendasEstoqueController {
 			@ApiResponse(responseCode = "500", content = @Content)
 	})
 	@PostMapping
-	public ResponseEntity<DadosDetalhamentoVendaEstoque> save(
-			@RequestBody @Valid DadosCriarVendaEstoque dados,
+	public ResponseEntity<List<DadosDetalhamentoVendaEstoque>> save(
+			@RequestBody @Valid List<DadosCriarVendaEstoque> dados,
 			UriComponentsBuilder uriBuilder){
-		var vendaEstoque = service.create(dados);
-		var uri = uriBuilder.path("/itens/vendas/{idVendas}/{idEstoque}")
-				.buildAndExpand(vendaEstoque.idVendas(), vendaEstoque.idEstoque()).toUri();
+//		var vendaEstoque = service.create(dados);
+//		var uri = uriBuilder.path("/itens/vendas/{idVendas}/{idEstoque}")
+//				.buildAndExpand(vendaEstoque.idVendas(), vendaEstoque.idEstoque()).toUri();
+		
+		var vendaEstoque = service.createList(dados);
+		var uri = uriBuilder.path("/itens/vendas/{idVendas}")
+				.buildAndExpand(vendaEstoque.get(0).idVendas()).toUri();
+	
 		return ResponseEntity.created(uri).body(vendaEstoque);
 	}
 	

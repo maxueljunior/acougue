@@ -2,6 +2,7 @@ package br.com.leuxam.acougue.domain.vendasEstoque;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ import br.com.leuxam.acougue.domain.estoqueData.DadosDetalhamentoEstoqueData;
 import br.com.leuxam.acougue.domain.estoqueData.EstoqueDataRepository;
 import br.com.leuxam.acougue.domain.vendas.VendasRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 public class VendasEstoqueService {
@@ -167,6 +169,17 @@ public class VendasEstoqueService {
 		
 //		var estoqueData = estoqueDataRepository.findBy
 		return estoqueData.stream().map(DadosDetalhamentoEstoqueData::new).collect(Collectors.toList());
+	}
+
+	public List<DadosDetalhamentoVendaEstoque> createList(List<DadosCriarVendaEstoque> dados) {
+		List<DadosDetalhamentoVendaEstoque> lista = new ArrayList<>();
+		
+		dados.forEach((d) -> {
+			var dado = create(d);
+			lista.add(dado);
+		});
+		
+		return lista;
 	}
 }
 
