@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { VendasDTO, Vendas } from 'src/app/core/types/Vendas';
+import { SnackMensagemComponent } from 'src/app/shared/snack-mensagem/snack-mensagem.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class VendaService {
   private urlApi: string = 'api/vendas';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar
   ) { }
 
   public create(idCliente: number, condicaoPagamento: string): Observable<VendasDTO>{
@@ -45,7 +48,7 @@ export class VendaService {
             valorTotal: ve.valorTotal,
             _links: ve._links
           }) as VendasDTO);
-          console.log(vendasConvertidas);
+
           this.vendasSubject.next(vendasConvertidas);
         }
         else{
@@ -56,6 +59,31 @@ export class VendaService {
       },
       error: (err) => {
         console.log(err);
+      }
+    })
+  }
+
+  delete(id: number, pageIndex: number, pageSize: number, nome: string): void{
+    this.http.delete(`${this.urlApi}/${id}`).subscribe({
+      next: () => {
+        let vendas = this.vendasSubject.getValue();
+        let index = vendas.findIndex(v => v.id === id);
+        if(index !== -1){
+          vendas.splice(index, 1);
+          let novasCompras = [...vendas];
+          this.vendasSubject.next(novasCompras);
+
+          let totalElementos = this.pageableSubject.value!.page.totalElements;
+
+          if(totalElementos > pageSize){
+            this.findAll(pageIndex, pageSize, nome);
+          }
+
+          this.openSnackBar('Compra deletada com sucesso!', 'sucesso');
+        }
+      },
+      error: (err) => {
+        this.verificaStatusErro(err.status);
       }
     })
   }
@@ -92,11 +120,33 @@ export class VendaService {
           window.URL.revokeObjectURL(url);
         }
 
-        // this.openSnackBar('Aguarde a inicialização do Download!', 'sucesso');
+        this.openSnackBar('Aguarde a inicialização do Download!', 'sucesso');
       },
       error: (err) => {
-        // this.verificaStatusErro(err.status);
+        this.verificaStatusErro(err.status);
       }
     });
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else if(statusErro === 400){
+      this.openSnackBar('Não é possivel encerrar a Venda!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
   }
 }

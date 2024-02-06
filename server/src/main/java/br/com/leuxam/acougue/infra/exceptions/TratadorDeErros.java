@@ -1,5 +1,6 @@
 package br.com.leuxam.acougue.infra.exceptions;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;

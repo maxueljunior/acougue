@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -137,6 +138,15 @@ public class VendasService {
 		var vendas = vendasRepository.getReferenceById(id);
 		
 		return new DadosDetalhamentoVendas(vendas);
+	}
+	
+	@Transactional
+	public void delete(Long id) {
+		if(!vendasRepository.existsById(id)) throw new ExisteException("Não existe venda nº " + id);
+		
+		var vendas = vendasRepository.findById(id);
+		
+		vendasRepository.delete(vendas.get());
 	}
 }
 

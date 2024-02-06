@@ -129,7 +129,7 @@ export class VendasComponent implements OnInit{
   }
   ngOnInit(): void {
     this.clienteSubscription = this.clienteService.clientes$.subscribe((c) =>{
-      console.log(c);
+      // console.log(c);
       this.clientes = c;
     });
 
@@ -145,7 +145,7 @@ export class VendasComponent implements OnInit{
 
     this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
       this.produtos = p;
-      console.log(p);
+      // console.log(p);
     })
 
     this.produtoService.findAll(0, 9999, '');
@@ -161,7 +161,8 @@ export class VendasComponent implements OnInit{
     this.clientesBuscaControl.valueChanges
       .pipe(debounceTime(300))
       .subscribe((valorDigitado) => {
-        console.log(valorDigitado);
+        this.nome = valorDigitado;
+        this.vendaService.findAll(this.pageIndex, this.pageSize, this.nome);
       });
 
     this.vendaSubscription = this.vendaService.$vendas.subscribe((v) => {
@@ -297,7 +298,7 @@ export class VendasComponent implements OnInit{
     let id = this.formBaseService.formBase.get('idEstoque')?.value;
 
     let index = this.vendas.findIndex((v) => v.produto.id === id);
-    console.log(`index do item é ${index}`);
+    // console.log(`index do item é ${index}`);
     this.vendas.splice(index, 1);
 
     this.tableBaseComponent!.refreshDataSource(this.vendas);
@@ -446,12 +447,12 @@ export class VendasComponent implements OnInit{
   }
 
   selecionaClienteBusca(){
-    console.log(this.clientesBuscaControl.value)
+    // console.log(this.clientesBuscaControl.value)
   }
 
   trocaDeTab(event: MatTabChangeEvent): void{
     if(event.index === 1){
-      console.log(`Index -> ${this.pageIndex}, Size -> ${this.pageSize}, Nome -> ${this.nome}`);
+      // console.log(`Index -> ${this.pageIndex}, Size -> ${this.pageSize}, Nome -> ${this.nome}`);
       this.vendaService.findAll(this.pageIndex, this.pageSize, this.nome);
     }
   }
@@ -470,7 +471,7 @@ export class VendasComponent implements OnInit{
 
     this.vendaEstoqueService.getProductsWithVendas(event.id).subscribe({
       next: (ve) => {
-        console.log(ve);
+        // console.log(ve);
 
         let vendaTable = ve.content.map((v) => ({
           id: v.id,
@@ -528,6 +529,7 @@ export class VendasComponent implements OnInit{
 
     dialogRef.componentInstance.exclusao.subscribe((e) => {
       if(e === true){
+        this.vendaService.delete(event.id, this.pageIndex, this.pageSize, this.nome);
         // this.compraService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
       }
     })

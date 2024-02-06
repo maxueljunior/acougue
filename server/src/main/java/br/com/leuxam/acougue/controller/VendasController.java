@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.itextpdf.text.DocumentException;
 
+import br.com.leuxam.acougue.domain.ExisteException;
 import br.com.leuxam.acougue.domain.compras.DadosCriarVendas;
 import br.com.leuxam.acougue.domain.vendas.DadosAtualizarVenda;
 import br.com.leuxam.acougue.domain.vendas.DadosDetalhamentoVendas;
@@ -148,6 +150,25 @@ public class VendasController {
 		return ResponseEntity.ok()
 				.header("Content-Disposition", "attachment;filename="+vendas.getFileName())
 				.body(resource);
+	}
+	
+	@Operation(summary = "Deletar a venda")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", content = @Content),
+			@ApiResponse(responseCode = "400", content = @Content),
+			@ApiResponse(responseCode = "403", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Venda não encontrada" ,content = @Content),
+			@ApiResponse(responseCode = "500", content = @Content)
+	})
+	@DeleteMapping("/{id}")
+	public ResponseEntity delete(
+			@PathVariable(name = "id") Long id){
+		try {
+			service.delete(id);
+		}catch(Exception e) {
+			throw new ExisteException("Não foi possivel encerrar a Venda, a mesma já se encontra finalizada!");
+		}
+		return ResponseEntity.noContent().build();
 	}
 }
 
