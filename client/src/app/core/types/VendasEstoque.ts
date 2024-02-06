@@ -30,6 +30,14 @@ export interface VendaEstoque{
     idVendas:      number;
 }
 
+export interface InsertVendaEstoque{
+    quantidade:    number;
+    valorUnitario: number;
+    idEstoque:     number;
+    idVendas:      number;
+    dataEstoque:   string; 
+}
+
 export interface VendaEstoqueTable{
     id: number;
     produto: Produto;

@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.ByteArrayOutputStream;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,15 @@ public class VendasService {
 	}
 	
 	@Transactional
-	public PagedModel<EntityModel<VendasDTO>> findAll(Pageable pageable, String idCliente) {
-		Page<Vendas> vendas = null;
+	public PagedModel<EntityModel<VendasDTO>> findAll(Pageable pageable, String nome) {
 		
-		if(idCliente.equals("0")) vendas = vendasRepository.findAll(pageable);	
+		Page<Vendas> vendas;
 		
-		if(!idCliente.equals("0")) vendas = vendasRepository.findVendasIdCliente(pageable, Long.valueOf(idCliente));
+		if(!nome.equals("")) {
+			vendas = vendasRepository.findVendasByNomeDoCliente(pageable, nome);
+		}else {
+			vendas = vendasRepository.findAll(pageable);
+		}
 		
 		var vendasDTO = vendas.map(v -> modelMapper.map(v, VendasDTO.class));
 		
@@ -79,7 +83,7 @@ public class VendasService {
 			}
 		});
 		
-		Link link = linkTo(methodOn(VendasController.class).findAll(pageable, idCliente)).withSelfRel();
+		Link link = linkTo(methodOn(VendasController.class).findAll(pageable, nome)).withSelfRel();
 		return assembler.toModel(vendasDTO, link);
 //		return vendas.map(DadosDetalhamentoVendas::new);
 	}

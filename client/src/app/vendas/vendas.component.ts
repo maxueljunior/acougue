@@ -10,10 +10,13 @@ import { VendaEstoqueService } from './service/venda-estoque.service';
 import { TableBaseComponent } from '../shared/table-base/table-base.component';
 import { Responsivo } from '../core/types/Types';
 import { Venda, Vendas } from '../core/types/Vendas';
-import { VendaEstoqueTable } from '../core/types/VendasEstoque';
+import { InsertVendaEstoque, VendaEstoqueTable } from '../core/types/VendasEstoque';
 import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { VendaService } from './service/venda.service';
+import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatOptionSelectionChange } from '@angular/material/core';
 
 @Component({
   selector: 'app-vendas',
@@ -23,7 +26,7 @@ import { VendaService } from './service/venda.service';
 export class VendasComponent implements OnInit{
 
   vendas: VendaEstoqueTable[] = [];
-  venda!: Venda;
+  venda!: Venda | null;
 
   @ViewChild('tableBaseComponent') tableBaseComponent: TableBaseComponent | undefined;
 
@@ -32,6 +35,9 @@ export class VendasComponent implements OnInit{
 
   myControl = new FormControl<null | Cliente>(null, Validators.required);
   condPagamentoControl = new FormControl<null | string>(null, Validators.required);
+
+  clientesBuscaControl = new FormControl();
+  filteredOptionsBusca!: Observable<Cliente[]>;
   
   criarVendas: boolean = false;
 
@@ -83,7 +89,8 @@ export class VendasComponent implements OnInit{
     private produtoService: ProdutoService,
     private vendaEstoqueService: VendaEstoqueService,
     private dialog: MatDialog,
-    private vendaService: VendaService
+    private vendaService: VendaService,
+    private snackBar: MatSnackBar
   ){
     this.formVendasEstoque = this.formBaseService.criarFormulario();
     this.formVendasEstoque = this.formBaseService.adicionaCamposVendasEstoque(this.formVendasEstoque);
@@ -103,6 +110,15 @@ export class VendasComponent implements OnInit{
         return name ? this._filter(name as string) : this.clientes.slice();
       }),
     );
+
+    this.filteredOptionsBusca = this.clientesBuscaControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.nome;
+        return name ? this._filter(name as string) : this.clientes.slice();
+      }),
+    );
+
 
     this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
       this.produtos = p;
@@ -203,7 +219,7 @@ export class VendasComponent implements OnInit{
 
   addProdutos(): void {
     this.formBaseService.formBase.patchValue({
-      idVendas: this.venda.id
+      idVendas: this.venda!.id
     })
 
     let id = this.vendas.length + 1;
@@ -328,6 +344,29 @@ export class VendasComponent implements OnInit{
         arquivo: true
       }
     })
+
+    dialogRef.componentInstance.finalizar.subscribe((p) => {
+      if(p === true){
+
+        let vendasConvertidas = this.vendas.map((v) => ({
+          idEstoque: v.produto.id,
+          idVendas: this.venda!.id,
+          quantidade: v.quantidade,
+          valorUnitario: v.valorUnitario,
+          dataEstoque: v.dataEstoque.dataCompra
+        }) as InsertVendaEstoque);
+
+        this.vendaEstoqueService.create(vendasConvertidas).subscribe({
+          next: (v) => {
+            this.openSnackBar('Venda finalizada com sucesso!', 'sucesso');
+            this.limparTela();
+          },
+          error: (err) => {
+            this.verificaStatusErro(err.status);
+          }
+        })
+      }
+    })
   }
 
   criarVenda(): void{
@@ -337,5 +376,39 @@ export class VendasComponent implements OnInit{
       this.venda = v;
       this.criarVendas = true;
     });
+  }
+
+  openSnackBar(mensagem: string, estilo: string){
+    this.snackBar.openFromComponent(SnackMensagemComponent, {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      data: {
+        mensagem,
+        estilo
+      }
+    })
+  }
+
+  verificaStatusErro(statusErro: number): void{
+    if(statusErro === 403){
+      this.openSnackBar('Sua sessão expirou!', 'falha')
+    }else{
+      this.openSnackBar('Ocorreu um erro inesperado!', 'falha')
+    }
+  }
+
+  limparTela(): void{
+    this.valorTotal = 0;
+    this.venda = null;
+    this.vendas = [];
+    this.myControl.reset();
+    this.condPagamentoControl.reset();
+    this.criarVendas = false;
+    this.limparCamposForm();
+  }
+
+  selecionaClienteBusca(){
+    console.log(this.clientesBuscaControl.value)
   }
 }

@@ -16,4 +16,10 @@ public interface VendasRepository extends JpaRepository<Vendas, Long>{
 			""")
 	Page<Vendas> findVendasIdCliente(Pageable pageable, Long idCliente);
 	
+	@Query("""
+			SELECT v
+			FROM Vendas v
+			WHERE v.cliente.nome LIKE  %:nome%
+			""")
+	Page<Vendas> findVendasByNomeDoCliente(Pageable pageable, String nome);
 }

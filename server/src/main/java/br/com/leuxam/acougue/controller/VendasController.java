@@ -72,8 +72,8 @@ public class VendasController {
 	@GetMapping
 	public ResponseEntity<PagedModel<EntityModel<VendasDTO>>> findAll(
 			@PageableDefault(size = 10, sort = {"id"}) Pageable pageable,
-			@RequestParam(name = "cliente", defaultValue = "0") String idCliente){
-		var vendas = service.findAll(pageable, idCliente);
+			@RequestParam(name = "q", defaultValue = "") String nome){
+		var vendas = service.findAll(pageable, nome);
 		return ResponseEntity.ok().body(vendas);
 	}
 	

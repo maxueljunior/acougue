@@ -47,7 +47,7 @@
                   <div class="lado-1">
                     <mat-divider></mat-divider>
                     <div class="codigo-compra">
-                      <span>Venda Nº: <strong>{{ venda.id }}</strong></span>
+                      <span>Venda Nº: <strong>{{ venda!.id }}</strong></span>
                       <span class="valor-total">VALOR TOTAL: <strong>R$ {{ valorTotal.toFixed(2) }}</strong></span>
                     </div>
                     <form [formGroup]="this.formBaseService.formBase">
@@ -160,7 +160,36 @@
           </mat-tab>
 
           <mat-tab label="Registros">
+            <div class="container-registros">
 
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Cliente</mat-label>
+                <input type="text" matInput [formControl]="clientesBuscaControl" [matAutocomplete]="autoComp">
+                <mat-autocomplete #autoComp="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selecionaClienteBusca()">
+                  <mat-option *ngFor="let option of filteredOptionsBusca | async" [value]="option">
+                    {{option.nome + " " + option.sobrenome}}
+                  </mat-option>
+                </mat-autocomplete>
+                <button matSuffix mat-icon-button aria-label="Clear" (click)="limpar(clientesBuscaControl)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <!-- <app-table-base
+                #tableBase
+                [displayedColumns]="displayedColumnsComp"
+                [displayedesColumns]="displayedesColumnsComp"
+                [pageable]="pageable"
+                [dados]="comprasRecuperadas"
+                [colunas]="colunasComp"
+                [colunasResponsivas]="colunasResponsivaComp"
+                [visualizacaoDeAdicao]="false"
+                [contemEdicao]="false"
+                (alteracaoPagina)="alteracaoNaPagina($event)"
+                (clickNaTabela)="abrirCompras($event)"
+                (exclusao)="excluirCompras($event)"
+              ></app-table-base> -->
+            </div>
           </mat-tab>
 
         </mat-tab-group>

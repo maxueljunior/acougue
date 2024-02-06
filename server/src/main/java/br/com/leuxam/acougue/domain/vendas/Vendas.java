@@ -46,7 +46,7 @@ public class Vendas {
 	@JoinColumn(name = "valor_total")
 	private BigDecimal valorTotal;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	private Cliente cliente;
 	
 	@Enumerated(EnumType.STRING)

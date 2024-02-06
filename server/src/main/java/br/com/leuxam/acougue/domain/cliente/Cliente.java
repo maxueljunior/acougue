@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.leuxam.acougue.domain.cliente.endereco.Endereco;
 import br.com.leuxam.acougue.domain.clienteEstoque.ClienteEstoque;
 import jakarta.persistence.Embedded;
@@ -52,6 +54,7 @@ public class Cliente {
 	private Boolean ativo;
 	
 	@OneToMany(mappedBy = "cliente")
+	@JsonIgnore
 	private List<ClienteEstoque> clientesEstoque;
 	
 	public Cliente(DadosCriarCliente dados) {

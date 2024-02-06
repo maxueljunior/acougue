@@ -9,6 +9,8 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.leuxam.acougue.domain.cliente.Cliente;
+
 public class VendasDTO extends RepresentationModel<VendasDTO>{
 	
 	private Long id;
@@ -16,8 +18,11 @@ public class VendasDTO extends RepresentationModel<VendasDTO>{
 	
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime dataVenda;
+	
 	private BigDecimal valorTotal;
-	private Long idCliente;
+	
+	private Cliente cliente;
+//	private Long idCliente;
 	
 	@JsonIgnore
 	private String fileName;
@@ -25,12 +30,13 @@ public class VendasDTO extends RepresentationModel<VendasDTO>{
 	public VendasDTO() {}
 	
 	public VendasDTO(Long id, CondicaoPagamento condicaoPagamento, LocalDateTime dataVenda, BigDecimal valorTotal,
-			Long idCliente, String fileName) {
+			 Cliente cliente, String fileName) {
 		this.id = id;
 		this.condicaoPagamento = condicaoPagamento;
 		this.dataVenda = dataVenda;
 		this.valorTotal = valorTotal;
-		this.idCliente = idCliente;
+		this.cliente = cliente;
+//		this.idCliente = idCliente;
 		this.fileName = fileName;
 	}
 
@@ -66,12 +72,12 @@ public class VendasDTO extends RepresentationModel<VendasDTO>{
 		this.valorTotal = valorTotal;
 	}
 
-	public Long getIdCliente() {
-		return idCliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
-	public void setIdCliente(Long idCliente) {
-		this.idCliente = idCliente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public String getFileName() {
@@ -84,20 +90,23 @@ public class VendasDTO extends RepresentationModel<VendasDTO>{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(condicaoPagamento, dataVenda, fileName, id, idCliente, valorTotal);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(cliente, condicaoPagamento, dataVenda, fileName, id, valorTotal);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		VendasDTO other = (VendasDTO) obj;
-		return condicaoPagamento == other.condicaoPagamento && Objects.equals(dataVenda, other.dataVenda)
-				&& Objects.equals(fileName, other.fileName) && Objects.equals(id, other.id)
-				&& Objects.equals(idCliente, other.idCliente) && Objects.equals(valorTotal, other.valorTotal);
+		return Objects.equals(cliente, other.cliente) && condicaoPagamento == other.condicaoPagamento
+				&& Objects.equals(dataVenda, other.dataVenda) && Objects.equals(fileName, other.fileName)
+				&& Objects.equals(id, other.id) && Objects.equals(valorTotal, other.valorTotal);
 	}
 }
