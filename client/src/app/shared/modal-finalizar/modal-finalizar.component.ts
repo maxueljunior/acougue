@@ -9,7 +9,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ModalFinalizarComponent {
   
   @Output() finalizar = new EventEmitter<boolean>();
-
+  @Output() gerarCupom = new EventEmitter<boolean>();
+  public gerouCupom: boolean = false;
+ 
   constructor(
     public dialogRef: MatDialogRef<ModalFinalizarComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -18,5 +20,10 @@ export class ModalFinalizarComponent {
 
   finalizarModal(): void{
     this.finalizar.emit(true);
+  }
+
+  geraCupom(): void{
+    this.gerouCupom = true;
+    this.gerarCupom.emit(true);
   }
 }

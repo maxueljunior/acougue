@@ -11,8 +11,8 @@
     <ng-container *ngFor="let lado of data.dadosLado2">
       <div class="info-content">
         <p>{{ lado.nome }}</p>
-        <input *ngIf="lado.nome !== 'Nota Fiscal'" [value]="lado.attributo" disabled>
-        <input class="input-check" type="checkbox" *ngIf="lado.nome === 'Nota Fiscal'" [checked]="lado.attributo !== undefined" disabled>
+        <input *ngIf="lado.nome !== 'Nota Fiscal' && lado.nome !== 'Cupom não Fiscal'" [value]="lado.attributo" disabled>
+        <input class="input-check" type="checkbox" *ngIf="lado.nome === 'Nota Fiscal' || lado.nome === 'Cupom não Fiscal'" [checked]="lado.attributo !== undefined" disabled>
       </div>
     </ng-container>
   </div>

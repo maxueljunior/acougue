@@ -7,6 +7,9 @@
         <h2>Deseja realmente finalizar a {{ data.texto }} nº <span>{{ data.numero }}</span> ?</h2>
         <h2>Valor Total: <span>R$ {{ data.total }}</span></h2>
         <h3 *ngIf="!data.arquivo">Obs.: Nota fiscal não inserida na compra!</h3>
+        <button *ngIf="data.gerarCupom" mat-flat-button color="accent" (click)="geraCupom()" [disabled]="gerouCupom">
+            GERAR CUPOM NÃO FISCAL
+        </button>
     </div>
     <div mat-dialog-actions align="center">
         <button (click)="finalizarModal()" color="primary" mat-flat-button mat-dialog-close>SIM</button>

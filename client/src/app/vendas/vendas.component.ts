@@ -77,6 +77,7 @@ export class VendasComponent implements OnInit{
   pageIndex: number = 0;
   pageSize: number = 10;
   nome: string = '';
+  gerarCupom: boolean = false;
 
   filteredOptions!: Observable<Cliente[]>;
 
@@ -249,9 +250,11 @@ export class VendasComponent implements OnInit{
 
     if(qntInserida > qntDisponivel){
       this.formBaseService.formBase.setErrors({'invalid': true});
+      this.desabilitaBotoes();
       return true;
     }
 
+    this.habilitaBotoes();
     return false;
   }
 
@@ -369,6 +372,7 @@ export class VendasComponent implements OnInit{
   }
 
   openDialog(): void{
+    this.gerarCupom = false;
     let tamWidth = window.innerWidth * 0.40;
     let tamHeigth = window.innerHeight * 0.60;
 
@@ -379,7 +383,14 @@ export class VendasComponent implements OnInit{
         texto: 'Venda',
         numero: this.venda!.id,
         total: this.valorTotal.toFixed(2),
-        arquivo: true
+        arquivo: true,
+        gerarCupom: true
+      }
+    })
+
+    dialogRef.componentInstance.gerarCupom.subscribe((g) => {
+      if(g === true){
+        this.gerarCupom = true;
       }
     })
 
@@ -396,6 +407,9 @@ export class VendasComponent implements OnInit{
 
         this.vendaEstoqueService.create(vendasConvertidas).subscribe({
           next: (v) => {
+            if(this.gerarCupom){
+              this.vendaService.downloadArchive(`api/vendas/gerar-cupom/${v[0].idVendas}`);
+            }
             this.openSnackBar('Venda finalizada com sucesso!', 'sucesso');
             this.limparTela();
           },
@@ -405,6 +419,8 @@ export class VendasComponent implements OnInit{
         })
       }
     })
+
+    
   }
 
   criarVenda(): void{
@@ -509,7 +525,7 @@ export class VendasComponent implements OnInit{
         dadosLado2: [
           {nome: "Data", attributo: vendas.dataVenda},
           {nome: "Valor Total (R$)", attributo: vendas.valorTotal},
-          {nome: "Nota Fiscal", attributo: vendas._links?.download?.href},
+          {nome: "Cupom não Fiscal", attributo: vendas._links?.download?.href},
         ],
         dados: vendasEstoque,
         colunas: this.colunas,
