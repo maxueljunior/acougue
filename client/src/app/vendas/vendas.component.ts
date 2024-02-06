@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ClienteService } from "../clientes/service/cliente.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Cliente } from "../core/types/Cliente";
-import { Observable, Subscription, map, startWith } from "rxjs";
+import { Observable, Subscription, debounceTime, map, startWith } from "rxjs";
 import { FormBaseService } from "../shared/service/form-base.service";
 import { ProdutoService } from '../produtos/service/produto.service';
 import { VendaEstoqueService } from './service/venda-estoque.service';
 import { TableBaseComponent } from '../shared/table-base/table-base.component';
 import { Responsivo } from '../core/types/Types';
-import { Venda, Vendas } from '../core/types/Vendas';
+import { VendasDTO, Vendas } from '../core/types/Vendas';
 import { InsertVendaEstoque, VendaEstoqueTable } from '../core/types/VendasEstoque';
 import { ModalFinalizarComponent } from '../shared/modal-finalizar/modal-finalizar.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,10 @@ import { VendaService } from './service/venda.service';
 import { SnackMensagemComponent } from '../shared/snack-mensagem/snack-mensagem.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { PageEvent } from '@angular/material/paginator';
+import { ModalProcuraComponent } from '../shared/modal-procura/modal-procura.component';
+import { ModalExclusaoComponent } from '../shared/modal-exclusao/modal-exclusao.component';
 
 @Component({
   selector: 'app-vendas',
@@ -26,7 +30,7 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 export class VendasComponent implements OnInit{
 
   vendas: VendaEstoqueTable[] = [];
-  venda!: Venda | null;
+  venda!: VendasDTO | null;
 
   @ViewChild('tableBaseComponent') tableBaseComponent: TableBaseComponent | undefined;
 
@@ -37,7 +41,6 @@ export class VendasComponent implements OnInit{
   condPagamentoControl = new FormControl<null | string>(null, Validators.required);
 
   clientesBuscaControl = new FormControl();
-  filteredOptionsBusca!: Observable<Cliente[]>;
   
   criarVendas: boolean = false;
 
@@ -47,6 +50,12 @@ export class VendasComponent implements OnInit{
   produtos: Produto[] = [];
   produtoSubscription: Subscription = new Subscription();
   produto!: Produto | null;
+
+  vendasRecuperadas: VendasDTO[] = [];
+  vendaSubscription: Subscription = new Subscription();
+
+  pageable: Vendas | null = null;
+  pageableSubscription: Subscription = new Subscription();
 
   produtoControl = new FormControl<null | Produto>(null, Validators.required);
   filteredOptionsProduto!: Observable<Produto[]>;
@@ -65,6 +74,10 @@ export class VendasComponent implements OnInit{
   quantidadeDisponivel: string = "Qnt. Disponivel";
   dataProduto!: DatasProdutos;
 
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  nome: string = '';
+
   filteredOptions!: Observable<Cliente[]>;
 
   formVendasEstoque!: FormGroup;
@@ -81,6 +94,25 @@ export class VendasComponent implements OnInit{
     {nome: "Descrição", atributo: "produto.descricao"},
     {nome: "Qnt.", atributo: "quantidade"},
     {nome: "Valor Unit. (R$)", atributo: "valorUnitario"},
+  ]
+
+
+  displayedColumnsVendas: string[] = ['id', 'cliente.nome', 'cliente.sobrenome', 'dataVenda' ,'valorTotal','download', 'acoes'];
+  displayedesColumnsVendas: string[] = ['id', 'cliente.nome', 'cliente.sobrenome', 'valorTotal','download', 'acoes'];
+
+  colunasVendas: Responsivo[] = [
+    {nome: "Cod.", atributo: "id"},
+    {nome: "Nome", atributo: "cliente.nome"},
+    {nome: "Sobrenome", atributo: "cliente.sobrenome"},
+    {nome: "Valor Total (R$)", atributo: "valorTotal"},
+  ];
+
+  colunasResponsivaVendas: Responsivo[] = [
+    {nome: "Cod.", atributo: "id"},
+    {nome: "Nome", atributo: "cliente.nome"},
+    {nome: "Sobrenome", atributo: "cliente.sobrenome"},
+    {nome: "Data", atributo: "dataVenda"},
+    {nome: "Valor Total (R$)", atributo: "valorTotal"},
   ]
 
   constructor(
@@ -111,15 +143,6 @@ export class VendasComponent implements OnInit{
       }),
     );
 
-    this.filteredOptionsBusca = this.clientesBuscaControl.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.nome;
-        return name ? this._filter(name as string) : this.clientes.slice();
-      }),
-    );
-
-
     this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
       this.produtos = p;
       console.log(p);
@@ -134,6 +157,20 @@ export class VendasComponent implements OnInit{
         return name ? this._filterPn(name as string) : this.produtos.slice();
       }),
     );
+
+    this.clientesBuscaControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((valorDigitado) => {
+        console.log(valorDigitado);
+      });
+
+    this.vendaSubscription = this.vendaService.$vendas.subscribe((v) => {
+      this.vendasRecuperadas = v;
+    })
+
+    this.pageableSubscription = this.vendaService.$pageable.subscribe((p) => {
+      this.pageable = p;
+    })
   }
 
   limpar(control: FormControl): void{
@@ -410,5 +447,89 @@ export class VendasComponent implements OnInit{
 
   selecionaClienteBusca(){
     console.log(this.clientesBuscaControl.value)
+  }
+
+  trocaDeTab(event: MatTabChangeEvent): void{
+    if(event.index === 1){
+      console.log(`Index -> ${this.pageIndex}, Size -> ${this.pageSize}, Nome -> ${this.nome}`);
+      this.vendaService.findAll(this.pageIndex, this.pageSize, this.nome);
+    }
+  }
+
+  alteracaoNaPagina(event: PageEvent){
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.vendaService.findAll(this.pageIndex, this.pageSize, this.nome);
+  }
+
+  downloadArquivo(event: any){
+    this.vendaService.downloadArchive(event);
+  }
+
+  abrirVendas(event: VendasDTO){
+
+    this.vendaEstoqueService.getProductsWithVendas(event.id).subscribe({
+      next: (ve) => {
+        console.log(ve);
+
+        let vendaTable = ve.content.map((v) => ({
+          id: v.id,
+          produto: this.produtos.find((p) => p.id === v.idEstoque),
+          valorUnitario: v.valorUnitario,
+          quantidade: v.quantidade
+        }) as VendaEstoqueTable);
+
+        this.openDialogRelacaoProdutos(event, vendaTable);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  openDialogRelacaoProdutos(vendas: VendasDTO, vendasEstoque: VendaEstoqueTable[]): void{
+    let tamWidth = window.innerWidth * 0.60;
+    let tamHeigth = window.innerHeight * 0.80;
+
+    let contemNotaFiscal = "Sim";
+    if(vendas._links?.download?.href === undefined){
+      contemNotaFiscal = "Não";
+    }
+
+    this.dialog.open(ModalProcuraComponent, {
+      width: `${tamWidth}px`,
+      // height: `${tamHeigth}px`,
+      data:{
+        dadosLado1: [
+          {nome: "Codigo Venda", attributo: vendas.id},
+          {nome: "Cliente", attributo: vendas.cliente.nome},
+          {nome: "Sobrenome", attributo: vendas.cliente.nome},
+        ],
+        dadosLado2: [
+          {nome: "Data", attributo: vendas.dataVenda},
+          {nome: "Valor Total (R$)", attributo: vendas.valorTotal},
+          {nome: "Nota Fiscal", attributo: vendas._links?.download?.href},
+        ],
+        dados: vendasEstoque,
+        colunas: this.colunas,
+        colunasResponsivas: this.colunasResponsiva,
+        displayedColumns: this.displayedColumns,
+        displayedesColumns: this.displayedesColumns
+      }
+    })
+  }
+
+  excluirVendas(event: any): void{
+    let dialogRef = this.dialog.open(ModalExclusaoComponent, {
+      data:{
+        titulo: `Venda nº ${event.id}`
+      }
+    });
+
+    dialogRef.componentInstance.exclusao.subscribe((e) => {
+      if(e === true){
+        // this.compraService.delete(event.id, this.pageIndex, this.pageSize, this.razaoSocial);
+      }
+    })
   }
 }

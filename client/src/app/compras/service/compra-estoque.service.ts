@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompraEstoque, ICompraEstoque } from 'src/app/core/types/ComprasEstoque';
@@ -23,6 +23,10 @@ export class CompraEstoqueService {
   }
 
   findAllByIdCompras(id: number): Observable<ICompraEstoque>{
-    return this.http.get<ICompraEstoque>(`${this.urlApi}/${id}`);
+    let options = new HttpParams()
+      .set('page', 0)
+      .set('size', 999);
+
+    return this.http.get<ICompraEstoque>(`${this.urlApi}/${id}`, {params: options});
   }
 }

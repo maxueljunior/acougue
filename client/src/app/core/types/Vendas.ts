@@ -1,3 +1,5 @@
+import { Cliente } from "./Cliente";
+
 export interface Vendas {
     _embedded: Embedded;
     _links:    VendasLinks;
@@ -5,7 +7,7 @@ export interface Vendas {
 }
 
 export interface Embedded {
-    vendasDTO: VendasDTO[];
+    vendasDTOList: VendasDTO[];
 }
 
 export interface VendasDTO {
@@ -13,7 +15,7 @@ export interface VendasDTO {
     condicaoPagamento: string;
     dataVenda:         string;
     valorTotal:        number;
-    idCliente:         number;
+    cliente:           Cliente;
     _links?:           VendasDTOListLinks;
 }
 
@@ -22,8 +24,8 @@ export interface Venda{
     condicaoPagamento: string;
     dataVenda:         string;
     valorTotal:        number;
-    idCliente:         number;
-    links?:            string;
+    cliente:           Cliente;
+    _links?:            string;
 }
 
 export interface VendasDTOListLinks {

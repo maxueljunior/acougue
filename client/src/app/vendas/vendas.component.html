@@ -3,7 +3,7 @@
     <div class="container-table">
       <app-card>
 
-        <mat-tab-group animationDuration="0ms" disableRipple disablePagination>
+        <mat-tab-group animationDuration="0ms" (selectedTabChange)="trocaDeTab($event)" disableRipple disablePagination>
 
           <mat-tab label="Vendas">
 
@@ -162,33 +162,27 @@
           <mat-tab label="Registros">
             <div class="container-registros">
 
-              <mat-form-field class="example-full-width" appearance="outline">
-                <mat-label>Cliente</mat-label>
-                <input type="text" matInput [formControl]="clientesBuscaControl" [matAutocomplete]="autoComp">
-                <mat-autocomplete #autoComp="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selecionaClienteBusca()">
-                  <mat-option *ngFor="let option of filteredOptionsBusca | async" [value]="option">
-                    {{option.nome + " " + option.sobrenome}}
-                  </mat-option>
-                </mat-autocomplete>
-                <button matSuffix mat-icon-button aria-label="Clear" (click)="limpar(clientesBuscaControl)">
-                  <mat-icon>close</mat-icon>
-                </button>
+              <mat-form-field appearance="outline">
+                <mat-label>Nome do Cliente</mat-label>
+                <input matInput placeholder="Ex: Fulano da Silva..." [formControl]="clientesBuscaControl">
+                <mat-icon matSuffix>search</mat-icon>
               </mat-form-field>
 
-              <!-- <app-table-base
+              <app-table-base
                 #tableBase
-                [displayedColumns]="displayedColumnsComp"
-                [displayedesColumns]="displayedesColumnsComp"
+                [displayedColumns]="displayedColumnsVendas"
+                [displayedesColumns]="displayedesColumnsVendas"
                 [pageable]="pageable"
-                [dados]="comprasRecuperadas"
-                [colunas]="colunasComp"
-                [colunasResponsivas]="colunasResponsivaComp"
+                [dados]="vendasRecuperadas"
+                [colunas]="colunasVendas"
+                [colunasResponsivas]="colunasResponsivaVendas"
                 [visualizacaoDeAdicao]="false"
                 [contemEdicao]="false"
                 (alteracaoPagina)="alteracaoNaPagina($event)"
-                (clickNaTabela)="abrirCompras($event)"
-                (exclusao)="excluirCompras($event)"
-              ></app-table-base> -->
+                (download)="downloadArquivo($event)"
+                (clickNaTabela)="abrirVendas($event)"
+                (exclusao)="excluirVendas($event)"
+              ></app-table-base>
             </div>
           </mat-tab>
 
