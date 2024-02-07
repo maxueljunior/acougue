@@ -170,7 +170,8 @@ public class VendasEstoqueService {
 //		var estoqueData = estoqueDataRepository.findBy
 		return estoqueData.stream().map(DadosDetalhamentoEstoqueData::new).collect(Collectors.toList());
 	}
-
+	
+	@Transactional
 	public List<DadosDetalhamentoVendaEstoque> createList(List<DadosCriarVendaEstoque> dados) {
 		List<DadosDetalhamentoVendaEstoque> lista = new ArrayList<>();
 		

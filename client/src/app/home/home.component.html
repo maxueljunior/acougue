@@ -1,4 +1,29 @@
 <app-aside-bar>
   <app-container>
+    <app-card>
+      <div class="conteudo-listagem">
+        aqui vai ficar um conteudo de produtos que estão faltando...
+      </div>
+    </app-card>
+    <app-card>
+      <div class="conteudo-grafico">
+        <h1 class="titulo-grafico">Gráfico de Lucratividade por Produto</h1>
+        <ngx-charts-bar-horizontal
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="single"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [legendTitle]="legendTitle"
+          [showDataLabel]="true">
+        </ngx-charts-bar-horizontal>
+      </div>
+    </app-card>
   </app-container>
 </app-aside-bar>
