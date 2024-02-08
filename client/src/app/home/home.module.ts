@@ -5,6 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { SharedModule } from '../shared/shared.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MaterialModule } from '../core/material/material.module';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     CommonModule,
     HomeRoutingModule,
     SharedModule,
-    NgxChartsModule
+    NgxChartsModule,
+    MaterialModule
   ],
   exports: [
     HomeComponent

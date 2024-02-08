@@ -11,6 +11,7 @@ import { ResumoLucratividade } from '../core/types/Resumo';
 })
 export class HomeComponent implements OnInit{
 
+  showFiller = false;
   singles!: number[];
   single: ResumoLucratividade[] = [];
   
