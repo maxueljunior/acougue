@@ -14,6 +14,7 @@ import { BuscaComponent } from './busca/busca.component';
 import { CardItemComponent } from './card-item/card-item.component';
 import { ModalProcuraComponent } from './modal-procura/modal-procura.component';
 import { ModalFinalizarComponent } from './modal-finalizar/modal-finalizar.component';
+import { CardMensagemComponent } from './card-mensagem/card-mensagem.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ModalFinalizarComponent } from './modal-finalizar/modal-finalizar.compo
     BuscaComponent,
     CardItemComponent,
     ModalProcuraComponent,
-    ModalFinalizarComponent
+    ModalFinalizarComponent,
+    CardMensagemComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { ModalFinalizarComponent } from './modal-finalizar/modal-finalizar.compo
     SnackMensagemComponent,
     BuscaComponent,
     CardItemComponent,
-    ModalProcuraComponent
+    ModalProcuraComponent,
+    CardMensagemComponent
   ]
 })
 export class SharedModule { }

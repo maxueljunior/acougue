@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { ResumoLucratividadeService } from './service/resumo-lucratividade.service';
 import { ResumoLucratividade } from '../core/types/Resumo';
+import { ProdutoService } from '../produtos/service/produto.service';
+import { Subscription } from 'rxjs';
+import { Produto } from '../core/types/Produto';
+import { UserService } from '../autenticacao/services/user.service';
 
 
 @Component({
@@ -15,7 +19,16 @@ export class HomeComponent implements OnInit{
   singles!: number[];
   single: ResumoLucratividade[] = [];
   
-  view: [number, number] = [800, 600];
+  tamWidth = 800;
+  tamHeigth = 600;
+
+  tamanhoTela: number = 0.00;
+  telaResponsiva: boolean = false;
+
+  view: [number, number] = [this.tamWidth, this.tamHeigth];
+
+  produtosSubscription: Subscription = new Subscription();
+  produtos: Produto[] = [];
 
   // options
   showXAxis: boolean = true;
@@ -27,6 +40,7 @@ export class HomeComponent implements OnInit{
   showYAxisLabel: boolean = false;
   xAxisLabel: string = 'Lucratividade (%)';
   legendTitle: string = 'Legenda';
+  mostrarMensagem: boolean = false;
 
   colorScheme: Color = {
     name: 'myScheme',
@@ -36,7 +50,9 @@ export class HomeComponent implements OnInit{
   };
 
   constructor(
-    private resumoLucratividadeService: ResumoLucratividadeService
+    private resumoLucratividadeService: ResumoLucratividadeService,
+    private produtosService: ProdutoService,
+    private userService: UserService
   ) {
     Object.assign(this, { single: this.single });
   }
@@ -49,6 +65,59 @@ export class HomeComponent implements OnInit{
       }) as ResumoLucratividade)
       console.log(this.single);
     })
+
+    this.produtosSubscription = this.produtosService.produtos$.subscribe((p) => {
+
+      let produtosAbaixoDaFaixa = p.filter((prod) => prod.totalQuantidade <= 5.00);
+
+      this.produtos = produtosAbaixoDaFaixa;
+      console.log(this.produtos);
+    })
+
+    this.produtosService.findAll(0, 9999, '');
+
+    this.userService.decodificarJWT();
   }
 
+  defineClasse(produto: Produto): string{
+    if(produto.totalQuantidade === 0){
+      return 'card';
+    }
+
+    return 'card-warning';
+  }
+
+  defineMensagem(produto: Produto): string{
+    if(produto.totalQuantidade === 0){
+      return `${produto.descricao} acabou!`;
+    }
+
+    return `${produto.descricao} contem ${produto.totalQuantidade} no estoque!`;
+  }
+
+  showMessages(): void{
+    if(this.mostrarMensagem) {
+      this.mostrarMensagem = false
+    }else{
+      this.mostrarMensagem = true;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.tamanhoTela = window.innerWidth;
+    if(this.tamanhoTela >= 769){
+      this.telaResponsiva = true;
+      this.showLegend = true;
+      this.view = [this.tamWidth,this.tamHeigth];
+    }else{
+      this.telaResponsiva = false;
+      this.showLegend = false;
+      let tamWidth = window.innerWidth * 0.60;
+      let tamHeigth = window.innerHeight * 0.40;
+      this.view = [tamWidth,tamHeigth];
+    }
+
+    console.log(this.telaResponsiva);
+  }
 }

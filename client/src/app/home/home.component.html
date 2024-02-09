@@ -22,23 +22,19 @@
     </app-card>
     <app-card class="conteudo">
       <div class="btn-mensagens">
-        <button mat-raised-button color="primary"
-            [matBadge]="2" matBadgePosition="before" matBadgeColor="accent" extended>
+        <button mat-raised-button color="primary" (click)="showMessages()"
+            [matBadge]="produtos.length" matBadgePosition="before" matBadgeColor="accent" extended>
           <mat-icon>message</mat-icon>
           Mensagens
         </button>
       </div>
-      <div class="conteudo-listagem">
-        <ul>
-          <div class="card">
-            <mat-icon class="icon">close</mat-icon>
-            <p class="mesage">Maminha c/ alcatra reserva filha acabou!</p>
-          </div>
-          <div class="card-warning">
-            <mat-icon class="icon">warning</mat-icon>
-            <p class="mesage">File de frango a parmegiana contem 05 no estoque!</p>
-          </div>
-        </ul>
+      <div class="conteudo-listagem" *ngIf="mostrarMensagem">
+        <div *ngFor="let produto of produtos">
+          <app-card-mensagem
+            [estilo]="defineClasse(produto)"
+            [mensagem]="defineMensagem(produto)"
+          ></app-card-mensagem>
+        </div>
       </div>
     </app-card>
   </app-container>

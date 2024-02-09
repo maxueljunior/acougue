@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from 'src/app/autenticacao/services/token.service';
+import { UserService } from 'src/app/autenticacao/services/user.service';
 
 @Component({
   selector: 'app-aside-bar',
@@ -9,9 +10,13 @@ import { TokenService } from 'src/app/autenticacao/services/token.service';
 })
 export class AsideBarComponent {
 
+  usuario = '';
+
   constructor(
     private router: Router,
-    private tokenService: TokenService){
+    private tokenService: TokenService,
+    private userService: UserService){
+      this.usuario = userService.getUsuario();
   }
 
   navegadorParaProdutos(event: any){

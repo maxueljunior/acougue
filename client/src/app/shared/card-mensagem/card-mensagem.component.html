@@ -1,0 +1,5 @@
+<div [ngClass]="estilo">
+    <mat-icon *ngIf="estilo === 'card'" class="icon">close</mat-icon>
+    <mat-icon *ngIf="estilo === 'card-warning'"  class="icon">warning</mat-icon>
+    <p class="mesage">{{ mensagem }}</p>
+</div>
