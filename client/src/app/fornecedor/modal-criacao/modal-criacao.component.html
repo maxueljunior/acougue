@@ -18,11 +18,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>CNPJ</mat-label>
-        <input matInput placeholder="Ex: 96.014.849/0001-93" formControlName="cnpj">
-        <mat-error
-        *ngIf="formFornecedor.formBase.get('cnpj')?.errors?.['required'] &&
-        (formFornecedor.formBase.get('cnpj')?.touched || formFornecedor.formBase.get('cnpj')?.dirty)">
-          CNPJ é obrigatorio!
+        <input matInput placeholder="Ex: 96.014.849/0001-93" formControlName="cnpj" validaCnpj>
+        <mat-error *ngIf="formFornecedor.formBase.get('cnpj')?.touched || formFornecedor.formBase.get('cnpj')?.dirty">
+          <span *ngIf="formFornecedor.formBase.get('cnpj')?.errors?.['required']">CNPJ é obrigatorio!</span>
+          <span *ngIf="formFornecedor.formBase.get('cnpj')?.errors?.['validaCnpj']">CNPJ incorreto, ex: 96.014.849/0001-93</span>
         </mat-error>
       </mat-form-field>
 
@@ -39,10 +38,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Telefone</mat-label>
         <input matInput placeholder="Ex: (16) 99232-6060" formControlName="telefone">
-        <mat-error
-        *ngIf="formFornecedor.formBase.get('telefone')?.errors?.['required'] &&
-        (formFornecedor.formBase.get('telefone')?.touched || formFornecedor.formBase.get('telefone')?.dirty)">
-          Telefone é obrigatorio!
+        <mat-error *ngIf="formFornecedor.formBase.get('telefone')?.touched || formFornecedor.formBase.get('telefone')?.dirty">
+          <span *ngIf="formFornecedor.formBase.get('telefone')?.errors?.['required']">Telefone é obrigatorio!</span>
+          <span *ngIf="formFornecedor.formBase.get('telefone')?.errors?.['minlength']">Telefone incorreto, ex: (16) 99232-6060</span>
         </mat-error>
       </mat-form-field>
 

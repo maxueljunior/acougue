@@ -22,9 +22,9 @@ export class FormBaseService{
   adicionaCamposFornecedor(formGroup: FormGroup){
     formGroup = this.formBuilder.group({
       razaoSocial:['', Validators.required],
-      cnpj:['', Validators.required],
+      cnpj:['', [Validators.required]],
       nomeContato:['', Validators.required],
-      telefone:['', Validators.required]
+      telefone:['', [Validators.required, Validators.minLength(11)]]
     })
     this.formBase = formGroup;
     return this.formBase;
@@ -35,7 +35,7 @@ export class FormBaseService{
       nome:['', Validators.required],
       sobrenome:['', Validators.required],
       sexo: ['', Validators.required],
-      telefone:['', Validators.required],
+      telefone:['', [Validators.required, Validators.minLength(11)]],
       dataNascimento:[new Date(), Validators.required],
       endereco: this.formBuilder.group({
         bairro:[''],

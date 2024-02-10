@@ -99,7 +99,7 @@ export class ClientesComponent implements OnInit{
 
   private openDialogCriar(): void{
     let tamWidth = window.innerWidth * 0.60;
-    let tamHeigth = window.innerHeight * 0.60;
+    // let tamHeigth = window.innerHeight * 0.60;
 
     if(tamWidth < 490){
       tamWidth = window.innerWidth * 0.85;
@@ -107,7 +107,7 @@ export class ClientesComponent implements OnInit{
     console.log(tamWidth);
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data:{
         editar: false
       }
@@ -129,7 +129,7 @@ export class ClientesComponent implements OnInit{
 
   private openDialogEditar(event: Cliente){
     let tamWidth = window.innerWidth * 0.60;
-    let tamHeigth = window.innerHeight * 0.60;
+    // let tamHeigth = window.innerHeight * 0.60;
 
     if(tamWidth < 490){
       tamWidth = window.innerWidth * 0.85;
@@ -138,7 +138,7 @@ export class ClientesComponent implements OnInit{
     this.passarValoresParaFormulario(event);
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data:{
         editar: true
       }

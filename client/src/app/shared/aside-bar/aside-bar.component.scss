@@ -29,7 +29,7 @@
         cursor: auto;
         color: #FFFFFF;
         font-family: var(--font-secundaria);
-        font-size: 16px;
+        font-size: 14px;
       }
     }
 
@@ -89,7 +89,6 @@
     .aside-toolbar{
       display: none;
     }
-
     .aside-toolbar-secundaria{
       display: flex;
       width: 100%;
@@ -112,7 +111,7 @@
         width: 55%;
         p{
           padding-right: 15px;
-          font-size: 16px;
+          font-size: 14px;
           font-family: var(--font-secundaria);
         }
       }

@@ -59,9 +59,9 @@
             <mat-label>Telefone</mat-label>
             <input matInput placeholder="Ex: (16) 99232-6060" formControlName="telefone">
             <mat-error
-            *ngIf="formBaseService.formBase.get('telefone')?.errors?.['required'] &&
-            (formBaseService.formBase.get('telefone')?.touched || formBaseService.formBase.get('telefone')?.dirty)">
-              Telefone é obrigatorio!
+            *ngIf="formBaseService.formBase.get('telefone')?.touched || formBaseService.formBase.get('telefone')?.dirty">
+              <span *ngIf="formBaseService.formBase.get('telefone')?.errors?.['required']">Telefone é obrigatorio!</span>
+              <span *ngIf="formBaseService.formBase.get('telefone')?.errors?.['minlength']">Telefone incorreto, ex:(16) 99232-6060</span>
             </mat-error>
           </mat-form-field>
         </div>

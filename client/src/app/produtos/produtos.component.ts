@@ -87,10 +87,10 @@ export class ProdutosComponent implements OnInit{
 
   openDialogCriar(): void{
     let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.60;
+    // let tamHeigth = window.innerHeight * 0.60;
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data: {
         editar: false
       }
@@ -105,10 +105,10 @@ export class ProdutosComponent implements OnInit{
 
   openDialogEditar(produto: Produto): void{
     let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.60;
+    // let tamHeigth = window.innerHeight * 0.60;
     let dialogRef = this.dialog.open(ModalCriacaoComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data: {
         editar: true
       }

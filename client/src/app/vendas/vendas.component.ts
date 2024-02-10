@@ -145,7 +145,7 @@ export class VendasComponent implements OnInit{
     );
 
     this.produtoSubscription = this.produtoService.produtos$.subscribe((p) => {
-      this.produtos = p;
+      this.produtos = p.filter((prod) => prod.totalQuantidade > 0);
       // console.log(p);
     })
 
@@ -374,11 +374,11 @@ export class VendasComponent implements OnInit{
   openDialog(): void{
     this.gerarCupom = false;
     let tamWidth = window.innerWidth * 0.40;
-    let tamHeigth = window.innerHeight * 0.60;
+    // let tamHeigth = window.innerHeight * 0.60;
 
     let dialogRef = this.dialog.open(ModalFinalizarComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data:{
         texto: 'Venda',
         numero: this.venda!.id,

@@ -7,12 +7,14 @@ import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../core/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalCriacaoComponent } from './modal-criacao/modal-criacao.component';
+import { ValidaCnpjDirective } from '../directives/valida-cnpj.directive';
 
 
 @NgModule({
   declarations: [
     FornecedorComponent,
-    ModalCriacaoComponent
+    ModalCriacaoComponent,
+    ValidaCnpjDirective
   ],
   imports: [
     CommonModule,

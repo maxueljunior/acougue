@@ -2,7 +2,7 @@ import { Directive, Input } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors } from '@angular/forms';
 
 @Directive({
-  selector: '[appValidaQuantidade][ngModel]',
+  selector: '[appValidaQuantidade]',
   providers: [
     {
       provide: NG_VALIDATORS,

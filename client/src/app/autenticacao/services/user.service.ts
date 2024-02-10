@@ -19,6 +19,8 @@ export class UserService {
     const token = this.tokenService.retornarToken();
     const user = jwtDecode(token);
     this.usuario = user.sub!;
+    console.log(user.sub!);
+    console.log(this.usuario);
   }
 
   getUsuario(){

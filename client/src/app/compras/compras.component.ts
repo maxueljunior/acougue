@@ -264,7 +264,7 @@ export class ComprasComponent implements OnInit{
 
     let dialogRef = this.dialog.open(ModalFinalizarComponent, {
       width: `${tamWidth}px`,
-      height: `${tamHeigth}px`,
+      // height: `${tamHeigth}px`,
       data:{
         texto: 'Compra',
         numero: this.compra?.id,

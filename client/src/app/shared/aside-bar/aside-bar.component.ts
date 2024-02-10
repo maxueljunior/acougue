@@ -17,6 +17,8 @@ export class AsideBarComponent {
     private tokenService: TokenService,
     private userService: UserService){
       this.usuario = userService.getUsuario();
+      console.log(this.userService.decodificarJWT());
+      console.log(this.usuario);
   }
 
   navegadorParaProdutos(event: any){
